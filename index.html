@@ -510,8 +510,21 @@ async function sayWord(h){const k=wordKeys(h);if(k&&await playSeq(k))return;tts(
 async function saySentence(h,slow){stopAll();if(AUDIO["f:"+h]){if(await playClip("f:"+h,slow?0.8:1.12))return true;}return tts(h,slow?Math.max(.5,S.rate-.25):S.rate);}
 
 /* ---------- tempo de estudo ---------- */
-let lastTick=Date.now();
-setInterval(()=>{if(document.visibilityState==="visible"){const now=Date.now();const d=Math.min(now-lastTick,20000);const k=dayKey();S.time[k]=(S.time[k]||0)+d;lastTick=now;save();renderStats();}else lastTick=Date.now();},15000);
+/* tempo de estudo: só conta dentro de uma atividade (etapa de lição, revisão, consulta ou treino)
+   e enquanto você interage; parado por mais de 90 s ou no mapa/menus não conta */
+let lastTick=Date.now(),lastAct=Date.now();
+["pointerdown","keydown"].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now();},true));
+function studying(){
+  const vis=id=>{const e=document.getElementById(id);return !!e&&!e.hidden;};
+  if(typeof SS!=="undefined"&&SS)return true;
+  if(vis("v-hoje")&&session)return true;
+  if(vis("v-trilha")&&typeof LS!=="undefined"&&LS&&vis("lessonView"))return true;
+  if(vis("v-tons")||vis("v-falar")||vis("v-frases"))return true;
+  return false;}
+setInterval(()=>{const now=Date.now();
+  if(document.visibilityState==="visible"&&studying()&&now-lastAct<90000){const d=Math.min(now-lastTick,6000);const k=dayKey();S.time[k]=(S.time[k]||0)+d;save();renderStats();
+    const g=document.getElementById("goalTxt");if(g&&!document.getElementById("trilhaHome").hidden){}}
+  lastTick=now;},5000);
 document.addEventListener("visibilitychange",()=>{lastTick=Date.now();});
 
 /* ---------- repetição espaçada ---------- */
