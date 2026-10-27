@@ -1,0 +1,1038 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f7a5c"><link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hanzi"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Caderno de Hanzi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Manrope:wght@400;600;800&display=swap">
+<style>
+/* Layout: phone app — content column + fixed bottom tab bar; tianzige practice grid as the recurring motif */
+:root{
+  --bg:#eef2ef; --surface:#ffffff; --ink:#1b2422; --muted:#5e6b67; --line:#cfd9d4;
+  --jade:#1f7a5c; --jade-soft:#d6ece3; --seal:#c8372d; --grid:#e8b4ae;
+  --good:#1f7a5c; --bad:#c8372d; --warn:#b7791f;
+  --t1:#c8372d; --t2:#b7791f; --t3:#1f7a5c; --t4:#2f5fa8;
+  --f-han:"Noto Serif SC","Songti SC","SimSun",serif;
+  --f-body:"Manrope",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121816; --surface:#1b2321; --ink:#e8efec; --muted:#9aa9a4; --line:#2e3a37;
+  --jade:#4fbf95; --jade-soft:#1e3a30; --seal:#e5625a; --grid:#6b3a37; --good:#4fbf95; --bad:#e5625a; --warn:#e0a84a;
+  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121816; --surface:#1b2321; --ink:#e8efec; --muted:#9aa9a4; --line:#2e3a37;
+  --jade:#4fbf95; --jade-soft:#1e3a30; --seal:#e5625a; --grid:#6b3a37; --good:#4fbf95; --bad:#e5625a; --warn:#e0a84a;
+  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; color-scheme:dark}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:12px calc(88px + env(safe-area-inset-bottom,0px))}
+.app{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:20px;font-weight:800;margin:0;display:flex;align-items:center;gap:10px}
+h2{font-size:17px;margin:0;font-weight:800;text-wrap:balance}
+h3{font-size:13px;margin:0;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.seal{font-family:var(--f-han);background:var(--seal);color:#fff;width:34px;height:34px;border-radius:6px;display:grid;place-items:center;font-size:20px}
+.gear{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:600 13px var(--f-body);cursor:pointer}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(6,1fr);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+nav.tabs button{border:0;background:none;color:var(--muted);font:600 11px var(--f-body);padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:10px}
+nav.tabs button .ic{font-family:var(--f-han);font-size:20px;line-height:1.1}
+nav.tabs button[aria-selected="true"]{color:var(--jade);background:var(--jade-soft)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 13px var(--f-body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--jade-soft);border-color:var(--jade);color:var(--jade)}
+.btn{flex:1 1 120px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:14px 10px;font:600 15px var(--f-body);cursor:pointer}
+.btn.primary{background:var(--jade);border-color:var(--jade);color:#fff}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.play{border:0;background:var(--jade-soft);color:var(--jade);border-radius:999px;padding:8px 14px;font:600 14px var(--f-body);cursor:pointer;white-space:nowrap}
+.muted{color:var(--muted);font-size:14px;line-height:1.5}
+.small{font-size:12px;color:var(--muted)}
+/* Hoje */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-size:24px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:110px}
+.bar{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.bar i{display:block;width:100%;max-width:28px;background:var(--jade);border-radius:6px 6px 2px 2px;min-height:2px}
+.bar i.zero{background:var(--line)}
+.bar span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar em{font-style:normal;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.recent{display:flex;flex-direction:column}
+.rec{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.rec:first-child{border-top:0}
+.rec .h{font-family:var(--f-han);font-weight:700;font-size:18px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec .m{font-size:13px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.ok{background:var(--good)} .dot.no{background:var(--bad)}
+/* quiz */
+.qcard{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.tzg{position:relative;width:min(58vw,210px);aspect-ratio:1;max-width:100%;border:2px solid var(--seal);display:grid;place-items:center}
+.tzg::before,.tzg::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(var(--grid),var(--grid)) center/100% 1px no-repeat,linear-gradient(var(--grid),var(--grid)) center/1px 100% no-repeat}
+.tzg::after{background:linear-gradient(45deg,transparent calc(50% - .5px),var(--grid) 50%,transparent calc(50% + .5px)),linear-gradient(-45deg,transparent calc(50% - .5px),var(--grid) 50%,transparent calc(50% + .5px));opacity:.6}
+.tzg.wide{width:100%;aspect-ratio:auto;min-height:130px;padding:16px}
+.han{font-family:var(--f-han);font-weight:700;position:relative;z-index:1;line-height:1.2}
+.pin{color:var(--jade);font-weight:600;font-size:18px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.opts.one{grid-template-columns:1fr}
+.opt{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 10px;font:600 15px var(--f-body);cursor:pointer;min-height:58px;line-height:1.3}
+.opt.hz{font-family:var(--f-han);font-size:22px}
+.opt.right{background:var(--jade-soft);border-color:var(--good);color:var(--good)}
+.opt.wrong{border-color:var(--bad);color:var(--bad)}
+.fb{font-weight:600;min-height:20px;line-height:1.4}
+.progress{width:100%;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--jade);transition:width .3s}
+/* tons */
+.tones{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+.tone{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font:600 13px var(--f-body)}
+.tone svg{width:100%;max-width:56px;height:40px}
+.tone.right{background:var(--jade-soft);border-color:var(--good)}
+.tone.wrong{border-color:var(--bad)}
+.tacc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tacc div{text-align:center;font-size:12px;color:var(--muted)}
+.tacc b{display:block;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+.big-syl{font-size:44px;font-weight:800;letter-spacing:.02em}
+/* frases */
+.sent{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-top:1px solid var(--line)}
+.sent:first-child{border-top:0;padding-top:0}
+.zh{font-family:var(--f-han);font-size:24px;font-weight:600;line-height:1.5;display:flex;flex-wrap:wrap;gap:2px 4px}
+.zh button{font:inherit;border:0;background:none;color:inherit;padding:0 2px;border-bottom:2px dotted var(--line);cursor:pointer;border-radius:4px}
+.zh button.na{border-bottom-color:transparent;cursor:default}
+.zh button.on{background:var(--jade-soft)}
+.sent .py{color:var(--jade);font-weight:600}
+.sent .pt{font-size:15px}
+.blur .py,.blur .pt,.blur .zh{filter:blur(6px);transition:filter .2s}
+.blur.show .py,.blur.show .pt,.blur.show .zh{filter:none}
+/* palavras */
+.list .item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.list .item:first-child{border-top:0}
+.item .h{font-family:var(--f-han);font-size:24px;font-weight:700;min-width:52px;cursor:pointer;background:none;border:0;color:var(--ink);text-align:left;padding:0}
+.item .t{min-width:0}
+.item .p{color:var(--jade);font-weight:600}
+.item .m{color:var(--muted);font-size:14px}
+.pill{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.pill.l1{background:var(--jade-soft);color:var(--jade)}
+.pill.l2{background:var(--jade);color:#fff}
+form{display:flex;flex-direction:column;gap:10px}
+label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+input,select{font:16px var(--f-body);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%;box-sizing:border-box}
+input[type=range]{padding:0}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);width:min(92vw,440px);padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+a{color:var(--jade)}
+/* falar */
+.chart{width:100%;overflow-x:auto}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.sylrow{display:flex;gap:8px;flex-wrap:wrap}
+.syl{border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:58px}
+.syl .hz{font-family:var(--f-han);font-size:22px;font-weight:700}
+.syl.ok{border-color:var(--good);background:var(--jade-soft)}
+.syl.no{border-color:var(--bad)}
+.syl.skip{opacity:.7}
+.syl small{font-size:11px;color:var(--muted)}
+.score{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.tips{display:flex;flex-direction:column;gap:8px;margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.micwrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding-block:6px}
+.mic{width:84px;height:84px;border-radius:50%;border:0;background:var(--jade);color:#fff;display:grid;place-items:center;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:transform .15s}
+.mic.recording{background:var(--seal);transform:scale(1.12);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(200,55,45,.45)}100%{box-shadow:0 0 0 22px rgba(200,55,45,0)}}
+.level{width:160px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.level i{display:block;height:100%;width:0;background:var(--seal);transition:width .08s}
+.rectime{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;line-height:1.4}
+/* trilha */
+.lvl{display:flex;flex-direction:column;gap:8px}
+.lesson{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;color:var(--ink);font:inherit;cursor:pointer;width:100%}
+.lesson .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-variant-numeric:tabular-nums;border:2px solid var(--line);color:var(--muted)}
+.lesson.open .n{border-color:var(--jade);color:var(--jade)}
+.lesson.done .n{background:var(--jade);border-color:var(--jade);color:#fff}
+.lesson.locked{opacity:.55;cursor:default}
+.lesson .tt{font-weight:800}
+.lesson .gg{font-size:13px;color:var(--muted);line-height:1.4}
+.lesson .sc{font-size:13px;font-weight:700;color:var(--jade);white-space:nowrap;font-variant-numeric:tabular-nums}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:10px;padding:10px 2px;font:600 12px var(--f-body);cursor:pointer}
+.steps button[aria-selected="true"]{border-color:var(--jade);color:var(--jade);background:var(--jade-soft)}
+.wcard{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:12px 0;border-top:1px solid var(--line)}
+.wcard:first-child{border-top:0}
+.wcard .hz{font-family:var(--f-han);font-size:30px;font-weight:700;grid-row:span 3;background:none;border:0;color:var(--ink);cursor:pointer;padding:0;min-width:60px;text-align:left}
+.wcard .py{color:var(--jade);font-weight:700}
+.wcard .note{font-size:13px;color:var(--muted);line-height:1.5;background:var(--bg);border-radius:8px;padding:6px 8px}
+.toks{display:flex;flex-wrap:wrap;gap:4px;align-items:flex-end}
+.tok{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:4px 8px;cursor:pointer;font:inherit}
+.tok small{font-size:11px;color:var(--jade);font-weight:600}
+.tok span{font-family:var(--f-han);font-size:22px;font-weight:600}
+.tok.p{border:0;background:none;cursor:default;padding:4px 0}
+.tok.sel{border-color:var(--jade);background:var(--jade-soft)}
+.lit{font-size:13px;color:var(--muted)}
+.gbox{background:var(--bg);border-radius:12px;padding:10px 12px;display:flex;gap:12px;align-items:flex-start}
+.gbox .hz{font-family:var(--f-han);font-size:28px;font-weight:700}
+.gbox .tx{font-size:14px;line-height:1.5;min-width:0}
+.build{min-height:56px;border:2px dashed var(--line);border-radius:12px;padding:6px;display:flex;flex-wrap:wrap;gap:4px;width:100%;box-sizing:border-box;justify-content:center}
+.pool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
+.pool .tok[disabled]{opacity:.25}
+.back{border:0;background:none;color:var(--jade);font:700 14px var(--f-body);cursor:pointer;padding:4px 0;align-self:flex-start}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <h1><span class="seal">字</span>Caderno de Hanzi</h1>
+    <button class="gear" id="openSettings">Voz e ajustes</button>
+  </header>
+
+  <!-- TRILHA -->
+  <section id="v-trilha">
+    <div style="display:flex;flex-direction:column;gap:16px" id="trilhaHome">
+      <div class="panel">
+        <h2>Sua trilha de chinês</h2>
+        <div class="progress"><i id="trBar" style="width:0"></i></div>
+        <p class="muted" id="trText"></p>
+      </div>
+      <div id="trLevels" style="display:flex;flex-direction:column;gap:18px"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px" id="lessonView" hidden></div>
+  </section>
+
+  <!-- HOJE -->
+  <section id="v-hoje" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div id="todayStart" class="panel">
+        <h2 id="todayTitle">Revisão de hoje</h2>
+        <p class="muted" id="todayText"></p>
+        <div class="row"><button class="btn primary" id="startReview">Começar revisão</button></div>
+      </div>
+      <div id="reviewBox" class="panel" hidden>
+        <div class="progress"><i id="rvBar" style="width:0"></i></div>
+        <div class="qcard" id="rvCard"></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="stStreak">0</b><span>dias seguidos</span></div>
+        <div class="stat"><b id="stToday">0</b><span>min hoje</span></div>
+        <div class="stat"><b id="stLearned">0</b><span>itens em estudo</span></div>
+      </div>
+      <div class="panel">
+        <h3>Minutos por dia</h3>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="panel">
+        <h3>Últimos treinos</h3>
+        <div class="recent" id="recent"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRASES -->
+  <section id="v-frases" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="chips" id="sCats"></div>
+      <div class="row" style="align-items:center">
+        <button class="chip" id="listenMode" aria-pressed="false">Modo escuta (esconder texto)</button>
+      </div>
+      <p class="small">Toque ▶ para ouvir a frase inteira. Toque numa palavra sublinhada para ouvir a gravação de um falante nativo.</p>
+      <div class="panel" id="sList"></div>
+    </div>
+  </section>
+
+  <!-- TONS -->
+  <section id="v-tons" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="panel">
+        <h2>Os 4 tons</h2>
+        <div class="tones" id="toneRef"></div>
+        <p class="small">Toque em cada tom para ouvir “ma” com uma voz real.</p>
+      </div>
+      <div class="chips" id="tMode">
+        <button class="chip" data-m="one" aria-pressed="true">Sílaba</button>
+        <button class="chip" data-m="pair" aria-pressed="false">Palavra de 2 sílabas</button>
+      </div>
+      <div class="panel qcard" id="tCard"></div>
+      <div class="panel">
+        <h3>Seus acertos por tom</h3>
+        <div class="tacc" id="tAcc"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALAVRAS -->
+  <section id="v-palavras" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="chips" id="wCats"></div>
+      <div class="panel list" id="wList"></div>
+      <div class="panel">
+        <h2>Adicionar palavra</h2>
+        <form id="addForm">
+          <label>Caractere(s)<input id="fHan" required placeholder="例如 学生" autocomplete="off"></label>
+          <label>Pinyin<input id="fPin" required placeholder="xuésheng" autocomplete="off"></label>
+          <label>Significado<input id="fMean" required placeholder="estudante" autocomplete="off"></label>
+          <button class="btn primary" type="submit">Adicionar</button>
+          <div class="small" id="fMsg"></div>
+        </form>
+      </div>
+      <p class="small">Áudios humanos: projeto <a href="https://github.com/hugolpz/audio-cmn" target="_blank" rel="noopener">audio-cmn</a> (vozes de Chen Wang e Yue Tan, licença CC BY-SA).</p>
+    </div>
+  </section>
+
+  <!-- FALAR -->
+  <section id="v-falar" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="chips" id="fkMode">
+        <button class="chip" data-m="syl" aria-pressed="false">Sílabas</button>
+        <button class="chip" data-m="word" aria-pressed="true">Palavras</button>
+        <button class="chip" data-m="sent" aria-pressed="false">Frases</button>
+      </div>
+      <div class="panel qcard" id="fkTarget"></div>
+      <div class="panel" style="gap:10px">
+        <div class="micwrap">
+          <button id="recBtn" class="mic" aria-label="Gravar minha voz"><svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
+          <div class="level"><i id="recLevel"></i></div>
+          <div class="rectime" id="recTime">Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp</div>
+        </div>
+        <div class="small" id="recMsg" style="text-align:center">Ouça o nativo primeiro, depois grave repetindo do mesmo jeito.</div>
+        <div id="recFallback" class="note" hidden style="font-size:13px;line-height:1.5;background:var(--bg);border-radius:10px;padding:10px">
+          <b>O microfone não foi liberado nesta tela.</b> <span id="recWhy"></span>
+          <label class="btn" style="margin-top:8px;display:flex;justify-content:center;align-items:center;color:var(--ink);font-size:14px;cursor:pointer">📁 Enviar uma gravação<input type="file" id="recFile" accept="audio/*" capture hidden></label>
+        </div>
+      </div>
+      <div class="panel" id="fkResult" hidden></div>
+      <div class="panel">
+        <h3>Como funciona</h3>
+        <p class="muted">O app mede a melodia da sua voz (a altura, que é o que forma os tons) e compara com a gravação do falante nativo, sílaba por sílaba. Ele mostra onde o seu tom ficou diferente e o ritmo da fala. Ainda não avalia consoantes e vogais, então use o ouvido para comparar esses sons: toque nas duas gravações e repita.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-v="trilha" aria-selected="true"><span class="ic">路</span>Trilha</button>
+  <button role="tab" data-v="hoje" aria-selected="false"><span class="ic">今</span>Hoje</button>
+  <button role="tab" data-v="frases" aria-selected="false"><span class="ic">句</span>Frases</button>
+  <button role="tab" data-v="tons" aria-selected="false"><span class="ic">声</span>Tons</button>
+  <button role="tab" data-v="falar" aria-selected="false"><span class="ic">说</span>Falar</button>
+  <button role="tab" data-v="palavras" aria-selected="false"><span class="ic">词</span>Palavras</button>
+</nav>
+
+<dialog id="settings">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <h2>Voz das frases</h2>
+    <p class="muted">As frases tocam com gravações de falantes nativos. A voz do celular só é usada quando falta alguma gravação. Escolha a que soar mais natural. No Android, as vozes do Google costumam ser as melhores; no iPhone, procure por Tingting ou Meijia (dá pra baixar a versão “Aprimorada” nos Ajustes de Acessibilidade).</p>
+    <label>Voz<select id="voiceSel"></select></label>
+    <label>Velocidade: <span id="rateLbl"></span><input type="range" id="rate" min="0.5" max="1.1" step="0.05"></label>
+    <button class="btn" id="testVoice">Testar: 你好，很高兴认识你。</button>
+    <label>Novos itens por dia<select id="newPerDay"><option>5</option><option>8</option><option>12</option><option>20</option></select></label>
+    <p class="small">Seu progresso fica salvo neste aparelho e neste navegador.</p>
+    <button class="btn primary" id="closeSettings">Fechar</button>
+  </div>
+</dialog>
+
+<script>
+const C = {"vocab":[["你好","nǐ hǎo","olá","Básico",false],["你好吗","nǐ hǎo ma","tudo bem?","Básico",false],["谢谢","xièxie","obrigado","Básico",true],["不客气","bú kèqi","de nada","Básico",false],["再见","zàijiàn","tchau","Básico",true],["对不起","duìbuqǐ","desculpa","Básico",true],["没关系","méi guānxi","não tem problema","Básico",true],["好的","hǎo de","ok / tá bom","Básico",false],["我","wǒ","eu","Básico",true],["你","nǐ","você","Básico",true],["他","tā","ele","Básico",true],["她","tā","ela","Básico",true],["我们","wǒmen","nós","Básico",true],["是","shì","ser / é","Básico",true],["不","bù","não","Básico",true],["有","yǒu","ter / há","Básico",true],["没有","méiyǒu","não ter","Básico",true],["什么","shénme","o quê","Básico",true],["谁","shéi","quem","Básico",true],["哪里","nǎlǐ","onde","Básico",true],["怎么","zěnme","como","Básico",true],["为什么","wèishénme","por quê","Básico",true],["可以","kěyǐ","poder (permissão)","Básico",true],["知道","zhīdào","saber","Básico",true],["明白","míngbai","entender","Básico",true],["喜欢","xǐhuan","gostar","Básico",true],["想","xiǎng","querer / pensar","Básico",true],["真","zhēn","realmente","Básico",true],["我的","wǒ de","meu / minha","Básico",false],["中国","Zhōngguó","China","Básico",false],["巴西","Bāxī","Brasil","Básico",false],["朋友","péngyou","amigo","Básico",true],["名字","míngzi","nome","Básico",true],["老师","lǎoshī","professor","Básico",true],["学习","xuéxí","estudar","Básico",true],["中文","Zhōngwén","chinês (língua)","Básico",true],["葡萄牙语","Pútáoyáyǔ","português (língua)","Básico",false],["公司","gōngsī","empresa","Trabalho",true],["工作","gōngzuò","trabalho / trabalhar","Trabalho",true],["同事","tóngshì","colega de trabalho","Trabalho",true],["经理","jīnglǐ","gerente","Trabalho",true],["开会","kāihuì","fazer reunião","Trabalho",true],["会议","huìyì","reunião","Trabalho",true],["办公室","bàngōngshì","escritório","Trabalho",true],["电脑","diànnǎo","computador","Trabalho",true],["问题","wèntí","problema / pergunta","Trabalho",true],["帮忙","bāngmáng","ajudar","Trabalho",true],["准备","zhǔnbèi","preparar","Trabalho",true],["完成","wánchéng","terminar / concluir","Trabalho",true],["开始","kāishǐ","começar","Trabalho",true],["工厂","gōngchǎng","fábrica","Trabalho",true],["空调","kōngtiáo","ar-condicionado","Trabalho",true],["质量","zhìliàng","qualidade","Trabalho",true],["客户","kèhù","cliente","Trabalho",false],["邮件","yóujiàn","e-mail","Trabalho",false],["电话","diànhuà","telefone","Trabalho",true],["忙","máng","ocupado","Trabalho",true],["加班","jiābān","fazer hora extra","Trabalho",true],["休息","xiūxi","descansar","Trabalho",true],["上班","shàngbān","ir trabalhar","Trabalho",true],["下班","xiàbān","sair do trabalho","Trabalho",true],["吃饭","chīfàn","comer / refeição","Comida",false],["好吃","hǎochī","gostoso","Comida",true],["喝","hē","beber","Comida",true],["水","shuǐ","água","Comida",true],["茶","chá","chá","Comida",true],["咖啡","kāfēi","café","Comida",true],["米饭","mǐfàn","arroz","Comida",true],["面条","miàntiáo","macarrão","Comida",false],["饿","è","com fome","Comida",true],["辣","là","apimentado","Comida",true],["今天","jīntiān","hoje","Tempo",true],["明天","míngtiān","amanhã","Tempo",true],["昨天","zuótiān","ontem","Tempo",true],["现在","xiànzài","agora","Tempo",true],["上午","shàngwǔ","manhã","Tempo",true],["下午","xiàwǔ","tarde","Tempo",true],["晚上","wǎnshang","noite","Tempo",true],["时间","shíjiān","tempo / horário","Tempo",true],["点","diǎn","hora (3点 = 3h)","Tempo",true],["分钟","fēnzhōng","minuto","Tempo",true],["星期","xīngqī","semana","Tempo",true],["零","líng","zero (0)","Números",true],["一","yī","um (1)","Números",true],["二","èr","dois (2)","Números",true],["两","liǎng","dois (contando coisas)","Números",true],["三","sān","três (3)","Números",true],["四","sì","quatro (4)","Números",true],["五","wǔ","cinco (5)","Números",true],["六","liù","seis (6)","Números",true],["七","qī","sete (7)","Números",true],["八","bā","oito (8)","Números",true],["九","jiǔ","nove (9)","Números",true],["十","shí","dez (10)","Números",true],["百","bǎi","cem (100)","Números",true],["千","qiān","mil (1000)","Números",true],["多少","duōshao","quanto(s)","Números",true]],"sentences":[["早上好！","Zǎoshang hǎo!","Bom dia!","Cumprimentos",[["早",1],["上",1],["好",1],["！",0]]],["你好，我是你的新同事。","Nǐ hǎo, wǒ shì nǐ de xīn tóngshì.","Olá, eu sou seu novo colega.","Cumprimentos",[["你",1],["好",1],["，",0],["我",1],["是",1],["你",1],["的",1],["新",1],["同事",1],["。",0]]],["我是巴西人。","Wǒ shì Bāxī rén.","Eu sou brasileiro.","Cumprimentos",[["我",1],["是",1],["巴",0],["西",1],["人",1],["。",0]]],["很高兴认识你。","Hěn gāoxìng rènshi nǐ.","Muito prazer em te conhecer.","Cumprimentos",[["很",1],["高兴",1],["认识",1],["你",1],["。",0]]],["你最近怎么样？","Nǐ zuìjìn zěnmeyàng?","Como você tem andado?","Cumprimentos",[["你",1],["最近",1],["怎么样",1],["？",0]]],["还不错，你呢？","Hái búcuò, nǐ ne?","Tudo certo, e você?","Cumprimentos",[["还",1],["不错",1],["，",0],["你",1],["呢",1],["？",0]]],["你叫什么名字？","Nǐ jiào shénme míngzi?","Qual é o seu nome?","Cumprimentos",[["你",1],["叫",1],["什么",1],["名字",1],["？",0]]],["辛苦了！","Xīnkǔ le!","Bom trabalho! / Obrigado pelo esforço!","Cumprimentos",[["辛苦",1],["了",1],["！",0]]],["明天见！","Míngtiān jiàn!","Até amanhã!","Cumprimentos",[["明天",1],["见",1],["！",0]]],["周末愉快！","Zhōumò yúkuài!","Bom fim de semana!","Cumprimentos",[["周末",1],["愉快",1],["！",0]]],["我在美的工作。","Wǒ zài Měidì gōngzuò.","Eu trabalho na Midea.","Escritório",[["我",1],["在",1],["美",1],["的",1],["工作",1],["。",0]]],["我是新来的同事。","Wǒ shì xīn lái de tóngshì.","Eu sou o colega novo.","Escritório",[["我",1],["是",1],["新",1],["来",1],["的",1],["同事",1],["。",0]]],["你在哪个部门？","Nǐ zài nǎge bùmén?","Em qual departamento você está?","Escritório",[["你",1],["在",1],["哪个",1],["部门",1],["？",0]]],["我现在有点忙。","Wǒ xiànzài yǒudiǎn máng.","Agora estou um pouco ocupado.","Escritório",[["我",1],["现在",1],["有",1],["点",1],["忙",1],["。",0]]],["请稍等一下。","Qǐng shāo děng yíxià.","Espere um momento, por favor.","Escritório",[["请",1],["稍",1],["等",1],["一下",1],["。",0]]],["我马上来。","Wǒ mǎshàng lái.","Já estou indo.","Escritório",[["我",1],["马上",1],["来",1],["。",0]]],["这个文件发给我，好吗？","Zhège wénjiàn fā gěi wǒ, hǎo ma?","Pode me mandar esse arquivo?","Escritório",[["这个",1],["文件",1],["发",1],["给",1],["我",1],["，",0],["好",1],["吗",1],["？",0]]],["我已经发邮件了。","Wǒ yǐjīng fā yóujiàn le.","Eu já mandei o e-mail.","Escritório",[["我",1],["已经",1],["发",1],["邮",0],["件",1],["了",1],["。",0]]],["今天要加班吗？","Jīntiān yào jiābān ma?","Hoje vai ter hora extra?","Escritório",[["今天",1],["要",1],["加班",1],["吗",1],["？",0]]],["我先下班了。","Wǒ xiān xiàbān le.","Vou indo embora (saindo do trabalho).","Escritório",[["我",1],["先",1],["下班",1],["了",1],["。",0]]],["会议几点开始？","Huìyì jǐ diǎn kāishǐ?","A que horas começa a reunião?","Reunião",[["会议",1],["几",1],["点",1],["开始",1],["？",0]]],["下午三点开会。","Xiàwǔ sān diǎn kāihuì.","A reunião é às três da tarde.","Reunião",[["下午",1],["三",1],["点",1],["开会",1],["。",0]]],["我同意你的意见。","Wǒ tóngyì nǐ de yìjiàn.","Concordo com a sua opinião.","Reunião",[["我",1],["同意",1],["你",1],["的",1],["意见",1],["。",0]]],["我有一个问题。","Wǒ yǒu yí ge wèntí.","Eu tenho uma pergunta.","Reunião",[["我",1],["有",1],["一",1],["个",1],["问题",1],["。",0]]],["这个问题怎么解决？","Zhège wèntí zěnme jiějué?","Como resolvemos esse problema?","Reunião",[["这个",1],["问题",1],["怎么",1],["解决",1],["？",0]]],["我们什么时候完成？","Wǒmen shénme shíhou wánchéng?","Quando vamos terminar?","Reunião",[["我们",1],["什么",1],["时候",1],["完成",1],["？",0]]],["没问题，我来负责。","Méi wèntí, wǒ lái fùzé.","Sem problema, eu fico responsável.","Reunião",[["没",1],["问题",1],["，",0],["我",1],["来",1],["负责",1],["。",0]]],["我们下次再讨论吧。","Wǒmen xià cì zài tǎolùn ba.","Vamos discutir isso da próxima vez.","Reunião",[["我们",1],["下",1],["次",1],["再",1],["讨论",1],["吧",1],["。",0]]],["不好意思，我听不懂。","Bù hǎoyìsi, wǒ tīng bu dǒng.","Desculpa, não entendi (o que ouvi).","Pedir ajuda",[["不好意思",1],["，",0],["我",1],["听",1],["不",1],["懂",1],["。",0]]],["请你说慢一点。","Qǐng nǐ shuō màn yìdiǎn.","Fale mais devagar, por favor.","Pedir ajuda",[["请",1],["你",1],["说",1],["慢",1],["一",1],["点",1],["。",0]]],["请再说一遍。","Qǐng zài shuō yí biàn.","Repita, por favor.","Pedir ajuda",[["请",1],["再说",1],["一",1],["遍",1],["。",0]]],["这个用中文怎么说？","Zhège yòng Zhōngwén zěnme shuō?","Como se diz isso em chinês?","Pedir ajuda",[["这个",1],["用",1],["中文",1],["怎么",1],["说",1],["？",0]]],["这是什么意思？","Zhè shì shénme yìsi?","O que isso significa?","Pedir ajuda",[["这",1],["是",1],["什么",1],["意思",1],["？",0]]],["你可以帮我一下吗？","Nǐ kěyǐ bāng wǒ yíxià ma?","Você pode me ajudar um pouco?","Pedir ajuda",[["你",1],["可以",1],["帮",1],["我",1],["一下",1],["吗",1],["？",0]]],["我明白了，谢谢！","Wǒ míngbai le, xièxie!","Entendi, obrigado!","Pedir ajuda",[["我",1],["明白",1],["了",1],["，",0],["谢谢",1],["！",0]]],["我在学中文。","Wǒ zài xué Zhōngwén.","Estou aprendendo chinês.","Pedir ajuda",[["我",1],["在",1],["学",1],["中文",1],["。",0]]],["一起去吃饭吧！","Yìqǐ qù chīfàn ba!","Vamos comer juntos!","Refeitório",[["一起",1],["去",1],["吃",1],["饭",1],["吧",1],["！",0]]],["你吃饭了吗？","Nǐ chīfàn le ma?","Já comeu? (cumprimento comum)","Refeitório",[["你",1],["吃",1],["饭",1],["了",1],["吗",1],["？",0]]],["我饿了。","Wǒ è le.","Estou com fome.","Refeitório",[["我",1],["饿",1],["了",1],["。",0]]],["这个菜很好吃。","Zhège cài hěn hǎochī.","Esse prato é muito gostoso.","Refeitório",[["这个",1],["菜",1],["很",1],["好吃",1],["。",0]]],["我不能吃辣的。","Wǒ bù néng chī là de.","Não consigo comer comida apimentada.","Refeitório",[["我",1],["不",1],["能",1],["吃",1],["辣",1],["的",1],["。",0]]],["你要喝茶还是咖啡？","Nǐ yào hē chá háishi kāfēi?","Você quer chá ou café?","Refeitório",[["你",1],["要",1],["喝",1],["茶",1],["还是",1],["咖啡",1],["？",0]]],["我请你喝咖啡。","Wǒ qǐng nǐ hē kāfēi.","Eu te pago um café.","Refeitório",[["我",1],["请",1],["你",1],["喝",1],["咖啡",1],["。",0]]],["你来巴西多久了？","Nǐ lái Bāxī duōjiǔ le?","Há quanto tempo você está no Brasil?","Conversa",[["你",1],["来",1],["巴",0],["西",1],["多",1],["久",1],["了",1],["？",0]]],["你喜欢巴西吗？","Nǐ xǐhuan Bāxī ma?","Você gosta do Brasil?","Conversa",[["你",1],["喜欢",1],["巴",0],["西",1],["吗",1],["？",0]]],["你是中国哪里人？","Nǐ shì Zhōngguó nǎlǐ rén?","De onde da China você é?","Conversa",[["你",1],["是",1],["中",1],["国",1],["哪里",1],["人",1],["？",0]]],["今天天气真热。","Jīntiān tiānqì zhēn rè.","Hoje está muito quente.","Conversa",[["今天",1],["天气",1],["真",1],["热",1],["。",0]]],["你周末做什么？","Nǐ zhōumò zuò shénme?","O que você faz no fim de semana?","Conversa",[["你",1],["周末",1],["做",1],["什么",1],["？",0]]],["你的葡萄牙语说得很好。","Nǐ de Pútáoyáyǔ shuō de hěn hǎo.","Você fala português muito bem.","Conversa",[["你",1],["的",1],["葡萄",1],["牙",1],["语",0],["说",1],["得很",1],["好",1],["。",0]]],["哪里哪里，还差得远。","Nǎlǐ nǎlǐ, hái chà de yuǎn.","Que nada, ainda falta muito. (resposta modesta a elogio)","Conversa",[["哪里",1],["哪里",1],["，",0],["还",1],["差",1],["得",1],["远",1],["。",0]]]],"bases":["ma","ba","bi","bu","da","di","du","fa","fu","ge","gu","guo","hu","ji","jia","jian","jie","jing","li","mi","mo","pi","qi","qing","shi","shu","tang","tong","wa","wan","wei","wen","wu","xi","xian","yan","yang","yi","you","yu","zhi","zhu","hao","fang","chi","che","shou","tian","bao"],"syll":["a","ai","an","ang","ao","ba","bai","ban","bang","bao","bei","ben","beng","bi","bian","biao","bie","bin","bing","bo","bu","ca","cai","can","cang","cao","ce","cei","cen","ceng","cha","chai","chan","chang","chao","che","chen","cheng","chi","chong","chou","chu","chua","chuai","chuan","chuang","chui","chun","chuo","ci","cong","cou","cu","cuan","cui","cun","cuo","da","dai","dan","dang","dao","de","dei","den","deng","di","dia","dian","diao","die","ding","diu","dong","dou","du","duan","dui","dun","duo","e","ei","en","eng","er","fa","fan","fang","fe","fei","fen","feng","fiao","fo","fou","fu","ga","gai","gan","gang","gao","ge","gei","gen","geng","gong","gou","gu","gua","guai","guan","guang","gui","gun","guo","ha","hai","han","hang","hao","he","hei","hen","heng","hong","hou","hu","hua","huai","huan","huang","hui","hun","huo","ji","jia","jian","jiang","jiao","jie","jin","jing","jiong","jiu","ju","juan","jue","jun","jv","ka","kai","kan","kang","kao","ke","kei","ken","keng","kong","kou","ku","kua","kuai","kuan","kuang","kui","kun","kuo","la","lai","lan","lang","lao","le","lei","leng","li","lia","lian","liang","liao","lie","lin","ling","liu","lo","long","lou","lu","luan","lun","luo","lv","lve","ma","mai","man","mang","mao","me","mei","men","meng","mi","mian","miao","mie","min","ming","miu","mo","mou","mu","na","nai","nan","nang","nao","ne","nei","nen","neng","ni","nian","niang","niao","nie","nin","ning","niu","nong","nou","nu","nuan","nun","nuo","nv","nve","o","ou","pa","pai","pan","pang","pao","pei","pen","peng","pi","pian","piao","pie","pin","ping","po","pou","pu","qi","qia","qian","qiang","qiao","qie","qin","qing","qiong","qiu","qu","quan","que","qun","ran","rang","rao","re","ren","reng","ri","rong","rou","ru","rua","ruan","rui","run","ruo","sa","sai","san","sang","sao","se","sen","seng","sha","shai","shan","shang","shao","she","shei","shen","sheng","shi","shou","shu","shua","shuai","shuan","shuang","shui","shun","shuo","si","song","sou","su","suan","sui","sun","suo","ta","tai","tan","tang","tao","te","tei","teng","ti","tian","tiao","tie","ting","tong","tou","tu","tuan","tui","tun","tuo","wa","wai","wan","wang","wei","wen","weng","wo","wu","xi","xia","xian","xiang","xiao","xie","xin","xing","xiong","xiu","xu","xuan","xue","xun","ya","yai","yan","yang","yao","ye","yi","yin","ying","yong","you","yu","yuan","yue","yun","za","zai","zan","zang","zao","ze","zei","zen","zeng","zha","zhai","zhan","zhang","zhao","zhe","zhei","zhen","zheng","zhi","zhong","zhou","zhu","zhua","zhuai","zhuan","zhuang","zhui","zhun","zhuo","zi","zong","zou","zu","zuan","zui","zun","zuo"],"gloss":{"我":["wǒ","eu / me",""],"你":["nǐ","você",""],"您":["nín","o senhor / a senhora","Forma respeitosa de 你. Use com chefes, clientes e pessoas mais velhas."],"他":["tā","ele",""],"她":["tā","ela","Mesmo som de 他; só muda a escrita (o radical 女 = mulher)."],"我们":["wǒmen","nós","们 (men) forma o plural de pessoas: 我们 nós, 你们 vocês, 他们 eles."],"这":["zhè","este / isto",""],"这个":["zhège","este / isto","这 (este) + 个 (classificador). Muito usado para apontar algo."],"吗":["ma","(partícula de pergunta)","Colocada no fim de uma frase afirmativa, transforma em pergunta de sim/não. 你好 = olá → 你好吗？ = tudo bem?"],"呢":["ne","e…? (devolve a pergunta)","Depois de uma pessoa ou coisa, devolve a pergunta: 你呢？ = e você?"],"的":["de","(partícula de posse: de / -dele)","Liga o dono à coisa: 我的名字 = meu nome (lit. eu-de nome). 他的朋友 = amigo dele. Funciona como o “de” do português, mas na ordem inversa: dono primeiro."],"了":["le","(partícula de ação concluída / mudança)","No fim da frase indica que algo aconteceu ou mudou: 我饿了 = fiquei com fome; 我明白了 = entendi (agora)."],"吧":["ba","(partícula de sugestão)","Suaviza e transforma em convite ou sugestão: 走吧 = vamos; 一起去吃饭吧 = vamos comer juntos."],"得":["de","(partícula de grau / como se faz algo)","Vem depois do verbo para dizer COMO a ação é feita: 说得很好 = fala muito bem. Mesmo som de 的, função diferente."],"很":["hěn","muito","Também serve de ligação entre a pessoa e um adjetivo: 我很好 = estou bem. Aqui o 很 é quase obrigatório e nem sempre significa “muito”."],"也":["yě","também","Sempre vem antes do verbo/adjetivo: 我也很好 = eu também estou bem."],"不":["bù","não","Nega verbos e adjetivos. Antes de um 4º tom vira bú: 不是 búshì, 不客气 bú kèqi."],"没":["méi","não (ter) / não (no passado)","Nega 有 (ter): 没有 = não ter. Também nega ações passadas: 我没吃 = não comi."],"还":["hái","ainda / até que","Em 还不错 suaviza: “até que está bom”."],"太":["tài","demais","Usado em 太…了: 太辣了 = apimentado demais!"],"都":["dōu","todos / ambos",""],"和":["hé","e / com","Liga nomes: 我和朋友 = eu e (meu) amigo."],"但是":["dànshì","mas",""],"还是":["háishi","ou (em perguntas)","Para escolher entre duas opções numa pergunta: 茶还是咖啡？ = chá ou café?"],"一下":["yíxià","um pouquinho / rapidinho","Depois do verbo deixa o pedido mais leve e educado: 帮我一下 = me ajuda rapidinho."],"好":["hǎo","bom / bem; (depois do verbo) concluído","Depois de um verbo indica que algo ficou pronto: 开好了 = já foi emitido; 准备好了 = está pronto."],"早上":["zǎoshang","manhã (cedo)",""],"下午":["xiàwǔ","tarde","下 = embaixo/depois, 午 = meio-dia → depois do meio-dia."],"上午":["shàngwǔ","manhã","上 = em cima/antes, 午 = meio-dia → antes do meio-dia."],"晚上":["wǎnshang","noite",""],"晚安":["wǎn'ān","boa noite (ao dormir)","Para despedida à noite. Para cumprimentar à noite use 晚上好."],"再见":["zàijiàn","tchau","再 = de novo, 见 = ver → “até nos vermos de novo”."],"见":["jiàn","ver / encontrar","明天见 = até amanhã (lit. amanhã nos vemos)."],"明天":["míngtiān","amanhã",""],"今天":["jīntiān","hoje",""],"谢谢":["xièxie","obrigado","O segundo 谢 é tom neutro (curto e leve)."],"不错":["búcuò","nada mal / bom","不 (não) + 错 (errado) = não está errado → bom."],"累":["lèi","cansado",""],"忙":["máng","ocupado",""],"叫":["jiào","chamar-se",""],"什么":["shénme","o quê / qual","Fica no lugar da resposta: 你叫什么？ (lit. você se chama o quê?). Em chinês a palavra de pergunta não vai para o começo."],"名字":["míngzi","nome",""],"是":["shì","ser / é","Liga duas coisas (nomes): 我是巴西人. Não use 是 com adjetivos: “estou bem” é 我很好, não 我是好."],"保罗":["Bǎoluó","Paulo (nome)","Nomes estrangeiros são adaptados pelo som. Peça a um colega chinês para sugerir o seu!"],"贵姓":["guìxìng","seu sobrenome (forma educada)","贵 = precioso, 姓 = sobrenome. 您贵姓？ é a forma educada de perguntar o nome de alguém."],"姓":["xìng","ter o sobrenome","Os chineses dizem o sobrenome primeiro: 王明 = Wang (sobrenome) Ming (nome)."],"王":["Wáng","Wang (sobrenome)","Um dos sobrenomes mais comuns da China."],"请问":["qǐngwèn","com licença, posso perguntar…","请 = por favor, 问 = perguntar. Bom jeito de começar uma pergunta educada."],"高兴":["gāoxìng","feliz / contente",""],"认识":["rènshi","conhecer (alguém)","很高兴认识你 = muito prazer em te conhecer."],"哪":["nǎ","qual","哪 (3º tom) pergunta “qual”. Não confunda com 那 nà (aquele)."],"国":["guó","país",""],"人":["rén","pessoa","País + 人 = nacionalidade: 巴西人 brasileiro, 中国人 chinês."],"巴西":["Bāxī","Brasil",""],"中国":["Zhōngguó","China","中 = meio/centro, 国 = país → “país do meio”."],"哪里":["nǎlǐ","onde","Também se fala 哪儿 nǎr no norte da China."],"朋友":["péngyou","amigo","友 é tom neutro: péngyou."],"一":["yī","um (1)","Muda de tom na fala: yí antes de 4º tom (一个 yí ge), yì antes dos outros (一起 yìqǐ)."],"二":["èr","dois (2)","Para contar coisas use 两 liǎng."],"三":["sān","três (3)",""],"四":["sì","quatro (4)",""],"五":["wǔ","cinco (5)",""],"六":["liù","seis (6)",""],"七":["qī","sete (7)",""],"八":["bā","oito (8)",""],"九":["jiǔ","nove (9)",""],"十":["shí","dez (10)","Números maiores são montados: 十二 = 10+2 = 12, 二十 = 2×10 = 20, 二十八 = 28."],"二十八":["èrshíbā","vinte e oito (28)","二 (2) × 十 (10) + 八 (8)."],"二十":["èrshí","vinte (20)",""],"三十":["sānshí","trinta (30)",""],"一百":["yìbǎi","cem (100)",""],"两":["liǎng","dois (para contar coisas)","两个人 = duas pessoas. Use 二 para contar em sequência e em números; 两 antes de classificador."],"个":["ge","(classificador geral)","Entre o número e a coisa: 一个人 = uma pessoa, 两个问题 = dois problemas. Em chinês quase sempre vai um classificador ali."],"岁":["suì","anos (de idade)",""],"几":["jǐ","quantos (poucos)","Para quantidades pequenas ou previsíveis: 几点 = que horas, 几个 = quantos."],"多大":["duōdà","que idade","多 = quão, 大 = grande → “quão grande”. Para adultos. Para crianças pergunta-se 几岁."],"今年":["jīnnián","este ano",""],"多少":["duōshao","quanto / quantos","Para qualquer quantidade, inclusive preços e números de telefone."],"钱":["qián","dinheiro",""],"块":["kuài","real / yuan (falado)","Jeito informal de dizer a unidade de dinheiro."],"电话":["diànhuà","telefone",""],"做":["zuò","fazer",""],"工作":["gōngzuò","trabalho / trabalhar",""],"在":["zài","em / estar em; estar (fazendo)","Antes de lugar = “em”: 在美的工作 = trabalho na Midea. Antes de verbo = ação em andamento: 我在学中文 = estou aprendendo chinês."],"公司":["gōngsī","empresa",""],"美的":["Měidì","Midea","O nome da empresa em chinês: 美 = bonito, 的 aqui faz parte do nome e se lê dì."],"工程师":["gōngchéngshī","engenheiro",""],"同事":["tóngshì","colega de trabalho","同 = mesmo, 事 = assunto/trabalho."],"部门":["bùmén","departamento",""],"哪个":["nǎge","qual (deles)",""],"说":["shuō","falar / dizer",""],"会":["huì","saber (fazer) / vai (acontecer)","Habilidade aprendida: 我会说中文 = sei falar chinês. Também indica futuro provável: 他会来 = ele vai vir."],"中文":["Zhōngwén","língua chinesa",""],"英语":["Yīngyǔ","inglês",""],"葡萄牙语":["Pútáoyáyǔ","português","葡萄牙 = Portugal, 语 = língua."],"一点儿":["yìdiǎnr","um pouco","O 儿 no final é o “r” do sotaque de Pequim. No sul fala-se 一点 yìdiǎn."],"一点":["yìdiǎn","um pouco (mais)","Depois de adjetivo = “um pouco mais”: 慢一点 = um pouco mais devagar."],"学":["xué","aprender / estudar",""],"听":["tīng","ouvir",""],"懂":["dǒng","entender","听不懂 = ouvir e não entender. 看不懂 = ler e não entender."],"请":["qǐng","por favor / convidar","No começo de um pedido: 请说慢一点 = fale mais devagar, por favor."],"慢":["màn","devagar",""],"可以":["kěyǐ","poder (ter permissão)",""],"帮":["bāng","ajudar",""],"意思":["yìsi","significado",""],"怎么":["zěnme","como","怎么说 = como se diz."],"用":["yòng","usar / em (língua)","用中文说 = dizer em chinês (lit. usando chinês)."],"再":["zài","de novo / mais uma vez",""],"遍":["biàn","vez (do começo ao fim)","再说一遍 = diga mais uma vez (inteiro)."],"不好意思":["bù hǎoyìsi","com licença / desculpa (leve)","Para pequenos incômodos: pedir licença, interromper, pedir para repetir. Mais leve que 对不起."],"明白":["míngbai","entender (ficar claro)",""],"会议":["huìyì","reunião",""],"开会":["kāihuì","fazer reunião","开 = abrir, 会 = reunião."],"点":["diǎn","hora (no relógio)","三点 = três horas. 几点？ = que horas?"],"开始":["kāishǐ","começar",""],"现在":["xiànzài","agora",""],"半":["bàn","meia (metade)","两点半 = duas e meia."],"稍":["shāo","um pouco / levemente",""],"等":["děng","esperar",""],"分钟":["fēnzhōng","minuto(s)",""],"发":["fā","enviar",""],"邮件":["yóujiàn","e-mail",""],"已经":["yǐjīng","já","Costuma vir junto com 了 no final: 我已经发了 = já mandei."],"文件":["wénjiàn","arquivo / documento",""],"给":["gěi","dar / para (alguém)","发给我 = mandar para mim."],"有":["yǒu","ter / haver",""],"问题":["wèntí","problema / pergunta",""],"没问题":["méi wèntí","sem problema","Resposta muito comum no trabalho."],"马上":["mǎshàng","já / imediatamente","马 = cavalo, 上 = montar → “a cavalo” = rapidinho."],"来":["lái","vir; (antes de verbo) deixa que eu…","Sozinho = vir: 我马上来. Antes de outro verbo indica que você assume a tarefa: 我来处理 = deixa que eu resolvo."],"吃":["chī","comer",""],"饭":["fàn","comida / refeição (arroz)","吃饭 = comer (uma refeição)."],"饿":["è","com fome",""],"一起":["yìqǐ","juntos",""],"去":["qù","ir",""],"好吃":["hǎochī","gostoso","好 (bom) + 吃 (comer) = bom de comer."],"菜":["cài","prato / comida (e verdura)",""],"喝":["hē","beber",""],"茶":["chá","chá",""],"咖啡":["kāfēi","café",""],"要":["yào","querer / precisar","我要咖啡 = quero café. Mais direto que 想."],"喜欢":["xǐhuan","gostar",""],"觉得":["juéde","achar (opinião)",""],"辣":["là","apimentado",""],"热":["rè","quente",""],"天气":["tiānqì","tempo (clima)",""],"真":["zhēn","realmente / muito","Antes de adjetivo é mais expressivo que 很: 真热！ = que calor!"],"辛苦":["xīnkǔ","trabalhoso / esforçado","辛苦了 = obrigado pelo esforço / bom trabalho. Muito usado no fim do expediente."],"哪里哪里":["nǎlǐ nǎlǐ","que nada (resposta modesta)","Resposta educada quando alguém te elogia. Responder só “obrigado” também é aceito hoje."],"客气":["kèqi","cerimônia / formalidade","不客气 = de nada (lit. não faça cerimônia)."],"别":["bié","não (faça)","Para pedir que alguém não faça algo: 别客气 = fique à vontade."],"对不起":["duìbuqǐ","desculpa (de verdade)","Pedido de desculpas mais sério. Para coisas leves use 不好意思."],"没关系":["méi guānxi","não tem problema","没 = não ter, 关系 = relação/importância."],"周末":["zhōumò","fim de semana",""],"打算":["dǎsuàn","planejar / pretender",""],"想":["xiǎng","querer / pensar","Mais suave que 要: 我想休息 = eu gostaria de descansar."],"家":["jiā","casa / família","在家 = em casa."],"休息":["xiūxi","descansar",""],"时候":["shíhou","momento / quando","什么时候 = quando (lit. que momento)."],"时间":["shíjiān","tempo (disponível)","有时间 = ter tempo."],"愉快":["yúkuài","agradável / alegre","周末愉快！ = bom fim de semana!"],"张伟":["Zhāng Wěi","Zhang Wei (nome masculino)","O nome completo mais comum da China: quase 300 mil pessoas. 张 = sobrenome, 伟 = grandioso."],"李娜":["Lǐ Nà","Li Na (nome feminino)","Um dos nomes completos mais comuns. 李 = sobrenome (ameixeira), 娜 = graciosa."],"王芳":["Wáng Fāng","Wang Fang (nome feminino)","芳 = perfumada, flor. Nome feminino muito comum."],"陈静":["Chén Jìng","Chen Jing (nome feminino)","静 = calma, tranquila."],"小王":["Xiǎo Wáng","“Wangzinho” (colega mais novo)","小 + sobrenome: jeito informal e carinhoso para colegas mais novos ou da mesma idade. Para alguém mais velho e próximo: 老 + sobrenome (老王)."],"刘":["Liú","Liu (sobrenome)","4º sobrenome mais comum. Era o sobrenome dos imperadores da dinastia Han."],"总":["zǒng","diretor / chefe (título)","Sobrenome + 总 é como se chama diretores e chefes: 刘总. Muito usado em empresas chinesas."],"张工":["Zhāng gōng","engenheiro Zhang","Sobrenome + 工 (de 工程师) é o jeito respeitoso de chamar engenheiros e técnicos, muito comum em fábricas."],"中文名字":["Zhōngwén míngzi","nome chinês","中文 (chinês) + 名字 (nome). Muitos colegas chineses vão gostar de te dar um!"],"能":["néng","poder / conseguir","能不能…？ (pode ou não pode) é um jeito educado e muito comum de pedir algo."],"看":["kàn","olhar / ver / ler","看一下 = dar uma olhada."],"麻烦":["máfan","incômodo / incomodar","麻烦你了 = desculpa o incômodo (e obrigado). Muito usado ao pedir ou agradecer um favor."],"帮个忙":["bāng ge máng","fazer um favor","帮忙 = ajudar; o 个 no meio deixa mais natural: 请你帮个忙 = te pedir um favor."],"方便":["fāngbiàn","conveniente / ter disponibilidade","你现在方便吗？ = você pode (falar/ajudar) agora?"],"借":["jiè","emprestar / pegar emprestado",""],"笔":["bǐ","caneta",""],"好的":["hǎo de","ok / tá bom","Resposta curta para aceitar um pedido. Aqui o 的 não indica posse."],"感谢":["gǎnxiè","agradecer","Um pouco mais forte que 谢谢: 太感谢了 = muitíssimo obrigado."],"晚":["wǎn","tarde / atrasado","来晚了 = cheguei atrasado."],"打扰":["dǎrǎo","incomodar / interromper","打扰一下 = com licença (antes de interromper alguém)."],"错":["cuò","erro / culpa / errado",""],"改":["gǎi","corrigir / mudar",""],"机器":["jīqì","máquina",""],"出":["chū","sair / surgir","出问题 = dar problema."],"担心":["dānxīn","preocupar-se","别担心 = não se preocupe."],"处理":["chǔlǐ","resolver / tratar (um assunto)",""],"下次":["xià cì","próxima vez",""],"注意":["zhùyì","prestar atenção / tomar cuidado",""],"怎么样":["zěnmeyàng","como está? / que tal?","Pergunta pela situação ou opinião: 工作怎么样？ = como está o trabalho?"],"进度":["jìndù","andamento / progresso",""],"顺利":["shùnlì","correr bem / sem problemas",""],"差不多":["chàbuduō","quase / mais ou menos","差 = faltar, 不多 = não muito → falta pouco."],"完":["wán","terminar","Depois do verbo = terminar de: 做完 = terminar de fazer."],"需要":["xūyào","precisar",""],"天":["tiān","dia","两天 = dois dias."],"产量":["chǎnliàng","volume de produção",""],"急":["jí","urgente",""],"之前":["zhīqián","antes de","Vem depois da referência: 明天之前 = antes de amanhã."],"完成":["wánchéng","concluir / terminar",""],"来得及":["láidejí","dar tempo","O contrário é 来不及 = não dar tempo."],"来不及":["láibují","não dar tempo",""],"推迟":["tuīchí","adiar",""],"加班":["jiābān","fazer hora extra",""],"着急":["zháojí","ficar ansioso / com pressa","别着急 = calma, sem pressa."],"慢慢":["mànmàn","devagar / com calma","慢慢来 = vá com calma (no seu tempo)."],"月":["yuè","mês","这个月 = este mês."],"预算":["yùsuàn","orçamento",""],"价格":["jiàgé","preço",""],"贵":["guì","caro",""],"便宜":["piányi","barato","便宜一点 = um pouco mais barato (pedido de desconto)."],"发票":["fāpiào","nota fiscal / fatura",""],"开":["kāi","abrir; emitir (nota)","开发票 = emitir nota fiscal."],"付":["fù","pagar",""],"报销":["bàoxiāo","pedir reembolso (de despesas)","Para despesas da empresa pagas por você, como táxi e refeição."],"成本":["chéngběn","custo",""],"高":["gāo","alto",""],"下":["xià","fazer (um pedido); próximo","下订单 = fazer um pedido. 下个星期 = semana que vem."],"订单":["dìngdān","pedido (de compra)",""],"你们":["nǐmen","vocês",""],"台":["tái","(classificador de máquinas e aparelhos)","五百台空调 = 500 ar-condicionados."],"五百":["wǔbǎi","quinhentos (500)",""],"空调":["kōngtiáo","ar-condicionado","O produto mais famoso da Midea!"],"交货":["jiāohuò","entregar a mercadoria",""],"星期":["xīngqī","semana","星期一 = segunda-feira, 星期二 = terça…"],"发货":["fāhuò","despachar / enviar a mercadoria",""],"货":["huò","mercadoria / carga",""],"到":["dào","chegar","到了 = chegou."],"确认":["quèrèn","confirmar",""],"喂":["wéi","alô (ao telefone)",""],"经理":["jīnglǐ","gerente","Sobrenome + 经理: 王经理 = gerente Wang."],"打":["dǎ","ligar (telefone); bater","打电话 = ligar. 打给你 = te ligar."],"加":["jiā","adicionar / somar",""],"微信":["Wēixìn","WeChat","O aplicativo de mensagens que todo chinês usa, inclusive para trabalho e pagamentos."],"消息":["xiāoxi","mensagem / notícia",""],"看到":["kàndào","ver (conseguir ver)","到 depois do verbo indica que a ação teve resultado."],"过":["guò","passar (o tempo)","周末过得怎么样？ = como foi seu fim de semana?"],"孩子":["háizi","filho(s) / criança",""],"女儿":["nǚ'ér","filha","儿子 érzi = filho."],"去过":["qùguo","já ter ido","过 (guo) depois do verbo = já ter feito alguma vez: 去过 = já foi."],"海边":["hǎibiān","praia / beira-mar",""],"下班":["xiàbān","sair do trabalho","上班 = ir trabalhar / estar no trabalho."],"以后":["yǐhòu","depois (de)","下班以后 = depois do expediente."],"一杯":["yì bēi","um copo / uma bebida","喝一杯 = tomar algo (uma bebida)."],"家人":["jiārén","família (os familiares)",""]},"lessons":[{"id":1,"lvl":"Nível 1 · Primeiros passos","t":"Olá e tchau","goal":"Cumprimentar em qualquer hora do dia e se despedir.","new":["你","好","早上","下午","晚上","再见","明天","见","晚安"],"ph":[[["你","好","！"],"Nǐ hǎo!","Olá!"],[["早上","好","！"],"Zǎoshang hǎo!","Bom dia!"],[["下午","好","！"],"Xiàwǔ hǎo!","Boa tarde!"],[["晚上","好","！"],"Wǎnshang hǎo!","Boa noite! (ao chegar)"],[["再见","！"],"Zàijiàn!","Tchau!"],[["明天","见","！"],"Míngtiān jiàn!","Até amanhã!"],[["晚安","！"],"Wǎn'ān!","Boa noite! (ao dormir)"]]},{"id":2,"lvl":"Nível 1 · Primeiros passos","t":"Como você está?","goal":"Perguntar e responder como a pessoa está, e devolver a pergunta.","new":["吗","我","很","呢","也","还","不错","谢谢","累","不","忙"],"ph":[[["你","好","吗","？"],"Nǐ hǎo ma?","Tudo bem? / Como vai?"],[["我","很","好","。"],"Wǒ hěn hǎo.","Estou bem."],[["你","呢","？"],"Nǐ ne?","E você?"],[["我","也","很","好","。"],"Wǒ yě hěn hǎo.","Eu também estou bem."],[["还","不错","，","谢谢","。"],"Hái búcuò, xièxie.","Até que bem, obrigado."],[["你","累","吗","？"],"Nǐ lèi ma?","Você está cansado?"],[["我","不","累","，","我","很","忙","。"],"Wǒ bú lèi, wǒ hěn máng.","Não estou cansado, estou ocupado."]]},{"id":3,"lvl":"Nível 1 · Primeiros passos","t":"Meu nome é…","goal":"Dizer seu nome e perguntar o nome dos outros.","new":["叫","什么","名字","保罗","的","是","请问","您","贵姓","姓","王","高兴","认识"],"ph":[[["你","叫","什么","名字","？"],"Nǐ jiào shénme míngzi?","Como você se chama?"],[["我","叫","保罗","。"],"Wǒ jiào Bǎoluó.","Eu me chamo Paulo."],[["我","的","名字","是","保罗","。"],"Wǒ de míngzi shì Bǎoluó.","Meu nome é Paulo."],[["请问","，","您","贵姓","？"],"Qǐngwèn, nín guìxìng?","Com licença, qual é o seu sobrenome? (educado)"],[["我","姓","王","。"],"Wǒ xìng Wáng.","Meu sobrenome é Wang."],[["很","高兴","认识","你","。"],"Hěn gāoxìng rènshi nǐ.","Muito prazer em te conhecer."]]},{"id":16,"lvl":"Nível 1 · Primeiros passos","t":"Nomes chineses","goal":"Conhecer os nomes mais comuns e chamar colegas do jeito certo.","new":["他","张伟","她","李娜","王芳","陈静","同事","小王","刘","总","张工","有","中文名字"],"ph":[[["他","叫","张伟","。"],"Tā jiào Zhāng Wěi.","Ele se chama Zhang Wei."],[["她","叫","李娜","。"],"Tā jiào Lǐ Nà.","Ela se chama Li Na."],[["我","姓","王","，","叫","王芳","。"],"Wǒ xìng Wáng, jiào Wáng Fāng.","Meu sobrenome é Wang, me chamo Wang Fang."],[["陈静","是","我","的","同事","。"],"Chén Jìng shì wǒ de tóngshì.","Chen Jing é minha colega de trabalho."],[["小王","，","你","好","！"],"Xiǎo Wáng, nǐ hǎo!","Oi, Xiao Wang!"],[["刘","总","好","！"],"Liú zǒng hǎo!","Olá, diretor Liu!"],[["张工","，","早上","好","！"],"Zhāng gōng, zǎoshang hǎo!","Bom dia, engenheiro Zhang!"],[["你","有","中文名字","吗","？"],"Nǐ yǒu Zhōngwén míngzi ma?","Você tem um nome chinês?"]],"extra":{"groups":[["Sobrenomes mais comuns (em ordem)",[["王","Wáng","rei"],["李","Lǐ","ameixeira"],["张","Zhāng","esticar (o arco)"],["刘","Liú","dinastia Han"],["陈","Chén","antigo reino Chen"],["杨","Yáng","álamo"],["黄","Huáng","amarelo"],["赵","Zhào","antigo reino Zhao"],["吴","Wú","antigo reino Wu"],["周","Zhōu","dinastia Zhou"]]],["Nomes masculinos comuns",[["伟","Wěi","grandioso"],["强","Qiáng","forte"],["磊","Lěi","firme como pedra"],["军","Jūn","exército"],["勇","Yǒng","corajoso"],["杰","Jié","talentoso"],["涛","Tāo","onda grande"],["明","Míng","brilhante"],["浩然","Hàorán","de espírito grandioso (moderno)"],["子轩","Zǐxuān","nobre, elevado (moderno, comum em jovens)"]]],["Nomes femininos comuns",[["芳","Fāng","perfumada"],["娜","Nà","graciosa"],["敏","Mǐn","inteligente, ágil"],["静","Jìng","tranquila"],["丽","Lì","bela"],["秀英","Xiùyīng","bela e notável (mais tradicional)"],["婷","Tíng","elegante"],["雪","Xuě","neve"],["欣怡","Xīnyí","alegre (moderno)"],["梓涵","Zǐhán","(moderno, comum em jovens)"]]],["Nomes completos mais comuns",[["张伟","Zhāng Wěi","masculino"],["王伟","Wáng Wěi","masculino"],["李娜","Lǐ Nà","feminino"],["王芳","Wáng Fāng","feminino"],["刘洋","Liú Yáng","unissex (洋 = oceano)"]]]],"notes":["O sobrenome vem primeiro e quase sempre tem um caractere só: em 张伟, Zhang é o sobrenome e Wei é o nome.","O nome tem um ou dois caracteres, escolhidos pelo significado: qualidades (forte, bela), natureza (neve, onda) ou desejos dos pais.","Entre colegas é normal chamar pelo nome completo (张伟), sem soar formal. Amigos próximos podem usar só o nome (伟).","No trabalho, use títulos: 刘总 (diretor Liu), 王经理 (gerente Wang), 张工 (engenheiro Zhang), 陈老师 (professor/instrutor Chen).","小王 é para colegas mais novos; 老王 para mais velhos e próximos. Não use com chefes.","Muitos chineses em empresas internacionais também usam um nome em inglês, como Kevin ou Lily. Pergunte qual eles preferem."]}},{"id":4,"lvl":"Nível 1 · Primeiros passos","t":"De onde você é?","goal":"Falar de nacionalidade e apresentar amigos.","new":["哪","国","人","巴西","中国","朋友","哪里"],"ph":[[["你","是","哪","国","人","？"],"Nǐ shì nǎ guó rén?","De que país você é?"],[["我","是","巴西","人","。"],"Wǒ shì Bāxī rén.","Eu sou brasileiro."],[["他","是","中国","人","。"],"Tā shì Zhōngguó rén.","Ele é chinês."],[["她","也","是","中国","人","吗","？"],"Tā yě shì Zhōngguó rén ma?","Ela também é chinesa?"],[["我","不","是","中国","人","。"],"Wǒ bú shì Zhōngguó rén.","Eu não sou chinês."],[["他","是","我","的","朋友","。"],"Tā shì wǒ de péngyou.","Ele é meu amigo."],[["你","是","中国","哪里","人","？"],"Nǐ shì Zhōngguó nǎlǐ rén?","De onde da China você é?"]]},{"id":5,"lvl":"Nível 2 · Sobre você","t":"Números e idade","goal":"Contar de 1 a 10 e dizer sua idade.","new":["一","二","三","四","五","六","七","八","九","十","今年","多大","二十八","岁","几","三十"],"ph":[[["一","二","三","四","五"],"yī èr sān sì wǔ","um, dois, três, quatro, cinco"],[["六","七","八","九","十"],"liù qī bā jiǔ shí","seis, sete, oito, nove, dez"],[["你","今年","多大","？"],"Nǐ jīnnián duōdà?","Quantos anos você tem? (adulto)"],[["我","今年","二十八","岁","。"],"Wǒ jīnnián èrshíbā suì.","Eu tenho 28 anos (este ano)."],[["你","几","岁","？"],"Nǐ jǐ suì?","Quantos anos você tem? (para criança)"],[["我","三十","岁","。"],"Wǒ sānshí suì.","Eu tenho 30 anos."]]},{"id":6,"lvl":"Nível 2 · Sobre você","t":"Quanto? Quantos?","goal":"Contar coisas com classificador e perguntar quantidades.","new":["两","个","问题","这个","多少","钱","二十","块","电话","一百"],"ph":[[["两","个","人"],"liǎng ge rén","duas pessoas"],[["我","有","一","个","问题","。"],"Wǒ yǒu yí ge wèntí.","Eu tenho uma pergunta."],[["这个","多少","钱","？"],"Zhège duōshao qián?","Quanto custa isto?"],[["二十","块","。"],"Èrshí kuài.","Vinte reais."],[["你","的","电话","是","多少","？"],"Nǐ de diànhuà shì duōshao?","Qual é o seu telefone?"],[["一百","块","。"],"Yìbǎi kuài.","Cem reais."]]},{"id":7,"lvl":"Nível 2 · Sobre você","t":"Meu trabalho","goal":"Dizer onde e com o que você trabalha.","new":["做","工作","在","美的","工程师","哪个","部门","我们"],"ph":[[["你","做","什么","工作","？"],"Nǐ zuò shénme gōngzuò?","Com o que você trabalha?"],[["我","在","美的","工作","。"],"Wǒ zài Měidì gōngzuò.","Eu trabalho na Midea."],[["我","是","工程师","。"],"Wǒ shì gōngchéngshī.","Eu sou engenheiro."],[["你","在","哪个","部门","？"],"Nǐ zài nǎge bùmén?","Em qual departamento você está?"],[["他","是","我","的","同事","。"],"Tā shì wǒ de tóngshì.","Ele é meu colega de trabalho."],[["我们","是","同事","。"],"Wǒmen shì tóngshì.","Nós somos colegas."]]},{"id":8,"lvl":"Nível 2 · Sobre você","t":"Que línguas você fala?","goal":"Falar das línguas que sabe e pedir para falarem devagar.","new":["会","说","中文","一点儿","学","英语","听","懂","请","慢","一点"],"ph":[[["你","会","说","中文","吗","？"],"Nǐ huì shuō Zhōngwén ma?","Você sabe falar chinês?"],[["我","会","说","一点儿","中文","。"],"Wǒ huì shuō yìdiǎnr Zhōngwén.","Eu sei falar um pouco de chinês."],[["我","在","学","中文","。"],"Wǒ zài xué Zhōngwén.","Estou aprendendo chinês."],[["你","会","说","英语","吗","？"],"Nǐ huì shuō Yīngyǔ ma?","Você sabe falar inglês?"],[["我","听","不","懂","。"],"Wǒ tīng bu dǒng.","Não entendo (o que ouço)."],[["请","说","慢","一点","。"],"Qǐng shuō màn yìdiǎn.","Fale mais devagar, por favor."]]},{"id":9,"lvl":"Nível 3 · No trabalho","t":"Pedindo ajuda","goal":"Pedir ajuda, perguntar significados e pedir para repetir.","new":["可以","帮","一下","这","意思","用","怎么","再","遍","不好意思","明白","了"],"ph":[[["你","可以","帮","我","一下","吗","？"],"Nǐ kěyǐ bāng wǒ yíxià ma?","Você pode me ajudar rapidinho?"],[["这","是","什么","意思","？"],"Zhè shì shénme yìsi?","O que isso significa?"],[["这个","用","中文","怎么","说","？"],"Zhège yòng Zhōngwén zěnme shuō?","Como se diz isso em chinês?"],[["请","再","说","一","遍","。"],"Qǐng zài shuō yí biàn.","Diga mais uma vez, por favor."],[["不好意思","，","我","听","不","懂","。"],"Bù hǎoyìsi, wǒ tīng bu dǒng.","Desculpa, não entendi."],[["我","明白","了","，","谢谢","！"],"Wǒ míngbai le, xièxie!","Entendi, obrigado!"]]},{"id":10,"lvl":"Nível 3 · No trabalho","t":"Reuniões e horários","goal":"Perguntar e dizer horários de reunião.","new":["会议","点","开始","开会","现在","半","稍","等","分钟"],"ph":[[["会议","几","点","开始","？"],"Huìyì jǐ diǎn kāishǐ?","A que horas começa a reunião?"],[["下午","三","点","开会","。"],"Xiàwǔ sān diǎn kāihuì.","A reunião é às três da tarde."],[["现在","几","点","？"],"Xiànzài jǐ diǎn?","Que horas são agora?"],[["现在","两","点","半","。"],"Xiànzài liǎng diǎn bàn.","Agora são duas e meia."],[["请","稍","等","一下","。"],"Qǐng shāo děng yíxià.","Espere um momento, por favor."],[["会议","十","分钟","开始","。"],"Huìyì shí fēnzhōng kāishǐ.","A reunião começa em dez minutos."]]},{"id":11,"lvl":"Nível 3 · No trabalho","t":"No escritório","goal":"Falar de e-mails, arquivos e responder pedidos.","new":["已经","发","邮件","文件","给","没问题","马上","来","今天"],"ph":[[["我","已经","发","邮件","了","。"],"Wǒ yǐjīng fā yóujiàn le.","Eu já mandei o e-mail."],[["这个","文件","发","给","我","，","好","吗","？"],"Zhège wénjiàn fā gěi wǒ, hǎo ma?","Pode me mandar esse arquivo?"],[["我","有","一","个","问题","。"],"Wǒ yǒu yí ge wèntí.","Eu tenho uma pergunta."],[["没问题","！"],"Méi wèntí!","Sem problema!"],[["我","马上","来","。"],"Wǒ mǎshàng lái.","Já estou indo."],[["今天","我","很","忙","。"],"Jīntiān wǒ hěn máng.","Hoje estou muito ocupado."]]},{"id":12,"lvl":"Nível 4 · Dia a dia","t":"No refeitório","goal":"Convidar para comer e pedir bebidas.","new":["吃","饭","饿","一起","去","吧","菜","好吃","要","喝","茶","还是","咖啡"],"ph":[[["你","吃","饭","了","吗","？"],"Nǐ chī fàn le ma?","Já comeu? (cumprimento comum)"],[["我","饿","了","。"],"Wǒ è le.","Estou com fome."],[["一起","去","吃","饭","吧","！"],"Yìqǐ qù chī fàn ba!","Vamos comer juntos!"],[["这个","菜","很","好吃","。"],"Zhège cài hěn hǎochī.","Esse prato é muito gostoso."],[["你","要","喝","茶","还是","咖啡","？"],"Nǐ yào hē chá háishi kāfēi?","Você quer chá ou café?"],[["我","要","咖啡","，","谢谢","。"],"Wǒ yào kāfēi, xièxie.","Quero café, obrigado."]]},{"id":13,"lvl":"Nível 4 · Dia a dia","t":"Gostos e opiniões","goal":"Dizer do que gosta e dar opinião.","new":["喜欢","觉得","天气","真","热","太","辣","但是"],"ph":[[["我","很","喜欢","巴西","。"],"Wǒ hěn xǐhuan Bāxī.","Eu gosto muito do Brasil."],[["你","喜欢","中国","菜","吗","？"],"Nǐ xǐhuan Zhōngguó cài ma?","Você gosta de comida chinesa?"],[["我","觉得","很","好吃","。"],"Wǒ juéde hěn hǎochī.","Acho muito gostoso."],[["今天","天气","真","热","！"],"Jīntiān tiānqì zhēn rè!","Que calor hoje!"],[["太","辣","了","！"],"Tài là le!","Apimentado demais!"],[["我","喜欢","咖啡","，","但是","不","喜欢","茶","。"],"Wǒ xǐhuan kāfēi, dànshì bù xǐhuan chá.","Gosto de café, mas não gosto de chá."]]},{"id":14,"lvl":"Nível 5 · Conversa natural","t":"Gentilezas","goal":"Agradecer, se desculpar e responder elogios como um nativo.","new":["辛苦","得","哪里哪里","客气","别","对不起","没关系"],"ph":[[["辛苦","了","！"],"Xīnkǔ le!","Bom trabalho! / Obrigado pelo esforço!"],[["你","的","中文","说","得","很","好","！"],"Nǐ de Zhōngwén shuō de hěn hǎo!","Você fala chinês muito bem!"],[["哪里哪里","。"],"Nǎlǐ nǎlǐ.","Que nada."],[["谢谢","！","不","客气","。"],"Xièxie! Bú kèqi.","Obrigado! — De nada."],[["别","客气","。"],"Bié kèqi.","Fique à vontade."],[["对不起","！","没关系","。"],"Duìbuqǐ! Méi guānxi.","Desculpa! — Não tem problema."]]},{"id":15,"lvl":"Nível 5 · Conversa natural","t":"Fim de semana e planos","goal":"Falar de planos e combinar horários.","new":["周末","打算","想","家","休息","和","时候","时间","愉快"],"ph":[[["你","周末","打算","做","什么","？"],"Nǐ zhōumò dǎsuàn zuò shénme?","O que você pretende fazer no fim de semana?"],[["我","想","在","家","休息","。"],"Wǒ xiǎng zài jiā xiūxi.","Quero descansar em casa."],[["我","和","朋友","去","吃","饭","。"],"Wǒ hé péngyou qù chī fàn.","Vou comer com amigos."],[["你","什么","时候","有","时间","？"],"Nǐ shénme shíhou yǒu shíjiān?","Quando você tem tempo?"],[["明天","下午","我","有","时间","。"],"Míngtiān xiàwǔ wǒ yǒu shíjiān.","Amanhã à tarde eu tenho tempo."],[["周末","愉快","！"],"Zhōumò yúkuài!","Bom fim de semana!"]]},{"id":17,"lvl":"Nível 6 · Cotidiano no trabalho","t":"Pedidos e favores","goal":"Pedir ajuda, favores e agradecer com educação.","new":["能","看","帮个忙","方便","借","笔","好的","麻烦","感谢"],"ph":[[["能","不","能","帮","我","看","一下","？"],"Néng bu néng bāng wǒ kàn yíxià?","Pode dar uma olhada para mim?"],[["我","想","请","你","帮个忙","。"],"Wǒ xiǎng qǐng nǐ bāng ge máng.","Queria te pedir um favor."],[["你","现在","方便","吗","？"],"Nǐ xiànzài fāngbiàn ma?","Você pode agora?"],[["可以","借","我","一下","你","的","笔","吗","？"],"Kěyǐ jiè wǒ yíxià nǐ de bǐ ma?","Pode me emprestar sua caneta?"],[["好的","，","没问题","。"],"Hǎo de, méi wèntí.","Tá bom, sem problema."],[["麻烦","你","了","！"],"Máfan nǐ le!","Desculpa o incômodo! (e obrigado)"],[["太","感谢","了","！"],"Tài gǎnxiè le!","Muitíssimo obrigado!"]]},{"id":18,"lvl":"Nível 6 · Cotidiano no trabalho","t":"Desculpas e problemas","goal":"Pedir desculpas, assumir um erro e dizer que vai resolver.","new":["晚","打扰","错","改","机器","出","担心","处理","下次","注意"],"ph":[[["对不起","，","我","来","晚","了","。"],"Duìbuqǐ, wǒ lái wǎn le.","Desculpa, cheguei atrasado."],[["不好意思","，","打扰","一下","。"],"Bù hǎoyìsi, dǎrǎo yíxià.","Com licença, desculpe interromper."],[["这","是","我","的","错","。"],"Zhè shì wǒ de cuò.","A culpa é minha."],[["我","马上","改","。"],"Wǒ mǎshàng gǎi.","Vou corrigir agora mesmo."],[["机器","出","问题","了","。"],"Jīqì chū wèntí le.","A máquina deu problema."],[["别","担心","，","我","来","处理","。"],"Bié dānxīn, wǒ lái chǔlǐ.","Não se preocupe, deixa que eu resolvo."],[["下次","我","会","注意","。"],"Xià cì wǒ huì zhùyì.","Da próxima vez vou tomar cuidado."]]},{"id":19,"lvl":"Nível 6 · Cotidiano no trabalho","t":"Como está o trabalho?","goal":"Perguntar sobre o andamento do serviço e responder.","new":["怎么样","进度","顺利","差不多","完","需要","天","产量"],"ph":[[["工作","怎么样","？"],"Gōngzuò zěnmeyàng?","Como está o trabalho?"],[["进度","怎么样","了","？"],"Jìndù zěnmeyàng le?","Como está o andamento?"],[["还","顺利","吗","？"],"Hái shùnlì ma?","Está correndo tudo bem?"],[["差不多","做","完","了","。"],"Chàbuduō zuò wán le.","Está quase pronto."],[["还","需要","两","天","。"],"Hái xūyào liǎng tiān.","Ainda precisa de dois dias."],[["有","什么","问题","吗","？"],"Yǒu shénme wèntí ma?","Tem algum problema?"],[["今天","的","产量","是","多少","？"],"Jīntiān de chǎnliàng shì duōshao?","Qual é a produção de hoje?"]]},{"id":20,"lvl":"Nível 6 · Cotidiano no trabalho","t":"Prazos e urgências","goal":"Falar de prazos, urgência e pedir mais tempo.","new":["急","之前","完成","来得及","来不及","推迟","加班","着急","慢慢"],"ph":[[["这个","很","急","。"],"Zhège hěn jí.","Isso é urgente."],[["什么","时候","要","？"],"Shénme shíhou yào?","Para quando precisa?"],[["明天","之前","要","完成","。"],"Míngtiān zhīqián yào wánchéng.","Precisa ficar pronto antes de amanhã."],[["来得及","吗","？"],"Láidejí ma?","Dá tempo?"],[["来不及","了","，","可以","推迟","吗","？"],"Láibují le, kěyǐ tuīchí ma?","Não dá tempo, pode adiar?"],[["我","今天","加班","做","完","。"],"Wǒ jīntiān jiābān zuò wán.","Hoje faço hora extra e termino."],[["别","着急","，","慢慢","来","。"],"Bié zháojí, mànmàn lái.","Calma, sem pressa."]]},{"id":21,"lvl":"Nível 7 · Negócios e conversa","t":"Financeiro","goal":"Falar de orçamento, preços, notas fiscais e reembolso.","new":["月","预算","价格","贵","便宜","发票","开","付","报销","成本","高"],"ph":[[["这个","月","的","预算","是","多少","？"],"Zhège yuè de yùsuàn shì duōshao?","Qual é o orçamento deste mês?"],[["价格","太","贵","了","。"],"Jiàgé tài guì le.","O preço está caro demais."],[["可以","便宜","一点","吗","？"],"Kěyǐ piányi yìdiǎn ma?","Pode fazer um pouco mais barato?"],[["发票","开","好","了","吗","？"],"Fāpiào kāi hǎo le ma?","A nota fiscal já foi emitida?"],[["钱","已经","付","了","。"],"Qián yǐjīng fù le.","O dinheiro já foi pago."],[["我","要","报销","。"],"Wǒ yào bàoxiāo.","Preciso pedir reembolso."],[["成本","太","高","了","。"],"Chéngběn tài gāo le.","O custo está alto demais."]]},{"id":22,"lvl":"Nível 7 · Negócios e conversa","t":"Pedidos e fornecedores","goal":"Fazer pedidos de compra, quantidades e entregas.","new":["下","订单","你们","台","五百","空调","交货","星期","发货","货","到","确认"],"ph":[[["我们","要","下","一","个","订单","。"],"Wǒmen yào xià yí ge dìngdān.","Precisamos fazer um pedido."],[["你们","要","多少","台","？"],"Nǐmen yào duōshao tái?","Quantas unidades vocês querem?"],[["我们","要","五百","台","空调","。"],"Wǒmen yào wǔbǎi tái kōngtiáo.","Queremos 500 ar-condicionados."],[["什么","时候","可以","交货","？"],"Shénme shíhou kěyǐ jiāohuò?","Quando pode entregar?"],[["下","个","星期","发货","。"],"Xià ge xīngqī fāhuò.","Despachamos semana que vem."],[["货","到","了","吗","？"],"Huò dào le ma?","A mercadoria chegou?"],[["请","确认","一下","订单","。"],"Qǐng quèrèn yíxià dìngdān.","Por favor, confirme o pedido."]]},{"id":23,"lvl":"Nível 7 · Negócios e conversa","t":"Telefone e WeChat","goal":"Atender ligações e combinar por mensagem.","new":["喂","经理","打","加","微信","消息","看到"],"ph":[[["喂","，","你","好","！"],"Wéi, nǐ hǎo!","Alô!"],[["请问","，","王","经理","在","吗","？"],"Qǐngwèn, Wáng jīnglǐ zài ma?","Por favor, o gerente Wang está?"],[["他","不","在","，","你","晚","一点","再","打","吧","。"],"Tā bú zài, nǐ wǎn yìdiǎn zài dǎ ba.","Ele não está, ligue um pouco mais tarde."],[["我","加","你","微信","吧","。"],"Wǒ jiā nǐ Wēixìn ba.","Vou te adicionar no WeChat."],[["我","发","消息","给","你","。"],"Wǒ fā xiāoxi gěi nǐ.","Te mando uma mensagem."],[["你","看到","我","的","消息","了","吗","？"],"Nǐ kàndào wǒ de xiāoxi le ma?","Você viu minha mensagem?"],[["我","等","一下","打","给","你","。"],"Wǒ děng yíxià dǎ gěi nǐ.","Te ligo daqui a pouco."]]},{"id":24,"lvl":"Nível 7 · Negócios e conversa","t":"Conversa no intervalo","goal":"Puxar conversa sobre família, fim de semana e lazer.","new":["过","孩子","女儿","去过","海边","家人","都","下班","以后","一杯"],"ph":[[["你","周末","过","得","怎么样","？"],"Nǐ zhōumò guò de zěnmeyàng?","Como foi seu fim de semana?"],[["你","家","在","哪里","？"],"Nǐ jiā zài nǎlǐ?","Onde você mora?"],[["你","有","孩子","吗","？"],"Nǐ yǒu háizi ma?","Você tem filhos?"],[["我","有","一","个","女儿","。"],"Wǒ yǒu yí ge nǚ'ér.","Tenho uma filha."],[["你","去过","巴西","的","海边","吗","？"],"Nǐ qùguo Bāxī de hǎibiān ma?","Você já foi à praia no Brasil?"],[["你","的","家人","都","好","吗","？"],"Nǐ de jiārén dōu hǎo ma?","Sua família está bem?"],[["下班","以后","一起","喝","一杯","吧","！"],"Xiàbān yǐhòu yìqǐ hē yì bēi ba!","Vamos tomar algo depois do trabalho!"]]}]};
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const DAY=86400000;
+const dayKey=(t=Date.now())=>{const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+
+/* ---------- estado ---------- */
+const KEY="hanzi-caderno-v2";
+let S={custom:[],removed:[],srs:{},log:[],time:{},tones:{1:[0,0],2:[0,0],3:[0,0],4:[0,0]},voice:"",rate:0.85,newPerDay:8,newIntro:{},lessons:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)S=Object.assign(S,s);if(!S.lessons)S.lessons={};
+  else{const o=JSON.parse(localStorage.getItem("hanzi-caderno-v1")||"null");if(o&&o.custom)S.custom=o.custom.map(w=>({h:w.h,p:w.p,m:w.m,c:"Minhas"}));}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+const VOCAB=()=>[...C.vocab.filter(v=>!S.removed.includes(v[0])).map(v=>({h:v[0],p:v[1],m:v[2],c:v[3],a:v[4]})),...S.custom];
+const SENTS=C.sentences.map(s=>({h:s[0],p:s[1],m:s[2],c:s[3],seg:s[4]}));
+const LESSONS=C.lessons,GL=C.gloss;
+const PUNCT=/^[！？。，]$/;
+function lessonItems(l){return [...l.new.map(h=>({id:"w:"+h,k:"w",h,p:GL[h][0],m:GL[h][1],c:"Trilha"})),
+  ...l.ph.map(([tk,p,m])=>({id:"s:"+tk.join(""),k:"s",h:tk.join(""),p,m,c:"Trilha"}))];}
+const items=()=>{const base=[...VOCAB().map(w=>({id:"w:"+w.h,k:"w",...w})),...SENTS.map(s=>({id:"s:"+s.h,k:"s",...s}))];
+  const ids=new Set(base.map(x=>x.id));
+  LESSONS.forEach(l=>{if(S.lessons[l.id]&&S.lessons[l.id].done)lessonItems(l).forEach(x=>{if(!ids.has(x.id)){ids.add(x.id);base.push(x);}});});
+  return base;};
+
+/* ---------- áudio ---------- */
+let AUDIO={};let audioReady=fetch("audio.json").then(r=>r.json()).then(j=>{AUDIO=j;}).catch(()=>{});
+let curAudio=null;
+function stopAll(){try{curAudio&&curAudio.pause();}catch(e){}try{speechSynthesis.cancel();}catch(e){}}
+function playClip(key,rate){return new Promise(res=>{const b=AUDIO[key];if(!b){res(false);return;}
+  try{const a=new Audio("data:audio/mpeg;base64,"+b);curAudio=a;if(rate){a.playbackRate=rate;try{a.preservesPitch=true;a.webkitPreservesPitch=true;}catch(_){}}a.onended=()=>res(true);a.onerror=()=>res(false);a.play().catch(()=>res(false));}catch(e){res(false);}});}
+async function playSeq(keys){stopAll();for(const k of keys){const ok=await playClip(k);if(!ok)return false;}return true;}
+function voices(){try{return speechSynthesis.getVoices().filter(v=>/^zh|cmn/i.test(v.lang)&&!/HK|TW|yue/i.test(v.lang+v.name));}catch(e){return[];}}
+function bestVoice(){const vs=voices();if(S.voice){const v=vs.find(v=>v.name===S.voice);if(v)return v;}
+  const rank=v=>(/natural|neural|online|premium|enhanced|aprimorad/i.test(v.name)?4:0)+(/google/i.test(v.name)?3:0)+(/xiaoxiao|tingting|meijia|yaoyao/i.test(v.name)?2:0)+(/zh-CN|zh_CN/i.test(v.lang)?1:0);
+  return vs.sort((a,b)=>rank(b)-rank(a))[0];}
+function tts(text,rate){return new Promise(res=>{try{stopAll();const u=new SpeechSynthesisUtterance(text);u.lang="zh-CN";u.rate=rate||S.rate;
+  const v=bestVoice();if(v)u.voice=v;u.onend=()=>res(true);u.onerror=()=>res(false);speechSynthesis.speak(u);}catch(e){res(false);}});}
+/* palavra: gravação humana inteira; senão junta partes gravadas; senão voz do celular */
+function wordKeys(h){if(AUDIO["w:"+h])return["w:"+h];const out=[];let i=0;
+  while(i<h.length){let f=false;for(const L of[4,3,2,1]){const w=h.slice(i,i+L);if(w.length===L&&AUDIO["w:"+w]){out.push("w:"+w);i+=L;f=true;break;}}if(!f)return null;}return out;}
+async function sayWord(h){const k=wordKeys(h);if(k&&await playSeq(k))return;tts(h);}
+/* frase inteira: gravação nativa montada; voz do celular só se faltar */
+async function saySentence(h,slow){stopAll();if(AUDIO["f:"+h]){if(await playClip("f:"+h,slow?0.8:1.12))return true;}return tts(h,slow?Math.max(.5,S.rate-.25):S.rate);}
+
+/* ---------- tempo de estudo ---------- */
+let lastTick=Date.now();
+setInterval(()=>{if(document.visibilityState==="visible"){const now=Date.now();const d=Math.min(now-lastTick,20000);const k=dayKey();S.time[k]=(S.time[k]||0)+d;lastTick=now;save();renderStats();}else lastTick=Date.now();},15000);
+document.addEventListener("visibilitychange",()=>{lastTick=Date.now();});
+
+/* ---------- repetição espaçada ---------- */
+const INTERVALS=[0,1,2,4,7,15,30,60]; // dias por nível
+function grade(it,ok){
+  const r=S.srs[it.id]||{lv:0,due:0,n:0,miss:0};
+  if(ok){r.lv=Math.min(r.lv+1,INTERVALS.length-1);r.due=Date.now()+INTERVALS[r.lv]*DAY-3600000;}
+  else{r.lv=1;r.miss++;r.due=Date.now();}
+  r.n++;r.last=Date.now();S.srs[it.id]=r;
+  S.log.unshift({id:it.id,h:it.h,m:it.m,ok,t:Date.now()});S.log=S.log.slice(0,200);save();
+}
+function dueList(){const now=Date.now();return items().filter(it=>S.srs[it.id]&&S.srs[it.id].due<=now);}
+function newList(){const k=dayKey();const done=S.newIntro[k]||0;const left=Math.max(0,S.newPerDay-done);
+  const fresh=items().filter(it=>!S.srs[it.id]);
+  // alterna palavras e frases para variar
+  const w=fresh.filter(x=>x.k==="w"),s=fresh.filter(x=>x.k==="s");const out=[];
+  let n=0;while(out.length<left&&(w.length||s.length)){const wantS=n%3===2;const src=(wantS&&s.length)||!w.length?s:w;out.push(src.shift());n++;}
+  return out;}
+
+/* ---------- sessão de revisão ---------- */
+let session=null;
+function startSession(){
+  const due=shuffle(dueList()),fresh=newList();
+  const q=[...fresh.map(x=>({it:x,isNew:true})),...due.map(x=>({it:x}))];
+  if(!q.length){renderToday();return;}
+  session={q,i:0,ok:0,total:q.length,start:Date.now()};
+  $("todayStart").hidden=true;$("reviewBox").hidden=false;showQ();
+}
+function optionsFor(it,field){
+  const pool=items().filter(x=>x.k===it.k&&x.id!==it.id&&x[field]!==it[field]);
+  return shuffle([it,...shuffle(pool).slice(0,3)]);
+}
+function showQ(){
+  const s=session;$("rvBar").style.width=(s.i/s.total*100)+"%";
+  if(s.i>=s.q.length){finishSession();return;}
+  const {it,isNew}=s.q[s.i];const box=$("rvCard");
+  if(isNew&&!s.q[s.i].seen){ // apresentação da novidade
+    s.q[s.i].seen=true;
+    box.innerHTML=`<span class="pill l1">Novo ${it.k==="s"?"· frase":"· palavra"}</span>
+      ${hanBox(it.h)}<div class="pin">${esc(it.p)}</div><div style="font-size:17px">${esc(it.m)}</div>
+      <div class="row" style="justify-content:center">${playBtns(it)}</div>
+      <div class="row" style="width:100%"><button class="btn primary" id="rvGo">Entendi, testar</button></div>`;
+    bindPlay(box,it);$("rvGo").onclick=()=>{askQ(it);};playItem(it);return;
+  }
+  askQ(it);
+}
+function askQ(it){
+  const box=$("rvCard");
+  // tipo de pergunta: frases alternam entre ler e só ouvir
+  const modes=it.k==="s"?["read","listen","listen","pt2zh"]:["read","read","listen","pt2zh"];
+  const mode=pick(modes);
+  const opts=optionsFor(it,mode==="pt2zh"?"h":"m");
+  let prompt="";
+  if(mode==="read")prompt=hanBox(it.h)+`<div class="small">O que significa?</div>`;
+  if(mode==="listen")prompt=`<div class="tzg wide"><span class="han" style="font-size:44px">🎧</span></div><div class="small">Ouça e escolha o significado</div>`;
+  if(mode==="pt2zh")prompt=`<div class="tzg wide"><span style="position:relative;z-index:1;font-size:20px;font-weight:600">${esc(it.m)}</span></div><div class="small">Como se diz em chinês?</div>`;
+  box.innerHTML=`${prompt}${mode!=="pt2zh"?`<div class="row" style="justify-content:center">${playBtns(it)}</div>`:""}
+    <div class="opts ${it.k==="s"?"one":""}" id="rvOpts"></div><div class="fb" id="rvFb"></div>
+    <div class="row" style="width:100%"><button class="btn primary" id="rvNext" hidden>Próxima</button></div>`;
+  if(mode!=="pt2zh"){bindPlay(box,it);playItem(it);}
+  const oc=$("rvOpts");
+  opts.forEach(o=>{const b=document.createElement("button");b.className="opt"+(mode==="pt2zh"?" hz":"");
+    b.textContent=mode==="pt2zh"?o.h:o.m;b.onclick=()=>{
+      if(!$("rvNext").hidden)return;const ok=o.id===it.id;
+      [...oc.children].forEach((x,i)=>{if(opts[i].id===it.id)x.classList.add("right");});
+      if(!ok)b.classList.add("wrong");
+      grade(it,ok);if(ok)session.ok++;else session.q.push({it,again:true});
+      $("rvFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Quase."}</span> <span class="han" style="font-size:18px">${esc(it.h)}</span> · <span style="color:var(--jade)">${esc(it.p)}</span><br>${esc(it.m)}`;
+      $("rvNext").hidden=false;if(mode==="pt2zh")playItem(it);
+      if(session.q[session.i].isNew){const k=dayKey();S.newIntro[k]=(S.newIntro[k]||0)+1;save();}
+      renderStats();renderRecent();
+    };oc.append(b);});
+  $("rvNext").onclick=()=>{session.i++;session.total=session.q.length;showQ();};
+}
+function finishSession(){
+  const s=session;session=null;
+  $("rvCard").innerHTML=`<h2>Revisão concluída!</h2><div class="muted">${s.ok} acertos de primeira em ${s.q.length} perguntas · ${Math.max(1,Math.round((Date.now()-s.start)/60000))} min</div>
+    <div class="row" style="width:100%"><button class="btn primary" id="rvDone">Voltar</button></div>`;
+  $("rvBar").style.width="100%";
+  $("rvDone").onclick=()=>{$("reviewBox").hidden=true;$("todayStart").hidden=false;renderToday();};
+}
+function hanBox(h){const n=[...h].length;const fs=n===1?"min(36vw,130px)":n===2?"min(24vw,88px)":n<=4?"56px":n<=8?"34px":"28px";
+  return `<div class="tzg ${n>2?"wide":""}"><span class="han" style="font-size:${fs}">${esc(h)}</span></div>`;}
+/* ouvir: frase inteira, devagar, palavra por palavra e em camadas */
+let SEGMAP=null,listenGen=0;
+const ISHAN=/[\u4e00-\u9fff]/;
+function segOf(h){if(!SEGMAP){SEGMAP={};SENTS.forEach(s=>SEGMAP[s.h]=s.seg.map(x=>x[0]));LESSONS.forEach(l=>l.ph.forEach(([tk])=>SEGMAP[tk.join("")]=tk));}
+  return SEGMAP[h]||[...h];}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function playWords(tokens,onStep,gen){
+  for(let i=0;i<tokens.length;i++){const w=tokens[i];if(!ISHAN.test(w))continue;if(gen!==listenGen)return false;
+    onStep&&onStep(i);const k=wordKeys(w);if(!(k&&await playSeq(k)))await tts(w);onStep&&onStep(-1);await sleep(280);}
+  return gen===listenGen;}
+async function listenAction(kind,h,onStep){
+  const gen=++listenGen;const tokens=segOf(h);
+  if(kind==="n")return saySentence(h);if(kind==="s")return saySentence(h,true);
+  if(kind==="w")return playWords(tokens,onStep,gen);
+  if(kind==="c"){if(!await playWords(tokens,onStep,gen))return;await sleep(500);if(gen!==listenGen)return;
+    await saySentence(h,true);await sleep(400);if(gen!==listenGen)return;await saySentence(h);}
+}
+function listenBtns(){return `<button class="play" data-l="n">▶ Frase inteira</button><button class="play" data-l="s">🐢 Devagar</button><button class="play" data-l="w">🔤 Palavra por palavra</button><button class="play" data-l="c">🎧 Camadas</button>`;}
+function bindListen(box,h,onStep){box.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>listenAction(b.dataset.l,h,onStep));}
+function playBtns(it){return it.k==="s"?listenBtns():`<button class="play" data-p="n">▶ Ouvir</button>`;}
+function bindPlay(box,it){if(it.k==="s")bindListen(box,it.h);box.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>playItem(it));}
+function playItem(it,slow){if(it.k==="s")saySentence(it.h,slow);else sayWord(it.h);}
+
+/* ---------- Hoje: painel ---------- */
+function renderToday(){
+  const d=dueList().length,n=newList().length;
+  $("todayTitle").textContent=d+n?"Revisão de hoje":"Tudo revisado por hoje";
+  $("todayText").textContent=d+n?`${d} para revisar e ${n} novos (palavras e frases). Leva uns ${Math.max(2,Math.round((d+n)*0.4))} minutos.`:
+    "Volte amanhã para a próxima revisão. Enquanto isso, treine os tons ou ouça as frases.";
+  $("startReview").disabled=!(d+n);
+  renderStats();renderRecent();renderBars();
+}
+function renderStats(){
+  const t=S.time[dayKey()]||0;$("stToday").textContent=Math.round(t/60000);
+  $("stLearned").textContent=Object.keys(S.srs).length;
+  let st=0;for(let i=0;i<400;i++){const k=dayKey(Date.now()-i*DAY);const active=(S.time[k]||0)>60000||S.log.some(l=>dayKey(l.t)===k);
+    if(active)st++;else if(i>0)break;}
+  $("stStreak").textContent=st;
+}
+function renderBars(){
+  const days=[...Array(7)].map((_,i)=>Date.now()-(6-i)*DAY);const vals=days.map(t=>Math.round((S.time[dayKey(t)]||0)/60000));
+  const max=Math.max(10,...vals);const wd=["dom","seg","ter","qua","qui","sex","sáb"];
+  $("bars").innerHTML=days.map((t,i)=>`<div class="bar"><em>${vals[i]}</em><i class="${vals[i]?"":"zero"}" style="height:${vals[i]/max*70}%"></i><span>${wd[new Date(t).getDay()]}</span></div>`).join("");
+}
+function renderRecent(){
+  const l=S.log.slice(0,10);
+  $("recent").innerHTML=l.length?l.map(r=>{const ago=Math.round((Date.now()-r.t)/60000);const when=ago<60?`${ago} min`:ago<1440?`${Math.round(ago/60)} h`:`${Math.round(ago/1440)} d`;
+    return `<div class="rec"><span class="dot ${r.ok?"ok":"no"}"></span><div style="min-width:0"><div class="h">${esc(r.h)}</div><div class="m">${esc(r.m)}</div></div><span class="small">${when}</span></div>`}).join(""):
+    `<p class="muted">Ainda não há treinos. Comece a revisão de hoje e o histórico aparece aqui.</p>`;
+}
+
+/* ---------- Frases ---------- */
+let sCat="Todas",listen=false;
+function renderSents(){
+  const cats=["Todas",...new Set(SENTS.map(s=>s.c))];
+  $("sCats").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===sCat}">${c}</button>`).join("");
+  [...$("sCats").children].forEach((b,i)=>b.onclick=()=>{sCat=cats[i];renderSents();});
+  const list=SENTS.filter(s=>sCat==="Todas"||s.c===sCat);
+  $("sList").innerHTML=list.map((s,i)=>`<div class="sent ${listen?"blur":""}" data-i="${SENTS.indexOf(s)}">
+     <div class="zh">${s.seg.map(([w,a],i2)=>/[一-鿿]/.test(w)?`<button class="${a?"":"na"}" data-w="${esc(w)}" data-si="${i2}">${esc(w)}</button>`:`<span>${esc(w)}</span>`).join("")}</div>
+     <div class="py">${esc(s.p)}</div><div class="pt">${esc(s.m)}</div>
+     <div class="row">${listenBtns()}${listen?`<button class="play" data-p="r">Mostrar texto</button>`:""}</div></div>`).join("");
+  $("sList").querySelectorAll(".sent").forEach(el=>{const s=SENTS[+el.dataset.i];
+    el.querySelectorAll(".zh button:not(.na)").forEach(b=>b.onclick=async()=>{b.classList.add("on");await playSeq(["w:"+b.dataset.w]);b.classList.remove("on");});
+    el.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{if(b.dataset.p==="r")el.classList.toggle("show");});
+    bindListen(el,s.h,i=>el.querySelectorAll(".zh button").forEach(x=>x.classList.toggle("on",+x.dataset.si===i)));
+  });
+}
+$("listenMode").onclick=()=>{listen=!listen;$("listenMode").setAttribute("aria-pressed",listen);renderSents();};
+
+/* ---------- Tons ---------- */
+const MARKS={"ā":1,"á":2,"ǎ":3,"à":4,"ē":1,"é":2,"ě":3,"è":4,"ī":1,"í":2,"ǐ":3,"ì":4,"ō":1,"ó":2,"ǒ":3,"ò":4,"ū":1,"ú":2,"ǔ":3,"ù":4,"ǖ":1,"ǘ":2,"ǚ":3,"ǜ":4};
+const TONE_MARK={a:"āáǎà",e:"ēéěè",i:"īíǐì",o:"ōóǒò",u:"ūúǔù",v:"ǖǘǚǜ"};
+function mark(base,t){const v=base.includes("a")?"a":base.includes("e")?"e":base.includes("ou")?"o":[...base].reverse().find(c=>"aeiouv".includes(c));
+  return base.replace(v,TONE_MARK[v][t-1]);}
+const CONTOUR={1:"M6 8 L50 8",2:"M6 24 L50 6",3:"M6 16 L26 32 L50 8",4:"M6 6 L50 34"};
+const TNAME={1:"1º alto",2:"2º sobe",3:"3º desce-sobe",4:"4º desce"};
+function toneSvg(t){return `<svg viewBox="0 0 56 40" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+$("toneRef").innerHTML=[1,2,3,4].map(t=>`<button class="tone" data-t="${t}">${toneSvg(t)}<span style="font-size:18px">${mark("ma",t)}</span><span class="small">${TNAME[t]}</span></button>`).join("");
+$("toneRef").querySelectorAll(".tone").forEach(b=>b.onclick=()=>playSeq(["s:ma"+b.dataset.t]));
+let tMode="one",tq=null;
+document.querySelectorAll("#tMode .chip").forEach(b=>b.onclick=()=>{tMode=b.dataset.m;document.querySelectorAll("#tMode .chip").forEach(x=>x.setAttribute("aria-pressed",x===b));newTone();});
+function tonesOf(p){const t=[...p].map(c=>MARKS[c]).filter(Boolean);return t;}
+const PAIRS=()=>VOCAB().filter(w=>[...w.h].length===2&&w.a!==false&&AUDIO["w:"+w.h]&&tonesOf(w.p).length===2&&!/[不一]/.test(w.h)&&!(tonesOf(w.p).join("")==="33"));
+function newTone(){
+  const box=$("tCard");
+  if(tMode==="one"){
+    const base=pick(C.bases),t=1+Math.floor(Math.random()*4);tq={keys:["s:"+base+t],ans:[t],label:mark(base,t)};
+    box.innerHTML=`<div class="small">Que tom você ouviu?</div><div class="big-syl" id="tSyl">${esc(base)} ?</div>
+      <button class="play" id="tPlay">▶ Ouvir de novo</button>
+      <div class="tones" id="tOpts">${[1,2,3,4].map(t=>`<button class="tone" data-t="${t}">${toneSvg(t)}<span>${TNAME[t]}</span></button>`).join("")}</div>
+      <div class="fb" id="tFb"></div><div class="row" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
+    box.querySelectorAll("#tOpts .tone").forEach(b=>b.onclick=()=>answerTone(b,[+b.dataset.t]));
+  }else{
+    const ps=PAIRS();if(!ps.length){box.innerHTML=`<p class="muted">Carregando áudios…</p>`;audioReady.then(newTone);return;}
+    const w=pick(ps),ans=tonesOf(w.p);tq={keys:["w:"+w.h],ans,label:w.p,w};
+    const all=[];for(let a=1;a<=4;a++)for(let b=1;b<=4;b++)if(!(a===3&&b===3))all.push([a,b]);
+    const near=all.filter(x=>x.join()!==ans.join()&&(x[0]===ans[0]||x[1]===ans[1]));
+    const opts=shuffle([ans,...shuffle(near).slice(0,3)]);
+    box.innerHTML=`<div class="small">Ouça a palavra e escolha os tons</div>${hanBox(w.h)}
+      <button class="play" id="tPlay">▶ Ouvir de novo</button>
+      <div class="opts" id="tOpts">${opts.map(o=>`<button class="opt" data-t="${o.join("")}"><span style="display:flex;justify-content:center;gap:4px">${o.map(t=>`<span style="width:44px">${toneSvg(t)}</span>`).join("")}</span>${o.join(" + ")}</button>`).join("")}</div>
+      <div class="fb" id="tFb"></div><div class="row" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
+    box.querySelectorAll("#tOpts .opt").forEach(b=>b.onclick=()=>answerTone(b,[...b.dataset.t].map(Number)));
+  }
+  $("tPlay").onclick=()=>playSeq(tq.keys);$("tNext").onclick=newTone;
+  audioReady.then(()=>playSeq(tq.keys));
+}
+function answerTone(btn,choice){
+  if(!$("tNext").hidden)return;const ok=choice.join()===tq.ans.join();
+  tq.ans.forEach((t,i)=>{S.tones[t][1]++;if(choice[i]===t)S.tones[t][0]++;});save();
+  $("tOpts").querySelectorAll("button").forEach(b=>{if(b.dataset.t===tq.ans.join(""))b.classList.add("right");});
+  if(!ok)btn.classList.add("wrong");
+  const syl=$("tSyl");if(syl)syl.textContent=tq.label;
+  $("tFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Era outro."}</span> ${esc(tq.label)}${tq.w?" · "+esc(tq.w.m):""}`;
+  $("tNext").hidden=false;renderTAcc();
+  S.log.unshift({id:"t",h:tq.w?tq.w.h:tq.label,m:"Treino de tons",ok,t:Date.now()});S.log=S.log.slice(0,200);save();renderRecent();renderStats();
+}
+function renderTAcc(){$("tAcc").innerHTML=[1,2,3,4].map(t=>{const [a,n]=S.tones[t];return `<div><span style="color:var(--t${t})">${TNAME[t]}</span><b>${n?Math.round(a/n*100)+"%":"–"}</b>${n} ouvidos</div>`}).join("");}
+
+/* ---------- Palavras ---------- */
+let wCat="Todas";
+function renderWords(){
+  const v=VOCAB();const cats=["Todas",...new Set(v.map(w=>w.c))];
+  $("wCats").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===wCat}">${c}</button>`).join("");
+  [...$("wCats").children].forEach((b,i)=>b.onclick=()=>{wCat=cats[i];renderWords();});
+  const list=v.filter(w=>wCat==="Todas"||w.c===wCat);
+  $("wList").innerHTML=list.map((w,i)=>{const r=S.srs["w:"+w.h];const lv=r?r.lv:0;
+    const pill=!r?`<span class="pill">novo</span>`:lv>=4?`<span class="pill l2">firme</span>`:`<span class="pill l1">estudando</span>`;
+    return `<div class="item"><button class="h" data-i="${i}">${esc(w.h)}</button><div class="t"><div class="p">${esc(w.p)}</div><div class="m">${esc(w.m)}</div></div>${pill}</div>`}).join("");
+  $("wList").querySelectorAll(".h").forEach(b=>b.onclick=()=>sayWord(list[+b.dataset.i].h));
+}
+$("addForm").addEventListener("submit",e=>{e.preventDefault();
+  const h=$("fHan").value.trim(),p=$("fPin").value.trim(),m=$("fMean").value.trim();if(!h||!p||!m)return;
+  if(VOCAB().some(w=>w.h===h)){$("fMsg").textContent=`${h} já está na lista.`;return;}
+  S.custom.push({h,p,m,c:"Minhas"});save();$("fMsg").textContent=`${h} adicionado. Vai aparecer na revisão como item novo.`;e.target.reset();renderWords();renderToday();});
+
+/* ---------- Ajustes ---------- */
+function fillVoices(){const vs=voices();const cur=bestVoice();
+  $("voiceSel").innerHTML=vs.length?vs.map(v=>`<option ${cur&&v.name===cur.name?"selected":""}>${esc(v.name)}</option>`).join(""):`<option>Nenhuma voz chinesa encontrada</option>`;}
+try{speechSynthesis.onvoiceschanged=fillVoices;}catch(e){}
+$("openSettings").onclick=()=>{fillVoices();$("rate").value=S.rate;$("rateLbl").textContent=S.rate+"×";$("newPerDay").value=S.newPerDay;try{$("settings").showModal();}catch(e){$("settings").setAttribute("open","");}};
+$("closeSettings").onclick=()=>{try{$("settings").close();}catch(e){$("settings").removeAttribute("open");}};
+$("voiceSel").onchange=e=>{S.voice=e.target.value;save();};
+$("rate").oninput=e=>{S.rate=+e.target.value;$("rateLbl").textContent=S.rate+"×";save();};
+$("newPerDay").onchange=e=>{S.newPerDay=+e.target.value;save();renderToday();};
+$("testVoice").onclick=()=>tts("你好，很高兴认识你。");
+
+/* ---------- Falar: análise da pronúncia (tons) ---------- */
+const SYLL=new Set(C.syll);
+const PLAIN={"ā":"a","á":"a","ǎ":"a","à":"a","ē":"e","é":"e","ě":"e","è":"e","ī":"i","í":"i","ǐ":"i","ì":"i","ō":"o","ó":"o","ǒ":"o","ò":"o","ū":"u","ú":"u","ǔ":"u","ù":"u","ǖ":"v","ǘ":"v","ǚ":"v","ǜ":"v","ü":"v"};
+/* divide o pinyin em sílabas e devolve o tom de cada uma (5 = neutro) */
+function pinyinTones(p){
+  const out=[];
+  for(const tok of p.split(/[\s,.!?;:，。！？'’\-…()（）\/]+/).filter(Boolean)){
+    const raw=[...tok];const norm=raw.map(c=>(PLAIN[c]||c).toLowerCase()).join("");
+    if(!/^[a-z]+$/.test(norm))return null;
+    const n=norm.length,best=Array(n+1).fill(null);best[0]=[];
+    for(let i=0;i<n;i++){if(!best[i])continue;for(let L=1;L<=6&&i+L<=n;L++){const s=norm.slice(i,i+L);
+      if(SYLL.has(s)){const cand=[...best[i],[i,i+L]];if(!best[i+L]||cand.length<best[i+L].length)best[i+L]=cand;}}}
+    if(!best[n])return null;
+    for(const [a,b] of best[n]){let t=5;for(let k=a;k<b;k++)if(MARKS[raw[k]])t=MARKS[raw[k]];out.push(t);}
+  }
+  return out;
+}
+/* tom que se espera ouvir: 3+3 vira 2+3 na fala */
+function spokenTones(t){const r=[...t];for(let i=0;i<r.length-1;i++)if(r[i]===3&&r[i+1]===3)r[i]=2;return r;}
+const hanChars=h=>[...h].filter(c=>/[一-鿿]/.test(c));
+
+let ACtx=null;
+function b64ToBuf(b){const s=atob(b);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}
+async function decode16k(buf){
+  const C1=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  try{const oc=new C1(1,16000,16000);const ab=await oc.decodeAudioData(buf.slice(0));return downmix(ab,16000);}
+  catch(e){if(!ACtx)ACtx=new (window.AudioContext||window.webkitAudioContext)();const ab=await new Promise((res,rej)=>ACtx.decodeAudioData(buf.slice(0),res,rej));return downmix(ab,16000);}
+}
+function downmix(ab,target){
+  const ch=ab.numberOfChannels,len=ab.length,src=new Float32Array(len);
+  for(let c=0;c<ch;c++){const d=ab.getChannelData(c);for(let i=0;i<len;i++)src[i]+=d[i]/ch;}
+  if(ab.sampleRate===target)return src;
+  const ratio=ab.sampleRate/target,out=new Float32Array(Math.floor(len/ratio));
+  for(let i=0;i<out.length;i++){const a=Math.floor(i*ratio),b=Math.min(len,Math.floor((i+1)*ratio));let s=0;for(let k=a;k<b;k++)s+=src[k];out[i]=s/Math.max(1,b-a);}
+  return out;
+}
+/* altura da voz quadro a quadro (método YIN), 10 ms por quadro */
+function pitchTrack(x,sr=16000){
+  const W=640,H=160,minT=Math.floor(sr/420),maxT=Math.floor(sr/70),frames=[];
+  let maxR=0;const rms=[];
+  for(let s=0;s+W<=x.length;s+=H){let e=0;for(let i=0;i<W;i++)e+=x[s+i]*x[s+i];const r=Math.sqrt(e/W);rms.push(r);if(r>maxR)maxR=r;}
+  const thr=Math.max(maxR*0.12,0.004);const d=new Float32Array(maxT+1);
+  for(let f=0;f<rms.length;f++){
+    if(rms[f]<thr){frames.push(null);continue;}
+    const s=f*H,half=W-maxT;
+    for(let t=minT;t<=maxT;t++){let sum=0;for(let i=0;i<half;i++){const v=x[s+i]-x[s+i+t];sum+=v*v;}d[t]=sum;}
+    let run=0,best=-1,bestV=1;
+    for(let t=minT;t<=maxT;t++){run+=d[t];const c=d[t]*(t-minT+1)/(run||1);
+      if(c<0.2){let tt=t;while(tt+1<=maxT&&d[tt+1]<d[tt])tt++;best=tt;bestV=c;break;}
+      if(c<bestV){bestV=c;best=t;}}
+    if(best<0||bestV>0.35){frames.push(null);continue;}
+    frames.push(sr/best);
+  }
+  // remove saltos de oitava e suaviza
+  const st=frames.map(f=>f?12*Math.log2(f/100):null);
+  const sm=st.map((v,i)=>{if(v==null)return null;const w=st.slice(Math.max(0,i-2),i+3).filter(z=>z!=null).sort((a,b)=>a-b);const med=w[Math.floor(w.length/2)];return Math.abs(v-med)>5?null:v;});
+  return sm;
+}
+/* separa os trechos com voz em N sílabas */
+function segment(st,N){
+  let runs=[];let a=-1;
+  st.forEach((v,i)=>{if(v!=null&&a<0)a=i;if((v==null||i===st.length-1)&&a>=0){const b=v==null?i:i+1;if(b-a>=4)runs.push([a,b]);a=-1;}});
+  if(!runs.length)return null;
+  while(runs.length>N){let gi=0,gm=1e9;for(let i=0;i<runs.length-1;i++){const g=runs[i+1][0]-runs[i][1];if(g<gm){gm=g;gi=i;}}
+    runs.splice(gi,2,[runs[gi][0],runs[gi+1][1]]);}
+  while(runs.length<N){let li=0;runs.forEach((r,i)=>{if(r[1]-r[0]>runs[li][1]-runs[li][0])li=i;});const [x,y]=runs[li];if(y-x<8)break;const m=Math.floor((x+y)/2);runs.splice(li,1,[x,m],[m,y]);}
+  return runs.length===N?runs:null;
+}
+function median(a){const s=a.filter(v=>v!=null).sort((x,y)=>x-y);return s.length?s[Math.floor(s.length/2)]:0;}
+/* classifica o formato do tom de uma sílaba */
+function classify(pts,ref,single){
+  const p=pts.filter(v=>v!=null).map(v=>v-ref);if(p.length<4)return null;
+  const q=Math.max(1,Math.floor(p.length*0.25));
+  const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const s=avg(p.slice(0,q)),e=avg(p.slice(-q)),mid=p.slice(q,p.length-q+1);const mn=mid.length?Math.min(...mid):Math.min(s,e);
+  const delta=e-s,mean=avg(p),dip=Math.min(s,e)-mn;
+  if(dip>1.5&&e-mn>1)return 3;
+  if(delta>=2.2)return 2;
+  if(delta<=-1.8){if(!single&&s<-1.5)return 3;return 4;}
+  if(!single&&mean<-1.5)return 3;
+  return 1;
+}
+async function analyze(samples){const st=pitchTrack(samples);return {st,ref:median(st),dur:st.length/100,voiced:st.filter(v=>v!=null).length};}
+function contourPoints(an,runs,n){ // reamostra cada sílaba em n pontos, normalizado pela voz da pessoa
+  return runs.map(([a,b])=>{const seg=an.st.slice(a,b);const out=[];for(let i=0;i<n;i++){const v=seg[Math.floor(i*seg.length/n)];out.push(v==null?null:v-an.ref);}return out;});
+}
+
+let fkMode="word",fkCur=null,fkNative=null,lastRecUrl=null;
+document.querySelectorAll("#fkMode .chip").forEach(b=>b.onclick=()=>{fkMode=b.dataset.m;PL=null;document.querySelectorAll("#fkMode .chip").forEach(x=>x.setAttribute("aria-pressed",x===b));newTarget();});
+function nativeKeysFor(t){
+  if(t.k==="syl")return ["s:"+t.key];
+  if(t.k==="word")return wordKeys(t.h);
+  if(AUDIO["f:"+t.h])return ["f:"+t.h];
+  const keys=[];for(const [w,a] of t.seg){if(!/[一-鿿]/.test(w))continue;const k=wordKeys(w);if(!k)return null;keys.push(...k);}return keys;
+}
+async function newTarget(preset){
+  await audioReady;
+  let t;
+  if(preset&&preset.h){t={...preset,tones:pinyinTones(preset.p)||[],chars:hanChars(preset.h)};if(t.tones.length!==t.chars.length)t.tones=t.chars.map(()=>5);}
+  else if(fkMode==="syl"){const b=pick(C.bases),tn=1+Math.floor(Math.random()*4);t={k:"syl",key:b+tn,h:mark(b,tn),p:mark(b,tn),m:`tom ${tn}`,tones:[tn],chars:[mark(b,tn)]};}
+  else if(fkMode==="word"){const w=pick(VOCAB().filter(w=>w.a!==false&&wordKeys(w.h)&&pinyinTones(w.p)&&pinyinTones(w.p).length===hanChars(w.h).length));
+    t={k:"word",h:w.h,p:w.p,m:w.m,tones:pinyinTones(w.p),chars:hanChars(w.h)};}
+  else{const ok=SENTS.filter(s=>{const tt=pinyinTones(s.p);return tt&&tt.length===hanChars(s.h).length;});const s=pick(ok);
+    t={k:"sent",h:s.h,p:s.p,m:s.m,seg:s.seg,tones:pinyinTones(s.p),chars:hanChars(s.h)};}
+  fkCur=t;fkNative=null;$("fkResult").hidden=true;$("fkMode").hidden=!!(PL&&preset);
+  const keys=nativeKeysFor(t);
+  $("fkTarget").innerHTML=`${t.k==="syl"?`<div class="big-syl">${esc(t.h)}</div>`:hanBox(t.h)}<div class="pin">${esc(t.p)}</div><div>${esc(t.m)}</div>
+    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz" style="font-size:${t.k==="syl"?16:22}px">${esc(c)}</span>${toneSvgSmall(spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    <div class="row" style="justify-content:center">${t.k==="sent"?"":`<button class="play" id="fkPlay">▶ Ouvir nativo</button>`}<button class="play" id="fkNext">Outra</button></div>
+    ${t.k==="sent"?`<div class="row" style="justify-content:center" id="fkListen">${listenBtns()}</div>`:""}
+    ${t.k==="sent"&&!keys?`<div class="small">Esta frase tem palavras sem gravação nativa; a comparação usa só os tons esperados.</div>`:""}
+    ${t.k==="sent"&&keys?`<div class="small">A referência é a frase montada com gravações nativas de cada palavra.</div>`:""}`;
+  if($("fkPlay"))$("fkPlay").onclick=()=>keys?playSeq(keys):saySentence(t.h);
+  if($("fkListen"))bindListen($("fkListen"),t.h);
+  $("fkNext").onclick=()=>fkGoNext();
+  if(PL&&preset){const n=PL.list.length,li=PL.lessonI;
+    $("fkTarget").insertAdjacentHTML("afterbegin",`<div class="row" style="width:100%;justify-content:space-between;align-items:center">
+      <button class="back" id="plBack">← Lição ${li+1}</button><span class="small">Frase ${PL.i+1} de ${n}</span></div>`);
+    $("fkNext").textContent=PL.i+1<n?"Próxima frase →":"Terminar";
+    $("plBack").onclick=()=>{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");};}
+  if(keys){try{const parts=[];for(const k of keys){parts.push(await decode16k(b64ToBuf(AUDIO[k])));parts.push(new Float32Array(1200));}
+    const len=parts.reduce((a,p)=>a+p.length,0),all=new Float32Array(len);let o=0;for(const p of parts){all.set(p,o);o+=p.length;}
+    if(fkCur===t)fkNative=await analyze(all);}catch(e){fkNative=null;}}
+}
+function fkGoNext(){
+  if(PL){if(PL.i+1<PL.list.length){PL.i++;newTarget(PL.list[PL.i]);}else{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");}}
+  else newTarget();window.scrollTo(0,0);
+}
+function goTab(v){document.querySelectorAll("nav.tabs button").forEach(x=>{const on=x.dataset.v===v;x.setAttribute("aria-selected",on);$("v-"+x.dataset.v).hidden=!on;});}
+function toneSvgSmall(t){if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+
+/* gravação: botão de microfone (toque para gravar/enviar, ou segure e solte) */
+let rec=null,recChunks=[],recStream=null,recStart=0,pressAt=0,recTimer=null,recAC=null,starting=false;
+function inClaude(){try{return window.self!==window.top;}catch(e){return true;}}
+async function startRec(){
+  if(starting||(rec&&rec.state==="recording"))return;starting=true;stopAll();
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)throw new Error("unsupported");
+    recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    $("recFallback").hidden=true;
+    const mt=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg"].find(m=>{try{return MediaRecorder.isTypeSupported(m);}catch(e){return false;}});
+    recChunks=[];rec=mt?new MediaRecorder(recStream,{mimeType:mt}):new MediaRecorder(recStream);
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data);};
+    rec.onstop=()=>{const type=rec.mimeType||"audio/webm";cleanupRec();
+      if(Date.now()-recStart<400){$("recMsg").textContent="Gravação muito curta. Toque e fale a frase inteira.";return;}
+      handleRecording(new Blob(recChunks,{type}));};
+    rec.start(100);recStart=Date.now();
+    $("recBtn").classList.add("recording");$("recMsg").textContent="Gravando… fale agora.";
+    try{recAC=new (window.AudioContext||window.webkitAudioContext)();const src=recAC.createMediaStreamSource(recStream);const an=recAC.createAnalyser();an.fftSize=512;src.connect(an);
+      const buf=new Uint8Array(an.fftSize);
+      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));$("recLevel").style.width=Math.min(100,m/90*100)+"%";
+        const s=(Date.now()-recStart)/1000;$("recTime").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
+        if(s>=20)stopRec();},80);}catch(e){}
+  }catch(e){
+    cleanupRec();$("recFallback").hidden=false;
+    $("recWhy").textContent=inClaude()?
+      "Dentro do Claude, as páginas não podem usar o microfone. Abra a versão do app no navegador (Chrome ou Safari) para gravar direto por aqui. Enquanto isso, dá para enviar uma gravação feita no celular:":
+      (e&&e.name==="NotAllowedError"?"Você negou a permissão. Libere o microfone para este site nas configurações do navegador (ícone de cadeado ao lado do endereço) e tente de novo.":"Não consegui acessar o microfone deste aparelho. Você pode enviar uma gravação:");
+    $("recMsg").textContent="";
+  }finally{starting=false;}
+}
+function stopRec(){if(rec&&rec.state==="recording")rec.stop();}
+function cleanupRec(){clearInterval(recTimer);recTimer=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop());}catch(e){}recStream=null;
+  try{recAC&&recAC.close();}catch(e){}recAC=null;$("recBtn").classList.remove("recording");$("recLevel").style.width="0";
+  $("recTime").innerHTML="Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp";}
+$("recBtn").addEventListener("pointerdown",e=>{e.preventDefault();pressAt=Date.now();
+  if(rec&&rec.state==="recording")stopRec();else startRec();});
+$("recBtn").addEventListener("pointerup",()=>{if(rec&&rec.state==="recording"&&Date.now()-pressAt>600)stopRec();});
+$("recBtn").addEventListener("contextmenu",e=>e.preventDefault());
+$("recBtn").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();rec&&rec.state==="recording"?stopRec():startRec();}});
+$("recFile").onchange=e=>{const f=e.target.files[0];if(f)handleRecording(f);e.target.value="";};
+
+async function handleRecording(blob){
+  const t=fkCur;if(!t)return;
+  $("recMsg").textContent="Analisando sua pronúncia…";
+  if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(blob);
+  let you;
+  try{you=await analyze(await decode16k(await blob.arrayBuffer()));}
+  catch(e){$("recMsg").textContent="Não consegui ler esse arquivo de áudio. Tente gravar de novo (formatos comuns: m4a, mp3, ogg, webm, wav).";return;}
+  $("recMsg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
+  renderResult(t,you);
+}
+function renderResult(t,you){
+  const N=t.tones.length,exp=spokenTones(t.tones),box=$("fkResult");box.hidden=false;
+  if(you.voiced<8){box.innerHTML=`<h2>Não deu para ouvir sua voz</h2><p class="muted">A gravação ficou muito baixa ou curta. Fale mais perto do celular, num lugar silencioso, e tente de novo.</p>`;return;}
+  const runsY=segment(you.st,N),runsN=fkNative?segment(fkNative.st,N):null;
+  const single=N===1;let judged=0,right=0;const res=[];
+  for(let i=0;i<N;i++){
+    let got=null;if(runsY){got=classify(you.st.slice(runsY[i][0],runsY[i][1]),you.ref,single);}
+    const e=exp[i];const skip=e===5||got==null;const ok=!skip&&got===e;if(!skip){judged++;if(ok)right++;}
+    res.push({c:t.chars[i],e,got,ok,skip});
+  }
+  // semelhança da melodia com o nativo
+  let sim=null;
+  if(runsY&&runsN){const A=contourPoints(you,runsY,12).flat(),B=contourPoints(fkNative,runsN,12).flat();let d=0,n=0;
+    for(let i=0;i<A.length;i++)if(A[i]!=null&&B[i]!=null){d+=Math.abs(A[i]-B[i]);n++;}
+    if(n>5)sim=Math.max(0,Math.min(100,Math.round(100-(d/n)*11)));}
+  const toneScore=judged?Math.round(right/judged*100):null;
+  const main=sim!=null&&toneScore!=null?Math.round(toneScore*0.6+sim*0.4):(toneScore??sim??0);
+  // dicas
+  const TIP={1:"Tom 1: voz alta e reta do começo ao fim, como cantar uma nota longa.",
+    2:"Tom 2: comece na altura do meio e suba, como quem pergunta “Hã?”.",
+    3:"Tom 3: leve a voz bem para o grave. No meio da frase ele fica só baixo, sem subir no final.",
+    4:"Tom 4: comece alto e caia rápido e firme, como dizer “Não!” com convicção."};
+  const NAME={1:"reto e alto",2:"subindo",3:"grave / descendo e subindo",4:"caindo"};
+  const tips=[];const wrongTones=new Set();
+  res.forEach(r=>{if(!r.skip&&!r.ok){tips.push(`<b>${esc(r.c)}</b>: você fez um tom ${NAME[r.got]}, o esperado era ${NAME[r.e]}.`);wrongTones.add(r.e);}});
+  wrongTones.forEach(t=>tips.push(TIP[t]));
+  if(!runsY)tips.push("Não consegui separar as sílabas da sua fala. Fale de forma clara, sem pausas longas no meio, e grave de novo.");
+  if(fkNative){const rate=you.voiced/Math.max(1,fkNative.voiced);
+    if(rate>1.7)tips.push("Você falou bem mais devagar que o nativo. Tente emendar as sílabas, num ritmo mais corrido.");
+    if(rate<0.55)tips.push("Você falou mais rápido que o nativo. Vá um pouco mais devagar para cada tom aparecer bem.");}
+  if(t.tones.some((x,i)=>x===3&&t.tones[i+1]===3))tips.push("Atenção: quando dois tons 3 aparecem juntos, o primeiro vira tom 2 (ex.: 你好 = ní hǎo).");
+  if(!tips.length)tips.push("Muito bom! Sua melodia está parecida com a do nativo. Tente agora sem olhar o texto, só de memória.");
+  // gráfico
+  const W=340,Hh=150,pad=16;const yMap=v=>Hh/2-v*6;
+  const lines=(an,runs)=>runs?contourPoints(an,runs,24).map((seg,i)=>{let d="",pen=false;seg.forEach((v,j)=>{if(v==null){pen=false;return;}const x=pad+(i+j/23)*(W-2*pad)/N;const y=Math.max(4,Math.min(Hh-4,yMap(v)));d+=(pen?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)+" ";pen=true;});return d;}).join(""):"";
+  const grid=[...Array(N+1)].map((_,i)=>{const x=pad+i*(W-2*pad)/N;return `<line x1="${x}" y1="0" x2="${x}" y2="${Hh}" stroke="var(--line)" stroke-dasharray="3 3"/>`;}).join("")+
+    t.chars.map((c,i)=>`<text x="${pad+(i+.5)*(W-2*pad)/N}" y="${Hh+16}" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="var(--f-han)">${esc(c)}</text>`).join("");
+  box.innerHTML=`<div style="display:flex;align-items:center;gap:16px"><div class="score" style="color:var(--${main>=75?"good":main>=50?"warn":"bad"})">${main}</div>
+      <div class="muted">${toneScore!=null?`Tons certos: ${right} de ${judged}`:""}${sim!=null?`<br>Melodia parecida com o nativo: ${sim}%`:""}</div></div>
+    <div class="chart"><svg viewBox="0 0 ${W} ${Hh+22}" role="img" aria-label="Curva da sua voz comparada com a do nativo">
+      <line x1="0" y1="${Hh/2}" x2="${W}" y2="${Hh/2}" stroke="var(--line)"/>${grid}
+      ${runsN?`<path d="${lines(fkNative,runsN)}" fill="none" stroke="var(--jade)" stroke-width="3" stroke-dasharray="6 4" stroke-linecap="round"/>`:""}
+      ${runsY?`<path d="${lines(you,runsY)}" fill="none" stroke="var(--seal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:""}
+    </svg></div>
+    <div class="legend">${runsN?`<span><i style="background:var(--jade)"></i>Nativo</span>`:""}<span><i style="background:var(--seal)"></i>Você</span><span>Alto ↑ / Grave ↓</span></div>
+    <div class="sylrow">${res.map(r=>`<span class="syl ${r.skip?"skip":r.ok?"ok":"no"}"><span class="hz">${esc(r.c)}</span>${toneSvgSmall(r.e)}<small>${r.skip?(r.e===5?"neutro":"não ouvi"):r.ok?"certo":"você: tom "+r.got}</small></span>`).join("")}</div>
+    <h3>O que melhorar</h3><ul class="tips">${tips.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="row"><button class="play" id="fkMine">▶ Minha gravação</button><button class="play" id="fkNat2">▶ Nativo</button><button class="play" id="fkRetry">🎙 Gravar de novo</button><button class="play" id="fkAgain">${PL?"Próxima frase →":"Outra"}</button></div>`;
+  $("fkMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
+  $("fkNat2").onclick=()=>{const k=nativeKeysFor(t);k?playSeq(k):saySentence(t.h);};
+  $("fkAgain").onclick=fkGoNext;$("fkRetry").onclick=()=>{window.scrollTo(0,0);startRec();};
+  S.speak=S.speak||{};S.speak[t.h]=Math.max(S.speak[t.h]||0,main);S.log.unshift({id:"f",h:t.h,m:`Pronúncia: ${main} pontos`,ok:main>=70,t:Date.now()});S.log=S.log.slice(0,200);
+  res.forEach(r=>{if(!r.skip&&r.e<5){S.tones[r.e][1]++;if(r.ok)S.tones[r.e][0]++;}});save();renderRecent();renderStats();renderTAcc();
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ---------- Trilha ---------- */
+const short=m=>m.split(/ \/ | \(/)[0];
+const unlocked=i=>i===0||!!(S.lessons[LESSONS[i-1].id]&&S.lessons[LESSONS[i-1].id].done);
+function renderTrilha(){
+  $("trilhaHome").hidden=false;$("lessonView").hidden=true;
+  const done=LESSONS.filter(l=>S.lessons[l.id]&&S.lessons[l.id].done).length;
+  $("trBar").style.width=(done/LESSONS.length*100)+"%";
+  const next=LESSONS.find((l,i)=>unlocked(i)&&!(S.lessons[l.id]&&S.lessons[l.id].done));
+  $("trText").textContent=`${done} de ${LESSONS.length} lições concluídas.`+(next?` Próxima: “${next.t}”.`:" Você terminou a trilha! Continue com a revisão diária.")+" Acerte 70% dos exercícios para liberar a lição seguinte.";
+  const lv=[...new Set(LESSONS.map(l=>l.lvl))];
+  $("trLevels").innerHTML=lv.map(name=>`<div class="lvl"><h3>${esc(name)}</h3>${LESSONS.map((l,i)=>l.lvl!==name?"":(()=>{
+      const st=S.lessons[l.id],u=unlocked(i),d=st&&st.done;
+      return `<button class="lesson ${d?"done":u?"open":"locked"}" data-i="${i}" ${u?"":"disabled"}><span class="n">${d?"✓":u?i+1:"🔒"}</span>
+        <span style="min-width:0"><span class="tt">${esc(l.t)}</span><br><span class="gg">${esc(l.goal)}</span></span>
+        <span class="sc">${st&&st.tries?`${st.best}%`:""}</span></button>`;})()).join("")}</div>`).join("");
+  $("trLevels").querySelectorAll(".lesson:not([disabled])").forEach(b=>b.onclick=()=>openLesson(+b.dataset.i,"learn"));
+}
+let LS=null; // lição aberta
+function openLesson(i,step){
+  const l=LESSONS[i];LS={i,l,step};stopAll();
+  $("trilhaHome").hidden=true;const v=$("lessonView");v.hidden=false;window.scrollTo(0,0);
+  v.innerHTML=`<button class="back" id="lsBack">← Trilha</button>
+    <div><div class="small">${esc(l.lvl)} · Lição ${i+1}</div><h2 style="font-size:22px">${esc(l.t)}</h2><div class="muted">${esc(l.goal)}</div></div>
+    <div class="steps" role="tablist"><button data-s="learn">1. Palavras</button><button data-s="phrases">2. Frases</button><button data-s="ex">3. Exercícios</button><button data-s="speak">4. Falar</button></div>
+    <div id="lsBody" style="display:flex;flex-direction:column;gap:14px"></div>`;
+  $("lsBack").onclick=()=>{LS=null;stopAll();renderTrilha();};
+  v.querySelectorAll(".steps button").forEach(b=>{b.setAttribute("aria-selected",b.dataset.s===step);b.onclick=()=>openLesson(i,b.dataset.s);});
+  if(step==="learn")renderLearn(l);if(step==="phrases")renderPhrases(l);if(step==="ex")startEx(l);if(step==="speak")renderSpeak(l);
+}
+function renderLearn(l){
+  const b=$("lsBody");
+  b.innerHTML=`<div class="panel"><p class="small">Toque no caractere para ouvir. Leia a explicação de cada palavra, principalmente das partículas.</p>
+    <div>${l.new.map(h=>{const [p,m,n]=GL[h];return `<div class="wcard"><button class="hz" data-h="${esc(h)}">${esc(h)}</button>
+      <div class="py">${esc(p)}</div><div>${esc(m)}</div>${n?`<div class="note">${esc(n)}</div>`:"<div></div>"}</div>`}).join("")}</div></div>
+    ${l.extra?`<div class="panel"><h2>Como funcionam os nomes chineses</h2><ul class="tips">${l.extra.notes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul></div>`+
+      l.extra.groups.map(([title,list])=>`<div class="panel"><h3>${esc(title)}</h3><div>${list.map(([h,p,m])=>`<div class="wcard"><button class="hz" data-h="${esc(h)}">${esc(h)}</button><div class="py">${esc(p)}</div><div>${esc(m)}</div><div></div></div>`).join("")}</div></div>`).join(""):""}
+    <div class="row"><button class="btn primary" id="lsNext">Ver as frases →</button></div>`;
+  b.querySelectorAll(".hz").forEach(x=>x.onclick=()=>sayWord(x.dataset.h));
+  $("lsNext").onclick=()=>openLesson(LS.i,"phrases");
+}
+function tokHtml(t,i){return PUNCT.test(t)?`<span class="tok p"><small>&nbsp;</small><span>${esc(t)}</span></span>`:`<button class="tok" data-i="${i}"><small>${esc(GL[t][0])}</small><span>${esc(t)}</span></button>`;}
+function glossBox(t){const [p,m,n]=GL[t];return `<div class="gbox"><span class="hz">${esc(t)}</span><div class="tx"><b style="color:var(--jade)">${esc(p)}</b> · ${esc(m)}${n?`<br><span class="muted">${esc(n)}</span>`:""}</div></div>`;}
+function renderPhrases(l){
+  const b=$("lsBody");
+  b.innerHTML=`<p class="small">Toque em cada palavra para ver o que ela significa. A linha “palavra por palavra” mostra a ordem do chinês.</p>`+
+   l.ph.map(([tk,p,m],k)=>`<div class="panel" data-k="${k}">
+     <div class="toks">${tk.map(tokHtml).join("")}</div>
+     <div class="pin" style="font-size:16px">${esc(p)}</div><div style="font-size:16px;font-weight:600">${esc(m)}</div>
+     <div class="lit">Palavra por palavra: ${tk.filter(t=>!PUNCT.test(t)).map(t=>esc(short(GL[t][1]))).join(" · ")}</div>
+     <div class="gslot"></div>
+     <div class="row">${listenBtns()}<button class="play" data-a="f">🎙 Praticar fala</button></div></div>`).join("")+
+   `<div class="row"><button class="btn primary" id="lsNext">Fazer os exercícios →</button></div>`;
+  b.querySelectorAll(".panel[data-k]").forEach(el=>{const [tk,p,m]=l.ph[+el.dataset.k];const h=tk.join("");
+    el.querySelectorAll(".tok[data-i]").forEach(x=>x.onclick=()=>{const t=tk[+x.dataset.i];el.querySelectorAll(".tok").forEach(y=>y.classList.toggle("sel",y===x));el.querySelector(".gslot").innerHTML=glossBox(t);sayWord(t);});
+    el.querySelector("[data-a=f]").onclick=()=>openFalar(lessonTargets(l),+el.dataset.k,LS.i);
+    bindListen(el,h,i=>el.querySelectorAll(".tok[data-i]").forEach(y=>y.classList.toggle("sel",+y.dataset.i===i)));
+  });
+  $("lsNext").onclick=()=>openLesson(LS.i,"ex");
+}
+/* exercícios */
+const GRAMMAR=["吗","呢","的","了","吧","很","也","不","在","会","是","个","得","还是","一下","给","几","什么"];
+let EX=null;
+function upTo(l){return LESSONS.slice(0,LESSONS.indexOf(l)+1);}
+function prevWords(l){return upTo(l).flatMap(x=>x.new);}
+function startEx(l){
+  const pool=prevWords(l),phr=l.ph,allPh=upTo(l).flatMap(x=>x.ph);
+  const qs=[];
+  const words=shuffle(l.new);
+  words.slice(0,3).forEach((h,i)=>qs.push(i%2?{type:"pt2w",h}:{type:"w2pt",h}));
+  shuffle(phr).slice(0,2).forEach(ph=>qs.push({type:"listen",ph}));
+  shuffle(phr.filter(ph=>ph[0].filter(t=>!PUNCT.test(t)).length>=2)).slice(0,3).forEach(ph=>qs.push({type:"build",ph}));
+  const fills=shuffle(phr.filter(ph=>ph[0].some(t=>!PUNCT.test(t))));
+  fills.slice(0,2).forEach(ph=>{const cand=ph[0].map((t,i)=>[t,i]).filter(([t])=>!PUNCT.test(t));const g=cand.filter(([t])=>GRAMMAR.includes(t));const [t,idx]=pick(g.length?g:cand);qs.push({type:"fill",ph,idx});});
+  while(qs.length<10&&words.length>3)qs.push({type:"w2pt",h:words[qs.length%words.length]});
+  EX={l,q:shuffle(qs),i:0,ok:0,total:0,pool,allPh,firstWrong:new Set(),start:Date.now()};EX.total=EX.q.length;
+  showEx();
+}
+function showEx(){
+  const b=$("lsBody"),e=EX;
+  if(e.i>=e.q.length){finishEx();return;}
+  const q=e.q[e.i];const head=`<div class="progress"><i style="width:${e.i/e.q.length*100}%"></i></div><div class="small">Exercício ${Math.min(e.i+1,e.total)} de ${e.total}${q.retry?" · revisão do erro":""}</div>`;
+  let body="",opts=[],right=null;
+  const distW=(h,f)=>shuffle(e.pool.filter(x=>x!==h&&GL[x][1]!==GL[h][1])).slice(0,3);
+  if(q.type==="w2pt"){const d=distW(q.h);opts=shuffle([q.h,...d]).map(x=>({lab:GL[x][1],ok:x===q.h}));
+    body=`<div class="small">O que significa?</div>${hanBox(q.h)}<div class="row" style="justify-content:center"><button class="play" id="exPlay">▶ Ouvir</button></div>`;}
+  if(q.type==="pt2w"){const d=distW(q.h);opts=shuffle([q.h,...d]).map(x=>({lab:x,hz:1,ok:x===q.h,py:GL[x][0]}));
+    body=`<div class="small">Como se diz em chinês?</div><div class="tzg wide"><span style="position:relative;z-index:1;font-size:22px;font-weight:700">${esc(GL[q.h][1])}</span></div>`;}
+  if(q.type==="listen"){const others=shuffle(e.allPh.filter(p=>p[2]!==q.ph[2])).slice(0,3);opts=shuffle([q.ph,...others]).map(p=>({lab:p[2],ok:p===q.ph}));
+    body=`<div class="small">Ouça e escolha a tradução</div><div class="tzg wide"><span class="han" style="font-size:44px">🎧</span></div><div class="row" style="justify-content:center" id="exListen">${listenBtns()}</div>`;}
+  if(q.type==="fill"){const tk=q.ph[0],t=tk[q.idx];
+    const d=shuffle([...new Set([...GRAMMAR.filter(g=>GL[g]&&e.pool.includes(g)),...e.pool])].filter(x=>x!==t&&!tk.includes(x))).slice(0,3);
+    opts=shuffle([t,...d]).map(x=>({lab:x,hz:1,ok:x===t,py:GL[x][0]}));
+    body=`<div class="small">Complete a frase</div><div class="toks" style="justify-content:center">${tk.map((x,i)=>i===q.idx?`<span class="tok" style="border-style:dashed"><small>?</small><span>＿</span></span>`:tokHtml(x,i)).join("")}</div><div style="font-weight:600">${esc(q.ph[2])}</div>`;}
+  if(q.type==="build"){
+    const tk=q.ph[0].filter(t=>!PUNCT.test(t));const order=shuffle(tk.map((t,i)=>i));
+    b.innerHTML=head+`<div class="panel qcard"><div class="small">Monte a frase em chinês</div><div style="font-size:18px;font-weight:700">${esc(q.ph[2])}</div>
+      <div class="build" id="bArea"></div><div class="pool" id="bPool">${order.map(i=>`<button class="tok" data-i="${i}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("")}</div>
+      <div class="fb" id="exFb"></div><div class="row" style="width:100%"><button class="btn" id="bClear">Limpar</button><button class="btn primary" id="bCheck">Conferir</button></div>
+      <div class="row" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
+    const chosen=[];
+    const draw=()=>{$("bArea").innerHTML=chosen.map((i,k)=>`<button class="tok" data-k="${k}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("");
+      $("bArea").querySelectorAll(".tok").forEach(x=>x.onclick=()=>{if(!$("exNext").hidden)return;chosen.splice(+x.dataset.k,1);sync();});};
+    const sync=()=>{draw();$("bPool").querySelectorAll(".tok").forEach(x=>x.disabled=chosen.includes(+x.dataset.i));};
+    $("bPool").querySelectorAll(".tok").forEach(x=>x.onclick=()=>{if(!$("exNext").hidden)return;chosen.push(+x.dataset.i);sync();sayWord(tk[+x.dataset.i]);});
+    $("bClear").onclick=()=>{if(!$("exNext").hidden)return;chosen.length=0;sync();};
+    $("bCheck").onclick=()=>{if(!$("exNext").hidden||chosen.length<tk.length)return;
+      const ok=chosen.map(i=>tk[i]).join("")===tk.join("");exResult(q,ok,`${esc(q.ph[0].join(""))} · <span style="color:var(--jade)">${esc(q.ph[1])}</span>`);$("bCheck").hidden=true;$("bClear").hidden=true;saySentence(q.ph[0].join(""));};
+    return;
+  }
+  b.innerHTML=head+`<div class="panel qcard">${body}<div class="opts ${q.type==="listen"?"one":""}" id="exOpts"></div><div class="fb" id="exFb"></div>
+    <div class="row" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
+  const h=q.h||(q.ph&&q.ph[0].join(""));
+  if($("exPlay"))$("exPlay").onclick=()=>q.h?sayWord(q.h):saySentence(h);
+  if($("exListen"))bindListen($("exListen"),h);
+  if(q.type==="listen")saySentence(h);if(q.type==="w2pt")sayWord(q.h);
+  const oc=$("exOpts");
+  opts.forEach(o=>{const x=document.createElement("button");x.className="opt"+(o.hz?" hz":"");x.innerHTML=o.py?`<small style="display:block;font:600 12px var(--f-body);color:var(--jade)">${esc(o.py)}</small>${esc(o.lab)}`:esc(o.lab);
+    x.onclick=()=>{if(!$("exNext").hidden)return;[...oc.children].forEach((y,k)=>{if(opts[k].ok)y.classList.add("right");});if(!o.ok)x.classList.add("wrong");
+      let info="";
+      if(q.h)info=`${esc(q.h)} · <span style="color:var(--jade)">${esc(GL[q.h][0])}</span> · ${esc(GL[q.h][1])}`;
+      else info=`${esc(q.ph[0].join(""))} · <span style="color:var(--jade)">${esc(q.ph[1])}</span><br>${esc(q.ph[2])}`;
+      if(q.type==="fill"){const t=q.ph[0][q.idx];info+=`<div style="margin-top:8px;text-align:left">${glossBox(t)}</div>`;}
+      exResult(q,o.ok,info);if(q.type==="pt2w")sayWord(q.h);if(q.type==="fill")saySentence(h);};
+    oc.append(x);});
+}
+function exResult(q,ok,info){
+  const e=EX;
+  if(!q.retry){if(ok)e.ok++;else{e.q.push({...q,retry:true});}}
+  else if(!ok)e.q.push({...q,retry:true});
+  $("exFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Ainda não."}</span> ${info}`;
+  if(q.ph){const h=q.ph[0].join("");$("exFb").insertAdjacentHTML("beforeend",`<div class="row" style="justify-content:center;margin-top:8px" id="fbListen">${listenBtns()}</div>`);bindListen($("fbListen"),h);}
+  $("exNext").hidden=false;$("exNext").onclick=()=>{e.i++;showEx();window.scrollTo(0,0);};
+  S.log.unshift({id:"l"+e.l.id,h:q.h||q.ph[0].join(""),m:`Lição ${LESSONS.indexOf(e.l)+1}: ${e.l.t}`,ok,t:Date.now()});S.log=S.log.slice(0,200);save();
+}
+function finishEx(){
+  const e=EX,l=e.l,score=Math.round(e.ok/e.total*100),passed=score>=70;
+  const st=S.lessons[l.id]||{best:0,tries:0,done:false};
+  st.tries++;st.best=Math.max(st.best,score);st.last=Date.now();const firstPass=passed&&!st.done;if(passed)st.done=true;S.lessons[l.id]=st;
+  if(firstPass){lessonItems(l).forEach(it=>{if(!S.srs[it.id])S.srs[it.id]={lv:1,due:Date.now()+DAY-3600000,n:1,miss:0,last:Date.now()};});}
+  save();renderStats();renderRecent();
+  const nextI=LS.i+1<LESSONS.length?LS.i+1:null;
+  $("lsBody").innerHTML=`<div class="panel qcard"><div class="score" style="color:var(--${passed?"good":"warn"})">${score}%</div>
+    <h2>${passed?(firstPass?"Lição concluída! A próxima foi liberada.":"Muito bem, lição revisada!"):"Quase lá!"}</h2>
+    <p class="muted">${e.ok} de ${e.total} certos de primeira · ${Math.max(1,Math.round((Date.now()-e.start)/60000))} min.
+    ${passed?"As palavras e frases desta lição entraram na sua revisão diária (aba Hoje).":"Releia as palavras e as frases e tente de novo. Você precisa de 70% para liberar a próxima lição."}</p>
+    <div class="row" style="width:100%">${passed?`<button class="btn primary" id="exSpeak">🎙 Agora fale as frases</button>`:""}${passed&&nextI!=null?`<button class="btn" id="exGoNext">Próxima lição →</button>`:""}<button class="btn ${passed?"":"primary"}" id="exRetry">Refazer exercícios</button><button class="btn" id="exHome">Voltar à trilha</button></div></div>`;
+  if($("exGoNext"))$("exGoNext").onclick=()=>openLesson(nextI,"learn");if($("exSpeak"))$("exSpeak").onclick=()=>openLesson(LS.i,"speak");
+  $("exRetry").onclick=()=>openLesson(LS.i,"ex");$("exHome").onclick=()=>{LS=null;renderTrilha();};
+}
+/* falar da lição: lista de frases em sequência */
+let PL=null;
+function lessonTargets(l){return l.ph.map(([tk,p,m])=>({k:"sent",h:tk.join(""),p,m,seg:tk.map(t=>[t,AUDIO["w:"+t]?1:0])}));}
+function openFalar(list,i,lessonI){
+  PL={list,i:i||0,lessonI};
+  document.querySelectorAll("nav.tabs button").forEach(x=>{const on=x.dataset.v==="falar";x.setAttribute("aria-selected",on);$("v-"+x.dataset.v).hidden=!on;});
+  window.scrollTo(0,0);newTarget(PL.list[PL.i]);
+}
+function renderSpeak(l){
+  const sp=S.speak||{};const list=lessonTargets(l);
+  const doneN=list.filter(x=>(sp[x.h]||0)>=70).length;
+  $("lsBody").innerHTML=`<div class="panel"><h2>Fale as frases da lição</h2>
+    <p class="muted">Ouça o nativo, grave repetindo e veja onde seus tons ficaram diferentes. Meta: 70 pontos em cada frase. ${doneN} de ${list.length} frases já atingiram a meta.</p>
+    <div class="row"><button class="btn primary" id="spAll">🎙 Praticar todas em sequência</button></div></div>
+    <div class="panel">${list.map((x,k)=>`<div class="rec" style="grid-template-columns:1fr auto auto">
+      <div style="min-width:0"><div class="han" style="font-size:20px">${esc(x.h)}</div><div class="m" style="font-size:13px;color:var(--muted)">${esc(x.m)}</div></div>
+      <span class="pill ${(sp[x.h]||0)>=70?"l2":sp[x.h]!=null?"l1":""}">${sp[x.h]!=null?sp[x.h]+" pts":"não feito"}</span>
+      <button class="play" data-k="${k}">🎙</button></div>`).join("")}</div>`;
+  $("spAll").onclick=()=>openFalar(list,0,LS.i);
+  $("lsBody").querySelectorAll(".play[data-k]").forEach(b=>b.onclick=()=>openFalar(list,+b.dataset.k,LS.i));
+}
+
+/* ---------- abas ---------- */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav.tabs button").forEach(x=>{x.setAttribute("aria-selected",x===b);$("v-"+x.dataset.v).hidden=x!==b;});
+  stopAll();window.scrollTo(0,0);
+  if(b.dataset.v==="tons"&&!tq)newTone();if(b.dataset.v==="trilha"&&!LS)renderTrilha();if(b.dataset.v==="falar"&&!fkCur)newTarget();if(b.dataset.v==="hoje"&&!session)renderToday();
+});
+$("startReview").onclick=()=>{audioReady.then(startSession);};
+
+renderTrilha();renderToday();renderSents();renderWords();renderTAcc();
+</script>
+<script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script></body></html>
