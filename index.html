@@ -194,15 +194,18 @@ body.insession{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .lvbadge{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:var(--onc);background:var(--c1);box-shadow:inset 0 0 0 4px color-mix(in srgb,var(--onc) 30%,transparent)}
 .mstat{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
 .mstat.fire{color:var(--c4)} .mstat.xp{color:var(--gold)} .mstat b{color:var(--ink)}
-.mappath{position:relative;width:100%;margin-top:6px}
-.pathsvg{position:absolute;left:0;top:0;pointer-events:none}
+.mappath{position:relative;width:100%;margin-top:6px;display:flex;flex-direction:column;gap:22px;padding-top:8px}
+.nrow{display:flex;justify-content:center;position:relative;z-index:1}
+.nrow.currow{margin-top:26px}
+.mapend{height:96px}
+.pathsvg{position:absolute;left:0;top:0;pointer-events:none;z-index:0}
 .pbase{fill:none;stroke:var(--line);stroke-width:9;stroke-linecap:round;stroke-dasharray:1 16}
 .pdone{fill:none;stroke:color-mix(in srgb,var(--c1) 55%,transparent);stroke-width:9;stroke-linecap:round}
-.lvband{position:absolute;left:0;right:0;height:48px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:14px;background:color-mix(in srgb,var(--nc) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--nc) 35%,transparent)}
+.lvband{position:relative;z-index:1;min-height:48px;margin-top:6px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:14px;background:color-mix(in srgb,var(--nc) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--nc) 35%,transparent)}
 .lvn{font-weight:800;color:var(--onc);background:var(--nc);border-radius:8px;padding:3px 8px;font-size:13px}
 .lvt{font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lvp{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-.node{position:absolute;transform:translateX(-50%);width:150px;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--ink);font:inherit}
+.node{position:relative;transform:translateX(var(--x));width:170px;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--ink);font:inherit}
 .ringw{position:relative;width:92px;height:92px;display:grid;place-items:center}
 .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
 .ring .trk{fill:none;stroke:color-mix(in srgb,var(--nc) 22%,var(--surface));stroke-width:7}
@@ -214,7 +217,7 @@ body.insession{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .node.locked .lbl{color:var(--muted)}
 .node .badge{position:absolute;right:2px;bottom:4px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--bg)}
 .badge.ok{background:var(--gold);color:#fff} .badge.lk{background:var(--surface);color:var(--muted)}
-.lbl{font-size:14px;line-height:1.3;text-align:center;font-weight:600;max-width:140px;text-wrap:balance}
+.lbl{font-size:14px;line-height:1.3;text-align:center;font-weight:600;max-width:170px;text-wrap:balance;background:var(--bg);border-radius:10px;padding:3px 8px;box-shadow:0 0 0 4px var(--bg)}
 .lbl b{color:var(--muted);font-weight:700;margin-right:2px}
 .node.cur .disc{animation:bob 2.2s ease-in-out infinite}
 .node .go{position:absolute;top:-30px;background:var(--surface);color:var(--nc);border:2px solid var(--nc);font-weight:800;font-size:12px;letter-spacing:.06em;padding:4px 10px;border-radius:10px;white-space:nowrap}
@@ -1234,31 +1237,32 @@ function renderMap(){
   const mins=Math.round((S.time[dayKey()]||0)/60000);
   $("goalTxt").innerHTML=`<b>${mins}</b>/${S.goal} min hoje`;$("goalBar").style.width=Math.min(100,mins/S.goal*100)+"%";
   const due=dueList().length+newList().length;$("rvCount").textContent=due?due:"";$("rvCount").hidden=!due;
-  const box=$("mapPath"),W=box.clientWidth||360,maxOff=Math.max(0,W/2-84);
+  const box=$("mapPath"),W=box.clientWidth||360,maxOff=Math.max(0,Math.min(110,W/2-92));
   const PAT=[0,.72,1,.72,0,-.72,-1,-.72];
-  let y=8,html="",pts=[],k=0,last=null;
+  let html="",k=0,last=null;
   LESSONS.forEach((l,i)=>{
     if(l.lvl!==last){last=l.lvl;const ls=LESSONS.filter(x=>x.lvl===l.lvl),d=ls.filter(lessonDone).length;
-      html+=`<div class="lvband" style="top:${y}px;--nc:var(--c${lvIdx(l)%7+1})"><span class="lvn">N${lvIdx(l)+1}</span><span class="lvt">${esc(lvShort(l.lvl))}</span><span class="lvp">${d}/${ls.length}</span></div>`;
-      y+=72;k=0;}
-    const x=W/2+PAT[k%8]*maxOff;k++;
+      html+=`<div class="lvband" style="--nc:var(--c${lvIdx(l)%7+1})"><span class="lvn">N${lvIdx(l)+1}</span><span class="lvt">${esc(lvShort(l.lvl))}</span><span class="lvp">${d}/${ls.length}</span></div>`;k=0;}
+    const x=PAT[k%8]*maxOff;k++;
     const open=lOpen(i),done=lessonDone(l),p=lProgress(l),isCur=i===ci;
-    pts.push([x,y+46,done]);
-    html+=`<button class="node ${done?"done":open?"open":"locked"} ${isCur?"cur":""}" data-i="${i}" style="left:${x}px;top:${y}px;--nc:var(--c${lvIdx(l)%7+1})" ${open?"":"aria-disabled=\"true\""} aria-label="Lição ${i+1}: ${esc(l.t)}">
+    html+=`<div class="nrow ${isCur?"currow":""}" style="--x:${x.toFixed(0)}px"><button class="node ${done?"done":open?"open":"locked"} ${isCur?"cur":""}" data-i="${i}" style="--nc:var(--c${lvIdx(l)%7+1})" ${open?"":"aria-disabled=\"true\""} aria-label="Lição ${i+1}: ${esc(l.t)}">
       ${isCur?`<span class="go">${p>0?"CONTINUAR":"COMEÇAR"}</span>`:""}
-      <span class="ringw"><svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="prg" stroke-dasharray="${(p*289).toFixed(1)} 289"/></svg>
+      <span class="ringw" data-done="${done?1:0}"><svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="prg" stroke-dasharray="${(p*289).toFixed(1)} 289"/></svg>
       <span class="disc"><span class="g">${GLYPH[l.id]||esc(l.new[0][0])}</span></span>
       ${!open?`<span class="badge lk">${ICON.lock}</span>`:done?`<span class="badge ok">${ICON.check}</span>`:""}</span>
-      <span class="lbl"><b>${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</b> ${esc(l.t)}</span></button>`;
-    y+=128;
+      <span class="lbl"><b>${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</b> ${esc(l.t)}</span></button></div>`;
   });
-  let d="",dd="";
-  for(let i=1;i<pts.length;i++){const [x0,y0,dn]=pts[i-1],[x1,y1]=pts[i],m=(y1-y0)/2;const seg=`M${x0} ${y0} C${x0} ${y0+m} ${x1} ${y1-m} ${x1} ${y1} `;d+=seg;if(dn)dd+=seg;}
-  box.style.height=(y+20)+"px";
-  box.innerHTML=`<svg class="pathsvg" width="${W}" height="${y+20}" aria-hidden="true"><path d="${d}" class="pbase"/><path d="${dd}" class="pdone"/></svg>`+html;
+  box.style.height="";
+  box.innerHTML=`<svg class="pathsvg" aria-hidden="true"></svg>`+html+`<div class="mapend"></div>`;
+  drawPath();
   box.querySelectorAll(".node").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!lOpen(i)){b.classList.add("shake");setTimeout(()=>b.classList.remove("shake"),400);return;}openLessonPage(i);});
   if(!mapScrolled){mapScrolled=true;const n=box.querySelector(".node.cur");if(n&&ci>1)requestAnimationFrame(()=>n.scrollIntoView({block:"center"}));}
 }
+function drawPath(){const box=$("mapPath");if(!box||box.offsetParent===null)return;const svg=box.querySelector(".pathsvg");if(!svg)return;
+  const br=box.getBoundingClientRect();const rs=[...box.querySelectorAll(".ringw")].map(r=>{const b=r.getBoundingClientRect();return [b.left+b.width/2-br.left,b.top+b.height/2-br.top,r.dataset.done==="1"];});
+  let d="",dd="";for(let i=1;i<rs.length;i++){const [x0,y0,dn]=rs[i-1],[x1,y1]=rs[i],m=(y1-y0)/2;const seg=`M${x0.toFixed(1)} ${y0.toFixed(1)} C${x0.toFixed(1)} ${(y0+m).toFixed(1)} ${x1.toFixed(1)} ${(y1-m).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)} `;d+=seg;if(dn)dd+=seg;}
+  svg.setAttribute("width",box.clientWidth);svg.setAttribute("height",box.scrollHeight);svg.innerHTML=`<path d="${d}" class="pbase"/><path d="${dd}" class="pdone"/>`;}
+try{document.fonts&&document.fonts.ready.then(()=>drawPath());}catch(e){}
 let rsT=null;addEventListener("resize",()=>{clearTimeout(rsT);rsT=setTimeout(()=>{if(!$("trilhaHome").hidden&&!$("v-trilha").hidden)renderMap();},150);});
 
 /* ---------- página da lição ---------- */
