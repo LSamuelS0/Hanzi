@@ -182,6 +182,10 @@ a{color:var(--jade)}
 .pool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
 .pool .tok[disabled]{opacity:.25}
 .back{border:0;background:none;color:var(--jade);font:700 14px var(--f-body);cursor:pointer;padding:4px 0;align-self:flex-start}
+/* botão de avançar fica sempre visível acima do menu */
+.nextbar{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:3;background:var(--surface);padding-block:8px;margin-inline:-4px;padding-inline:4px;border-radius:14px}
+.nextbar:has(> button:not([hidden]))::before{content:"";position:absolute;inset:-14px 0 100% 0;background:linear-gradient(transparent,var(--surface));pointer-events:none}
+.nextbar:not(:has(> button:not([hidden]))){position:static;padding:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -443,7 +447,7 @@ function askQ(it){
   if(mode==="pt2zh")prompt=`<div class="tzg wide"><span style="position:relative;z-index:1;font-size:20px;font-weight:600">${esc(it.m)}</span></div><div class="small">Como se diz em chinês?</div>`;
   box.innerHTML=`${prompt}${mode!=="pt2zh"?`<div class="row" style="justify-content:center">${playBtns(it)}</div>`:""}
     <div class="opts ${it.k==="s"?"one":""}" id="rvOpts"></div><div class="fb" id="rvFb"></div>
-    <div class="row" style="width:100%"><button class="btn primary" id="rvNext" hidden>Próxima</button></div>`;
+    <div class="row nextbar" style="width:100%"><button class="btn primary" id="rvNext" hidden>Próxima</button></div>`;
   if(mode!=="pt2zh"){bindPlay(box,it);playItem(it);}
   const oc=$("rvOpts");
   opts.forEach(o=>{const b=document.createElement("button");b.className="opt"+(mode==="pt2zh"?" hz":"");
@@ -453,7 +457,7 @@ function askQ(it){
       if(!ok)b.classList.add("wrong");
       grade(it,ok);if(ok)session.ok++;else session.q.push({it,again:true});
       $("rvFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Quase."}</span> <span class="han" style="font-size:18px">${esc(it.h)}</span> · <span style="color:var(--jade)">${esc(it.p)}</span><br>${esc(it.m)}`;
-      $("rvNext").hidden=false;if(mode==="pt2zh")playItem(it);
+      $("rvNext").hidden=false;showNext("rvNext");if(mode==="pt2zh")playItem(it);
       if(session.q[session.i].isNew){const k=dayKey();S.newIntro[k]=(S.newIntro[k]||0)+1;save();}
       renderStats();renderRecent();
     };oc.append(b);});
@@ -559,7 +563,7 @@ function newTone(){
     box.innerHTML=`<div class="small">Que tom você ouviu?</div><div class="big-syl" id="tSyl">${esc(base)} ?</div>
       <button class="play" id="tPlay">▶ Ouvir de novo</button>
       <div class="tones" id="tOpts">${[1,2,3,4].map(t=>`<button class="tone" data-t="${t}">${toneSvg(t)}<span>${TNAME[t]}</span></button>`).join("")}</div>
-      <div class="fb" id="tFb"></div><div class="row" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
+      <div class="fb" id="tFb"></div><div class="row nextbar" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
     box.querySelectorAll("#tOpts .tone").forEach(b=>b.onclick=()=>answerTone(b,[+b.dataset.t]));
   }else{
     const ps=PAIRS();if(!ps.length){box.innerHTML=`<p class="muted">Carregando áudios…</p>`;audioReady.then(newTone);return;}
@@ -570,7 +574,7 @@ function newTone(){
     box.innerHTML=`<div class="small">Ouça a palavra e escolha os tons</div>${hanBox(w.h)}
       <button class="play" id="tPlay">▶ Ouvir de novo</button>
       <div class="opts" id="tOpts">${opts.map(o=>`<button class="opt" data-t="${o.join("")}"><span style="display:flex;justify-content:center;gap:4px">${o.map(t=>`<span style="width:44px">${toneSvg(t)}</span>`).join("")}</span>${o.join(" + ")}</button>`).join("")}</div>
-      <div class="fb" id="tFb"></div><div class="row" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
+      <div class="fb" id="tFb"></div><div class="row nextbar" style="width:100%"><button class="btn primary" id="tNext" hidden>Próxima</button></div>`;
     box.querySelectorAll("#tOpts .opt").forEach(b=>b.onclick=()=>answerTone(b,[...b.dataset.t].map(Number)));
   }
   $("tPlay").onclick=()=>playSeq(tq.keys);$("tNext").onclick=newTone;
@@ -583,7 +587,7 @@ function answerTone(btn,choice){
   if(!ok)btn.classList.add("wrong");
   const syl=$("tSyl");if(syl)syl.textContent=tq.label;
   $("tFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Era outro."}</span> ${esc(tq.label)}${tq.w?" · "+esc(tq.w.m):""}`;
-  $("tNext").hidden=false;renderTAcc();
+  $("tNext").hidden=false;showNext("tNext");renderTAcc();
   S.log.unshift({id:"t",h:tq.w?tq.w.h:tq.label,m:"Treino de tons",ok,t:Date.now()});S.log=S.log.slice(0,200);save();renderRecent();renderStats();
 }
 function renderTAcc(){$("tAcc").innerHTML=[1,2,3,4].map(t=>{const [a,n]=S.tones[t];return `<div><span style="color:var(--t${t})">${TNAME[t]}</span><b>${n?Math.round(a/n*100)+"%":"–"}</b>${n} ouvidos</div>`}).join("");}
@@ -854,6 +858,8 @@ function renderResult(t,you){
   box.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
+function showNext(id){const b=$(id);if(!b)return;requestAnimationFrame(()=>{const r=b.getBoundingClientRect();const nav=document.querySelector("nav.tabs").getBoundingClientRect().top;
+  if(r.bottom>nav-8||r.top<0)b.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});}
 /* ---------- Trilha ---------- */
 const short=m=>m.split(/ \/ | \(/)[0];
 const unlocked=i=>i===0||!!(S.lessons[LESSONS[i-1].id]&&S.lessons[LESSONS[i-1].id].done);
@@ -951,8 +957,8 @@ function showEx(){
     const tk=q.ph[0].filter(t=>!PUNCT.test(t));const order=shuffle(tk.map((t,i)=>i));
     b.innerHTML=head+`<div class="panel qcard"><div class="small">Monte a frase em chinês</div><div style="font-size:18px;font-weight:700">${esc(q.ph[2])}</div>
       <div class="build" id="bArea"></div><div class="pool" id="bPool">${order.map(i=>`<button class="tok" data-i="${i}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("")}</div>
-      <div class="fb" id="exFb"></div><div class="row" style="width:100%"><button class="btn" id="bClear">Limpar</button><button class="btn primary" id="bCheck">Conferir</button></div>
-      <div class="row" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
+      <div class="fb" id="exFb"></div><div class="row nextbar" style="width:100%"><button class="btn" id="bClear">Limpar</button><button class="btn primary" id="bCheck">Conferir</button></div>
+      <div class="row nextbar" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
     const chosen=[];
     const draw=()=>{$("bArea").innerHTML=chosen.map((i,k)=>`<button class="tok" data-k="${k}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("");
       $("bArea").querySelectorAll(".tok").forEach(x=>x.onclick=()=>{if(!$("exNext").hidden)return;chosen.splice(+x.dataset.k,1);sync();});};
@@ -964,7 +970,7 @@ function showEx(){
     return;
   }
   b.innerHTML=head+`<div class="panel qcard">${body}<div class="opts ${q.type==="listen"?"one":""}" id="exOpts"></div><div class="fb" id="exFb"></div>
-    <div class="row" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
+    <div class="row nextbar" style="width:100%"><button class="btn primary" id="exNext" hidden>Próximo</button></div></div>`;
   const h=q.h||(q.ph&&q.ph[0].join(""));
   if($("exPlay"))$("exPlay").onclick=()=>q.h?sayWord(q.h):saySentence(h);
   if($("exListen"))bindListen($("exListen"),h);
@@ -985,7 +991,7 @@ function exResult(q,ok,info){
   else if(!ok)e.q.push({...q,retry:true});
   $("exFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Ainda não."}</span> ${info}`;
   if(q.ph){const h=q.ph[0].join("");$("exFb").insertAdjacentHTML("beforeend",`<div class="row" style="justify-content:center;margin-top:8px" id="fbListen">${listenBtns()}</div>`);bindListen($("fbListen"),h);}
-  $("exNext").hidden=false;$("exNext").onclick=()=>{e.i++;showEx();window.scrollTo(0,0);};
+  $("exNext").hidden=false;showNext("exNext");$("exNext").onclick=()=>{e.i++;showEx();window.scrollTo(0,0);};
   S.log.unshift({id:"l"+e.l.id,h:q.h||q.ph[0].join(""),m:`Lição ${LESSONS.indexOf(e.l)+1}: ${e.l.t}`,ok,t:Date.now()});S.log=S.log.slice(0,200);save();
 }
 function finishEx(){
