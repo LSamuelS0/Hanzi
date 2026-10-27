@@ -4131,14 +4131,21 @@ function startUnit(li,uk){
   $("trilhaHome").hidden=true;$("lessonView").hidden=true;$("sessionView").hidden=false;document.body.classList.add("insession");
   $("sessionView").innerHTML=`<div class="sestop"><button class="sx" id="sesX" aria-label="Sair da etapa">${ICON.close}</button>
     <div class="progress sesprog"><i id="sesProg"></i></div><span class="sesn" id="sesN"></span></div>
-    <div class="sesbody" id="sesBody"></div>
+    <div class="sesbody" id="sesBody"></div><div id="sesSpacer" aria-hidden="true"></div>
     <div class="sesbar" id="sesBar"><div class="sesfb" id="sesFb" hidden></div><button class="btn primary" id="sesGo">Continuar</button></div>`;
   $("sesX").onclick=exitSession;
+  /* o espaço no fim da página acompanha a altura da barra de baixo, para nada ficar escondido atrás dela */
+  try{if(window.ResizeObserver){barRO&&barRO.disconnect();barRO=new ResizeObserver(padForBar);barRO.observe($("sesBar"));}}catch(e){}
+  padForBar();
   audioReady.then(renderStep);
 }
-function exitSession(){stopAll();stopRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
+let barRO=null;
+function padForBar(){const b=$("sesBar"),s=$("sesSpacer");if(!b||!s)return;s.style.height=(b.offsetHeight+28)+"px";}
+function keepAboveBar(el){if(!el)return;requestAnimationFrame(()=>{const b=$("sesBar");if(!b)return;const r=el.getBoundingClientRect(),top=b.getBoundingClientRect().top;
+  if(r.bottom>top-12)window.scrollBy({top:Math.min(r.bottom-top+20,Math.max(0,r.top-70)),behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});}
+function exitSession(){try{barRO&&barRO.disconnect();}catch(e){}document.body.style.paddingBottom="";stopAll();stopRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
   if(LP!=null)openLessonPage(LP);else renderMap();}
-function barState(kind,html,label,fn){const fb=$("sesFb"),bar=$("sesBar"),go=$("sesGo");
+function barState(kind,html,label,fn){setTimeout(padForBar,0);const fb=$("sesFb"),bar=$("sesBar"),go=$("sesGo");
   bar.className="sesbar"+(kind?" "+kind:"");fb.hidden=!html;fb.innerHTML=html||"";go.textContent=label;go.disabled=!fn;go.onclick=fn||null;}
 function nextStep(){stopAll();MIC=null;SS.i++;renderStep();window.scrollTo(0,0);}
 function distract(l,h,n){const pool=poolFor(l).filter(x=>x!==h&&GL[x][1]!==GL[h][1]);let out=shuffle(pool).slice(0,n);
@@ -4242,7 +4249,7 @@ function renderSpeakStep(s){
       <div class="row" style="justify-content:center"><button class="play sm" id="spMine">▶ Minha voz</button><button class="play sm" id="spNat">▶ Nativo</button></div>`;
     $("spMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
     $("spNat").onclick=()=>t.k==="sent"?saySentence(t.h):sayWord(t.h);
-    barState(sc.main>=70?"good":"", "", "Continuar",nextStep);
+    barState(sc.main>=70?"good":"", "", "Continuar",nextStep);padForBar();keepAboveBar($("spRes"));
   }};
   MIC=ctx;bindMic($("spMic"));
   nativeAnalysis(t).then(n=>{ctx.native=n;});
@@ -4288,7 +4295,7 @@ function renderWriteStep(s){
   const f=writeFlow($("wB"),ch,{msg:m=>{const e=$("wMsg");if(e)e.textContent=m;},onDone:mis=>{if(!SS)return;
     const sc=Math.max(0,100-mis*15);SS.spoke.push(sc);if(mis<=2)SS.xp+=10;
     S.wrote=S.wrote||{};S.wrote[ch]=(S.wrote[ch]||0)+1;save();
-    barState(mis<=2?"good":"",`<div class="fbt">${mis===0?"Perfeito!":mis<=2?"Muito bem!":"Concluído."}</div><div class="fbi">${esc(ch)} (${esc(C.cpy[ch]||"")}) · ${mis} ${mis===1?"erro":"erros"}</div>`,"Continuar",nextStep);}});
+    keepAboveBar($("wMsg"));barState(mis<=2?"good":"",`<div class="fbt">${mis===0?"Perfeito!":mis<=2?"Muito bem!":"Concluído."}</div><div class="fbi">${esc(ch)} (${esc(C.cpy[ch]||"")}) · ${mis} ${mis===1?"erro":"erros"}</div>`,"Continuar",nextStep);}});
   $("wAnim").onclick=f.anim;$("wSay").onclick=()=>sayWord(s.w&&[...s.w].length===1?s.w:ch);
   sayWord(ch);f.anim();barState("","","Pular por agora",nextStep);
 }
@@ -4391,17 +4398,17 @@ function finishUnit(){
     <h2>${!pass?"Quase lá!":u.kind==="t"?(lessonFirst?"Lição concluída!":"Teste concluído!"):"Etapa concluída!"}</h2>
     <p class="muted">${!pass?"Você precisa de 70% no teste para liberar a próxima lição. Revise as etapas e tente de novo.":u.kind==="t"&&lessonFirst?"A próxima lição foi liberada e as palavras desta entraram na sua revisão diária.":u.kind==="s"?"Continue praticando a fala sempre que puder.":u.kind==="w"?"Volte para treinar a escrita em Praticar → Escrever hanzi sempre que quiser.":"Bom trabalho! Siga para a próxima etapa."}</p>
     <div class="fstats"><span>${SS.scored?`<b>${SS.ok}/${SS.scored}</b>certas de primeira`:u.kind==="w"?`<b>${SS.spoke.length}</b>hanzi escritos`:`<b>${SS.spoke.length}</b>gravações`}</span><span><b>+${SS.xp}</b>XP</span><span><b>${mins}</b>min</span></div></div>`;
-  const goNext=()=>{SS=null;document.body.classList.remove("insession");
+  const goNext=()=>{SS=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";
     if(!pass){startUnit(li,u.k);return;}
     if(nu)startUnit(li,nu.k);else if(nextL){openLessonPage(li+1);}else renderMap();};
   barState(pass?"good":"",``,!pass?"Tentar de novo":nu?`Próxima: ${nu.t}`:nextL?"Ir para a próxima lição":"Voltar ao mapa",goNext);
   $("sesBar").insertAdjacentHTML("beforeend",`<button class="btn" id="sesBack">Voltar à lição</button>`);
-  $("sesBack").onclick=()=>{SS=null;document.body.classList.remove("insession");openLessonPage(li);};
+  $("sesBack").onclick=()=>{SS=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";openLessonPage(li);};
 }
 
 /* ---------- abas ---------- */
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;
-  if(SS){SS=null;MIC=null;document.body.classList.remove("insession");}
+  if(SS){SS=null;MIC=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";}
   goTab(v);if(v==="trilha")renderMap();});
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>goTab("praticar"));
 document.querySelectorAll("#v-praticar [data-go]").forEach(b=>b.onclick=()=>goTab(b.dataset.go));
