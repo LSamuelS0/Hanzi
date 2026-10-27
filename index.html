@@ -316,6 +316,14 @@ hr.sep{border:0;border-top:1px dashed var(--line);width:100%;margin:6px 0}
 .phn{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .pht{font-size:20px;font-weight:800;background:var(--bg);padding:0 10px}
 .phl{font-size:12px;color:var(--muted);background:var(--bg);padding:2px 8px;border-radius:8px}
+.fctop{display:flex;align-items:center;gap:12px}
+.fccard{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 16px}
+.fcws{display:flex;flex-direction:column;gap:6px;width:100%}
+.fcw{text-align:left;background:var(--bg);border:0;border-radius:10px;padding:8px 10px;font:inherit;color:var(--ink);cursor:pointer}
+.fcbar{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;background:var(--bg);padding-block:8px;z-index:3}
+.fcbar .btn{padding:14px 4px;font-size:14px}
+.fc0{border-color:var(--bad)!important;color:var(--bad)!important}.fc1{border-color:var(--warn)!important;color:var(--warn)!important}
+.fc2{border-color:var(--good)!important;color:var(--good)!important}.fc3{background:var(--good)!important;border-color:var(--good)!important;color:#fff!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -376,11 +384,21 @@ hr.sep{border:0;border-top:1px dashed var(--line);width:100%;margin:6px 0}
     <div style="display:flex;flex-direction:column;gap:12px">
       <h2 style="font-size:20px">Praticar livremente</h2>
       <p class="muted" style="margin:0">Treinos avulsos, fora das lições. Use quando quiser reforçar um ponto específico.</p>
+      <button class="unit u-t pr" data-go="cartoes"><span class="uic">卡</span><span class="ut"><b>Flashcards de hanzi</b><span>Memorize os caracteres: veja, lembre, vire o cartão e avalie</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-w pr" data-go="escrever"><span class="uic">写</span><span class="ut"><b>Escrever hanzi</b><span>Todos os caracteres do curso, com ordem dos traços e história</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-s pr" data-go="falar"><span class="uic">说</span><span class="ut"><b>Pronúncia</b><span>Grave sílabas, palavras ou frases e compare com o nativo</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-g pr" data-go="tons"><span class="uic">声</span><span class="ut"><b>Treino dos 4 tons</b><span>Ouça e identifique o tom de cada sílaba</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-f pr" data-go="frases"><span class="uic">句</span><span class="ut"><b>Escuta de frases</b><span>Todas as frases por tema, com modo escuta</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-v pr" data-go="palavras"><span class="uic">词</span><span class="ut"><b>Lista de palavras</b><span>Todas as palavras, com áudio, e adicionar as suas</span></span><span class="ust" data-ic="chev"></span></button>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="v-cartoes" hidden>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <button class="back" data-back>← Praticar</button>
+      <div id="fcHome"></div>
+      <div id="fcPlay" hidden></div>
     </div>
   </section>
 
@@ -3252,7 +3270,7 @@ function studying(){
   if(typeof SS!=="undefined"&&SS)return true;
   if(vis("v-hoje")&&session)return true;
   if(vis("v-trilha")&&typeof LS!=="undefined"&&LS&&vis("lessonView"))return true;
-  if(vis("v-tons")||vis("v-falar")||vis("v-frases")||(vis("v-escrever")&&WCH&&vis("escPanel")))return true;
+  if(vis("v-tons")||vis("v-falar")||vis("v-frases")||(vis("v-escrever")&&WCH&&vis("escPanel"))||(vis("v-cartoes")&&vis("fcPlay")))return true;
   return false;}
 setInterval(()=>{const now=Date.now();
   if(document.visibilityState==="visible"&&studying()&&now-lastAct<90000){const d=Math.min(now-lastTick,6000);const k=dayKey();S.time[k]=(S.time[k]||0)+d;save();renderStats();
@@ -3311,7 +3329,7 @@ function askQ(it){
   const mode=pick(modes);
   const opts=optionsFor(it,mode==="pt2zh"?"h":"m");
   let prompt="";
-  if(mode==="read")prompt=hanBox(it.h)+`<div class="small">O que significa?</div>`;
+  if(mode==="read")prompt=hanBox(it.h)+`<div class="pin">${esc(it.p)}</div><div class="small">O que significa?</div>`;
   if(mode==="listen")prompt=`<div class="tzg wide"><span class="han" style="font-size:44px">🎧</span></div><div class="small">Ouça e escolha o significado</div>`;
   if(mode==="pt2zh")prompt=`<div class="tzg wide"><span style="position:relative;z-index:1;font-size:20px;font-weight:600">${esc(it.m)}</span></div><div class="small">Como se diz em chinês?</div>`;
   box.innerHTML=`${prompt}${mode!=="pt2zh"?`<div class="row" style="justify-content:center">${playBtns(it)}</div>`:""}
@@ -3621,11 +3639,11 @@ function fkGoNext(){
   if(PL){if(PL.i+1<PL.list.length){PL.i++;newTarget(PL.list[PL.i]);}else{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");}}
   else newTarget();window.scrollTo(0,0);
 }
-const NAVOF={trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",palavras:"palavras"};
+const NAVOF={trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"praticar",palavras:"palavras"};
 function goTab(v){document.querySelectorAll("section[id^='v-']").forEach(s=>s.hidden=s.id!=="v-"+v);
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===NAVOF[v]));
   stopAll();if(rec&&rec.state==="recording")stopRec();window.scrollTo(0,0);
-  if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="hoje"&&!session)renderToday();
+  if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="cartoes")renderFcHome();if(v==="hoje"&&!session)renderToday();
   if(v!=="falar")MIC=null;}
 function toneSvgSmall(t){if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
 
@@ -4168,7 +4186,7 @@ function renderStep(){
   if(s.q==="speak"){renderSpeakStep(s);return;}
   if(s.q==="build"){renderBuild(s);return;}
   let prompt="",opts=[],hz=false;
-  if(s.q==="w2pt"){prompt=`<div class="kicker">O que significa?</div>${hanBox(s.h)}<button class="play" id="qp">▶ Ouvir</button>`;
+  if(s.q==="w2pt"){prompt=`<div class="kicker">O que significa?</div>${hanBox(s.h)}<div class="bigpy">${esc(GL[s.h][0])}</div><button class="play" id="qp">▶ Ouvir</button>`;
     opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:esc(GL[x][1]),ok:x===s.h}));}
   if(s.q==="pt2w"){prompt=`<div class="kicker">Como se diz em chinês?</div><div class="ptbig">${esc(GL[s.h][1])}</div>`;hz=true;
     opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:`<small>${esc(GL[x][0])}</small>${esc(x)}`,ok:x===s.h}));}
@@ -4294,6 +4312,63 @@ function openEscrever(ch){
     S.wrote=S.wrote||{};S.wrote[ch]=(S.wrote[ch]||0)+1;save();const b=document.querySelector(`.escc[data-c="${ch}"]`);if(b)b.classList.add("done");}});
   $("eAnim").onclick=f.anim;$("eSay").onclick=()=>sayWord(ch);$("eClose").onclick=()=>{$("escPanel").hidden=true;$("escPanel").innerHTML="";};
   sayWord(ch);f.anim();
+}
+/* ---------- flashcards de hanzi (repetição espaçada própria) ---------- */
+const FC_IV=[0,1,3,7,14,30,60,120];
+let FC=null,fcScope="all";
+function fcChars(scope){const out=[];LESSONS.forEach((l,i)=>{if(!lOpen(i))return;if(scope!=="all"&&String(l.mod)!==scope)return;
+  l.new.forEach(w=>[...w].forEach(c=>{if(/[\u4e00-\u9fff]/.test(c)&&!out.includes(c))out.push(c);}));});return out;}
+function fcWords(ch){const ws=[];LESSONS.forEach(l=>l.new.forEach(w=>{if(w.includes(ch)&&w!==ch&&!ws.includes(w))ws.push(w);}));return ws.slice(0,4);}
+function fcState(){S.fc=S.fc||{};S.fcNew=S.fcNew||{};return S.fc;}
+function renderFcHome(){
+  fcState();$("fcPlay").hidden=true;$("fcHome").hidden=false;
+  const mods=C.modules.filter(m=>m.ids.some(id=>{const i=LESSONS.findIndex(l=>l.id===id);return i>=0&&lOpen(i);}));
+  const all=fcChars(fcScope),now=Date.now();
+  const due=all.filter(c=>S.fc[c]&&S.fc[c].due<=now),fresh=all.filter(c=>!S.fc[c]);
+  const newLeft=Math.max(0,10-(S.fcNew[dayKey()]||0));
+  const known=all.filter(c=>S.fc[c]&&S.fc[c].lv>=3).length;
+  $("fcHome").innerHTML=`<h2 style="font-size:20px">Flashcards de hanzi</h2>
+    <p class="muted" style="margin:0">Veja o caractere, tente lembrar a leitura e o significado, vire o cartão e diga como foi. Os que você erra voltam logo; os fáceis demoram mais para voltar.</p>
+    <div class="chips" id="fcScope"><button class="chip" data-s="all" aria-pressed="${fcScope==="all"}">Todos abertos</button>${mods.map(m=>`<button class="chip" data-s="${m.n}" aria-pressed="${fcScope===String(m.n)}">M${m.n} ${esc(m.name)}</button>`).join("")}</div>
+    <div class="stats"><div class="stat"><b>${due.length}</b><span>para revisar</span></div><div class="stat"><b>${Math.min(newLeft,fresh.length)}</b><span>novos hoje</span></div><div class="stat"><b>${known}/${all.length}</b><span>bem memorizados</span></div></div>
+    <div class="row"><button class="btn primary" id="fcGo" ${due.length+Math.min(newLeft,fresh.length)?"":"disabled"}>Começar</button><button class="btn" id="fcAll">Treinar todos (sem contar)</button></div>
+    ${due.length+Math.min(newLeft,fresh.length)?"":`<p class="small">Nada pendente agora nesta seleção. Use “Treinar todos” para praticar livremente.</p>`}`;
+  $("fcScope").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{fcScope=b.dataset.s;renderFcHome();});
+  $("fcGo").onclick=()=>startFc([...shuffle(due),...fresh.slice(0,newLeft)],false);
+  $("fcAll").onclick=()=>startFc(shuffle(all),true);
+}
+function startFc(list,free){if(!list.length)return;FC={q:list.slice(),done:0,total:list.length,free,again:0};$("fcHome").hidden=true;$("fcPlay").hidden=false;strokesReady.then(showFc);}
+function showFc(){
+  const box=$("fcPlay");if(!FC)return;
+  if(!FC.q.length){box.innerHTML=`<div class="stepcard finish"><div class="bigring" style="--p:100"><span>✓</span></div><h2>Cartões concluídos!</h2>
+    <p class="muted">${FC.total} caracteres revisados${FC.again?` · ${FC.again} voltaram para repetir`:""}.</p><div class="row" style="width:100%"><button class="btn primary" id="fcBack">Voltar</button></div></div>`;
+    $("fcBack").onclick=()=>{FC=null;renderFcHome();};return;}
+  const ch=FC.q[0],ws=fcWords(ch);
+  box.innerHTML=`<div class="fctop"><span class="small">${FC.done}/${FC.total}</span><div class="progress" style="flex:1"><i style="width:${FC.done/FC.total*100}%"></i></div><button class="sx" id="fcX" aria-label="Sair">${ICON.close}</button></div>
+    <div class="fccard" id="fcCard"><div class="kicker">Você lembra?</div>${hanBox(ch)}
+      <div id="fcBackSide" hidden style="display:flex;flex-direction:column;gap:12px;width:100%;align-items:center">
+        <div class="bigpy">${esc(C.cpy[ch]||"")}</div><div class="bigm">${esc(charMean(ch))}</div>
+        <div class="story"><div class="kicker">Como lembrar</div><p>${esc(C.story[ch]||"")}</p></div>
+        ${ws.length?`<div class="fcws"><div class="kicker">Aparece em</div>${ws.map(w=>`<button class="fcw" data-w="${esc(w)}"><b class="hzi">${esc(w)}</b> <span class="pyi">${esc(GL[w]?GL[w][0]:"")}</span> · ${esc(GL[w]?shortM(w):"")}</button>`).join("")}</div>`:""}
+      </div></div>
+    <div class="fcbar" id="fcBar"><button class="btn primary" id="fcFlip">Virar o cartão</button></div>`;
+  $("fcX").onclick=()=>{FC=null;renderFcHome();};
+  box.querySelectorAll(".fcw").forEach(b=>b.onclick=()=>sayWord(b.dataset.w));
+  $("fcFlip").onclick=()=>{$("fcBackSide").hidden=false;sayWord(ch);
+    $("fcBar").innerHTML=`<button class="btn fc0" data-g="0">Não lembrei</button><button class="btn fc1" data-g="1">Difícil</button><button class="btn fc2" data-g="2">Lembrei</button><button class="btn fc3" data-g="3">Fácil</button>`;
+    $("fcBar").querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>gradeFc(ch,+b.dataset.g));};
+}
+function gradeFc(ch,g){
+  fcState();const r=S.fc[ch]||{lv:0,due:0,n:0};const isNew=!S.fc[ch];
+  if(!FC.free){
+    if(g===0)r.lv=0;else if(g===1)r.lv=Math.max(1,r.lv);else if(g===2)r.lv=Math.min(FC_IV.length-1,r.lv+1);else r.lv=Math.min(FC_IV.length-1,r.lv+2);
+    r.due=g===0?Date.now():Date.now()+FC_IV[r.lv]*DAY-3600000;r.n++;S.fc[ch]=r;
+    if(isNew){const k=dayKey();S.fcNew[k]=(S.fcNew[k]||0)+1;}
+  }
+  S.log.unshift({id:"fc",h:ch,m:"Flashcard: "+charMean(ch),ok:g>0,t:Date.now()});S.log=S.log.slice(0,200);save();
+  FC.q.shift();
+  if(g===0){FC.q.splice(Math.min(3,FC.q.length),0,ch);FC.again++;}else FC.done++;
+  showFc();window.scrollTo(0,0);
 }
 function finishUnit(){
   const {l,u}=SS;MIC=null;
