@@ -14,17 +14,18 @@
   --jade:#1f7a5c; --jade-soft:#d6ece3; --seal:#c8372d; --grid:#e8b4ae;
   --good:#1f7a5c; --bad:#c8372d; --warn:#b7791f;
   --t1:#c8372d; --t2:#b7791f; --t3:#1f7a5c; --t4:#2f5fa8;
+  --c1:#1f8a66; --c2:#2f73c0; --c3:#7a5ccf; --c4:#d0653a; --c5:#b9861a; --c6:#c64b67; --c7:#2a8f9e; --gold:#e8a317; --onc:#ffffff;
   --f-han:"Noto Serif SC","Songti SC","SimSun",serif;
   --f-body:"Manrope",system-ui,-apple-system,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121816; --surface:#1b2321; --ink:#e8efec; --muted:#9aa9a4; --line:#2e3a37;
   --jade:#4fbf95; --jade-soft:#1e3a30; --seal:#e5625a; --grid:#6b3a37; --good:#4fbf95; --bad:#e5625a; --warn:#e0a84a;
-  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; color-scheme:dark}}
+  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; --c1:#2fa67c; --c2:#4a8fdc; --c3:#9479e3; --c4:#e07c52; --c5:#d39f2e; --c6:#dc6680; --c7:#3fabb9; --gold:#f0b43a; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121816; --surface:#1b2321; --ink:#e8efec; --muted:#9aa9a4; --line:#2e3a37;
   --jade:#4fbf95; --jade-soft:#1e3a30; --seal:#e5625a; --grid:#6b3a37; --good:#4fbf95; --bad:#e5625a; --warn:#e0a84a;
-  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; color-scheme:dark}
+  --t1:#ef7a72; --t2:#e0a84a; --t3:#4fbf95; --t4:#7ea6ea; --c1:#2fa67c; --c2:#4a8fdc; --c3:#9479e3; --c4:#e07c52; --c5:#d39f2e; --c6:#dc6680; --c7:#3fabb9; --gold:#f0b43a; color-scheme:dark}
 [hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;
@@ -38,9 +39,9 @@ h3{font-size:13px;margin:0;font-weight:800;letter-spacing:.06em;text-transform:u
 .seal{font-family:var(--f-han);background:var(--seal);color:#fff;width:34px;height:34px;border-radius:6px;display:grid;place-items:center;font-size:20px}
 .gear{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:600 13px var(--f-body);cursor:pointer}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(6,1fr);
+  display:grid;grid-template-columns:repeat(4,1fr);
   padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
-nav.tabs button{border:0;background:none;color:var(--muted);font:600 11px var(--f-body);padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:10px}
+nav.tabs button{border:0;background:none;color:var(--muted);font:600 12px var(--f-body);padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:10px}
 nav.tabs button .ic{font-family:var(--f-han);font-size:20px;line-height:1.1}
 nav.tabs button[aria-selected="true"]{color:var(--jade);background:var(--jade-soft)}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
@@ -186,7 +187,107 @@ a{color:var(--jade)}
 .nextbar{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:3;background:var(--surface);padding-block:8px;margin-inline:-4px;padding-inline:4px;border-radius:14px}
 .nextbar:has(> button:not([hidden]))::before{content:"";position:absolute;inset:-14px 0 100% 0;background:linear-gradient(transparent,var(--surface));pointer-events:none}
 .nextbar:not(:has(> button:not([hidden]))){position:static;padding:0}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---------- aprender: mapa ---------- */
+body.insession nav.tabs,body.insession .app>header{display:none}
+body.insession{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+.maphead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:4px 2px}
+.lvbadge{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:var(--onc);background:var(--c1);box-shadow:inset 0 0 0 4px color-mix(in srgb,var(--onc) 30%,transparent)}
+.mstat{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.mstat.fire{color:var(--c4)} .mstat.xp{color:var(--gold)} .mstat b{color:var(--ink)}
+.mappath{position:relative;width:100%;margin-top:6px}
+.pathsvg{position:absolute;left:0;top:0;pointer-events:none}
+.pbase{fill:none;stroke:var(--line);stroke-width:9;stroke-linecap:round;stroke-dasharray:1 16}
+.pdone{fill:none;stroke:color-mix(in srgb,var(--c1) 55%,transparent);stroke-width:9;stroke-linecap:round}
+.lvband{position:absolute;left:0;right:0;height:48px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:14px;background:color-mix(in srgb,var(--nc) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--nc) 35%,transparent)}
+.lvn{font-weight:800;color:var(--onc);background:var(--nc);border-radius:8px;padding:3px 8px;font-size:13px}
+.lvt{font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lvp{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.node{position:absolute;transform:translateX(-50%);width:150px;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--ink);font:inherit}
+.ringw{position:relative;width:92px;height:92px;display:grid;place-items:center}
+.ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring .trk{fill:none;stroke:color-mix(in srgb,var(--nc) 22%,var(--surface));stroke-width:7}
+.ring .prg{fill:none;stroke:var(--nc);stroke-width:7;stroke-linecap:round}
+.disc{width:72px;height:72px;border-radius:50%;background:var(--nc);display:grid;place-items:center;box-shadow:0 5px 0 color-mix(in srgb,var(--nc) 60%,#000),0 8px 18px color-mix(in srgb,var(--nc) 35%,transparent)}
+.disc .g{font-family:var(--f-han);font-weight:700;font-size:36px;color:var(--onc);line-height:1}
+.node.locked .disc{background:var(--line);box-shadow:0 5px 0 color-mix(in srgb,var(--line) 70%,#000)}
+.node.locked .disc .g{color:var(--muted)} .node.locked .ring .prg{stroke:none}
+.node.locked .lbl{color:var(--muted)}
+.node .badge{position:absolute;right:2px;bottom:4px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--bg)}
+.badge.ok{background:var(--gold);color:#fff} .badge.lk{background:var(--surface);color:var(--muted)}
+.lbl{font-size:14px;line-height:1.3;text-align:center;font-weight:600;max-width:140px;text-wrap:balance}
+.lbl b{color:var(--muted);font-weight:700;margin-right:2px}
+.node.cur .disc{animation:bob 2.2s ease-in-out infinite}
+.node .go{position:absolute;top:-30px;background:var(--surface);color:var(--nc);border:2px solid var(--nc);font-weight:800;font-size:12px;letter-spacing:.06em;padding:4px 10px;border-radius:10px;white-space:nowrap}
+.node .go::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--nc);border-bottom:2px solid var(--nc);transform:translateX(-50%) rotate(45deg)}
+.node.shake .ringw{animation:shake .35s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.mapbar{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:4;display:grid;grid-template-columns:1fr auto;gap:10px;padding-block:10px 4px}
+.goal{display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;color:var(--ink);font:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.gtxt{font-size:14px;color:var(--muted)} .gtxt b{font-size:20px;color:var(--c4);font-variant-numeric:tabular-nums}
+.gbar{width:100%;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.gbar i{display:block;height:100%;background:var(--c4);border-radius:3px}
+.rvbtn{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 18px;font:800 16px var(--f-body);color:var(--c5);cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.rvc{background:var(--seal);color:#fff;border-radius:999px;font-size:12px;padding:2px 8px;font-variant-numeric:tabular-nums}
+/* ---------- página da lição ---------- */
+.lhero{display:flex;gap:14px;align-items:center;background:color-mix(in srgb,var(--nc) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--nc) 35%,transparent);border-radius:20px;padding:16px}
+.ltile{flex:none;width:84px;height:84px;border-radius:20px;background:var(--nc);color:var(--onc);display:grid;place-items:center;font-family:var(--f-han);font-size:46px;font-weight:700;box-shadow:0 5px 0 color-mix(in srgb,var(--nc) 60%,#000)}
+.lsup{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+.ltitle{font-size:22px;margin:2px 0 8px}
+.lchips{display:flex;flex-wrap:wrap;gap:6px}
+.lchips span{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.units{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.unit{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px;background:var(--surface);border:0;border-top:1px solid var(--line);color:var(--ink);font:inherit;text-align:left;cursor:pointer;width:100%}
+.units .unit:first-child{border-top:0}
+.unit.pr,.unit.u-r{border:1px solid var(--line);border-radius:18px}
+.uic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-family:var(--f-han);font-size:26px;font-weight:700;color:#fff;background:var(--uc)}
+.u-v{--uc:var(--c5)} .u-g{--uc:var(--c3)} .u-f{--uc:var(--c2)} .u-s{--uc:var(--c6)} .u-t{--uc:var(--c1)} .u-r{--uc:var(--c7)}
+.ut{display:flex;flex-direction:column;gap:3px;min-width:0}.ut b{font-size:16px}
+.ut span{font-size:13px;color:var(--muted);line-height:1.35}.ut .uhz{font-family:var(--f-han);font-size:15px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ust{display:flex;align-items:center;gap:6px;color:var(--muted)} .ust em{font-style:normal;font-weight:700;font-size:13px;color:var(--c1);font-variant-numeric:tabular-nums}
+.okc{width:26px;height:26px;border-radius:50%;background:var(--c1);color:#fff;display:grid;place-items:center}
+.unit.locked{cursor:default}.unit.locked .uic{background:var(--line);color:var(--muted)}.unit.locked .ut b{color:var(--muted)}
+.unit.next{background:color-mix(in srgb,var(--uc) 9%,var(--surface))}
+.unit.next .ust{color:var(--uc)}
+.lpbar{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom,0px));padding-block:8px;z-index:3}
+.lpbar .btn{width:100%;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+/* ---------- sessão ---------- */
+.sestop{display:flex;align-items:center;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding-block:6px 10px}
+.sx{border:0;background:none;color:var(--muted);padding:6px;cursor:pointer;display:grid;place-items:center}
+.sesprog{flex:1;height:12px;border-radius:6px}.sesprog i{border-radius:6px;background:var(--c1)}
+.sesn{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:38px;text-align:right}
+.stepcard{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 16px}
+.stepcard .tzg:not(.wide){width:min(42vw,160px)}
+.kicker{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.bigpy{font-size:24px;font-weight:700;color:var(--jade)} .bigm{font-size:19px;font-weight:600}
+.ptbig{font-size:22px;font-weight:700;line-height:1.35;text-wrap:balance}
+.notebox{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;color:var(--ink);text-align:left;width:100%;box-sizing:border-box}
+.exbox{display:flex;flex-direction:column;align-items:center;gap:8px;border-top:1px dashed var(--line);padding-top:12px;width:100%}
+.earbtn{width:110px;height:110px;border-radius:50%;border:0;background:var(--c2);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 0 color-mix(in srgb,var(--c2) 60%,#000)}
+.earbtn:active{transform:translateY(3px);box-shadow:0 3px 0 color-mix(in srgb,var(--c2) 60%,#000)}
+.opt small{display:block;font:600 12px var(--f-body);color:var(--jade)}
+.tok.blank{border-style:dashed}
+.build.okb{border-color:var(--good);background:var(--jade-soft)}.build.badb{border-color:var(--bad)}
+.sesbar{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sesbar>*{width:100%;max-width:520px;margin:0 auto;box-sizing:border-box}
+.sesbar .btn{flex:none;padding:15px}
+.sesbar .btn:disabled{background:var(--line);border-color:var(--line);color:var(--muted);opacity:1}
+.sesbar.good{background:color-mix(in srgb,var(--good) 14%,var(--surface));border-top-color:var(--good)}
+.sesbar.bad{background:color-mix(in srgb,var(--bad) 12%,var(--surface));border-top-color:var(--bad)}
+.sesbar.bad .btn.primary{background:var(--bad);border-color:var(--bad)}
+.sesfb{display:flex;flex-direction:column;gap:4px;text-align:left;max-height:40vh;overflow:auto}
+.fbt{font-weight:800;font-size:17px}.sesbar.good .fbt{color:var(--good)}.sesbar.bad .fbt{color:var(--bad)}
+.fbi{font-size:15px;line-height:1.45}.hzi{font-family:var(--f-han);font-weight:700;font-size:18px}.pyi{color:var(--jade);font-weight:600}
+.sesfb .play{align-self:flex-start}.play.sm{padding:6px 12px;font-size:13px}
+.fbg .gbox{background:var(--surface)}
+.spscore{display:flex;align-items:center;justify-content:center;gap:12px}
+.finish h2{font-size:22px}
+.bigring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c1) calc(var(--p)*1%),var(--line) 0)}
+.bigring span{width:104px;height:104px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.fstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+.fstats span{display:flex;flex-direction:column;gap:2px;background:var(--bg);border-radius:12px;padding:10px 6px;font-size:12px;color:var(--muted)}
+.fstats b{font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
 <div class="app">
@@ -197,15 +298,20 @@ a{color:var(--jade)}
 
   <!-- TRILHA -->
   <section id="v-trilha">
-    <div style="display:flex;flex-direction:column;gap:16px" id="trilhaHome">
-      <div class="panel">
-        <h2>Sua trilha de chinês</h2>
-        <div class="progress"><i id="trBar" style="width:0"></i></div>
-        <p class="muted" id="trText"></p>
+    <div id="trilhaHome">
+      <div class="maphead">
+        <span class="lvbadge" id="mhLevel" title="Seu nível">N1</span>
+        <span class="mstat fire" id="mhStreak" title="Dias seguidos de estudo"></span>
+        <span class="mstat xp" id="mhXp" title="Pontos de experiência"></span>
       </div>
-      <div id="trLevels" style="display:flex;flex-direction:column;gap:18px"></div>
+      <div id="mapPath" class="mappath"></div>
+      <div class="mapbar">
+        <button class="goal" id="goalBtn"><span class="gtxt" id="goalTxt"></span><span class="gbar"><i id="goalBar"></i></span></button>
+        <button class="rvbtn" id="rvBtn">Revisão <span class="rvc" id="rvCount" hidden></span></button>
+      </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:14px" id="lessonView" hidden></div>
+    <div id="sessionView" hidden></div>
   </section>
 
   <!-- HOJE -->
@@ -236,9 +342,22 @@ a{color:var(--jade)}
     </div>
   </section>
 
+  <!-- PRATICAR -->
+  <section id="v-praticar" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2 style="font-size:20px">Praticar livremente</h2>
+      <p class="muted" style="margin:0">Treinos avulsos, fora das lições. Use quando quiser reforçar um ponto específico.</p>
+      <button class="unit u-s pr" data-go="falar"><span class="uic">说</span><span class="ut"><b>Pronúncia</b><span>Grave sílabas, palavras ou frases e compare com o nativo</span></span><span class="ust" data-ic="chev"></span></button>
+      <button class="unit u-g pr" data-go="tons"><span class="uic">声</span><span class="ut"><b>Treino dos 4 tons</b><span>Ouça e identifique o tom de cada sílaba</span></span><span class="ust" data-ic="chev"></span></button>
+      <button class="unit u-f pr" data-go="frases"><span class="uic">句</span><span class="ut"><b>Escuta de frases</b><span>Todas as frases por tema, com modo escuta</span></span><span class="ust" data-ic="chev"></span></button>
+      <button class="unit u-v pr" data-go="palavras"><span class="uic">词</span><span class="ut"><b>Lista de palavras</b><span>Todas as palavras, com áudio, e adicionar as suas</span></span><span class="ust" data-ic="chev"></span></button>
+    </div>
+  </section>
+
   <!-- FRASES -->
   <section id="v-frases" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
+      <button class="back" data-back>← Praticar</button>
       <div class="chips" id="sCats"></div>
       <div class="row" style="align-items:center">
         <button class="chip" id="listenMode" aria-pressed="false">Modo escuta (esconder texto)</button>
@@ -251,6 +370,7 @@ a{color:var(--jade)}
   <!-- TONS -->
   <section id="v-tons" hidden>
     <div style="display:flex;flex-direction:column;gap:16px">
+      <button class="back" data-back>← Praticar</button>
       <div class="panel">
         <h2>Os 4 tons</h2>
         <div class="tones" id="toneRef"></div>
@@ -271,6 +391,7 @@ a{color:var(--jade)}
   <!-- PALAVRAS -->
   <section id="v-palavras" hidden>
     <div style="display:flex;flex-direction:column;gap:16px">
+      <button class="back" data-back>← Praticar</button>
       <div class="chips" id="wCats"></div>
       <div class="panel list" id="wList"></div>
       <div class="panel">
@@ -290,22 +411,23 @@ a{color:var(--jade)}
   <!-- FALAR -->
   <section id="v-falar" hidden>
     <div style="display:flex;flex-direction:column;gap:16px">
+      <button class="back" data-back>← Praticar</button>
       <div class="chips" id="fkMode">
         <button class="chip" data-m="syl" aria-pressed="false">Sílabas</button>
         <button class="chip" data-m="word" aria-pressed="true">Palavras</button>
         <button class="chip" data-m="sent" aria-pressed="false">Frases</button>
       </div>
       <div class="panel qcard" id="fkTarget"></div>
-      <div class="panel" style="gap:10px">
+      <div class="panel" style="gap:10px" id="micDefault">
         <div class="micwrap">
-          <button id="recBtn" class="mic" aria-label="Gravar minha voz"><svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
-          <div class="level"><i id="recLevel"></i></div>
-          <div class="rectime" id="recTime">Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp</div>
+          <button id="recBtn" data-m="btn" class="mic" aria-label="Gravar minha voz"><svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
+          <div class="level"><i id="recLevel" data-m="level"></i></div>
+          <div class="rectime" id="recTime" data-m="time">Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp</div>
         </div>
-        <div class="small" id="recMsg" style="text-align:center">Ouça o nativo primeiro, depois grave repetindo do mesmo jeito.</div>
-        <div id="recFallback" class="note" hidden style="font-size:13px;line-height:1.5;background:var(--bg);border-radius:10px;padding:10px">
-          <b>O microfone não foi liberado nesta tela.</b> <span id="recWhy"></span>
-          <label class="btn" style="margin-top:8px;display:flex;justify-content:center;align-items:center;color:var(--ink);font-size:14px;cursor:pointer">📁 Enviar uma gravação<input type="file" id="recFile" accept="audio/*" capture hidden></label>
+        <div class="small" id="recMsg" data-m="msg" style="text-align:center">Ouça o nativo primeiro, depois grave repetindo do mesmo jeito.</div>
+        <div id="recFallback" data-m="fb" class="note" hidden style="font-size:13px;line-height:1.5;background:var(--bg);border-radius:10px;padding:10px">
+          <b>O microfone não foi liberado nesta tela.</b> <span id="recWhy" data-m="why"></span>
+          <label class="btn" style="margin-top:8px;display:flex;justify-content:center;align-items:center;color:var(--ink);font-size:14px;cursor:pointer">📁 Enviar uma gravação<input type="file" id="recFile" data-m="file" accept="audio/*" capture hidden></label>
         </div>
       </div>
       <div class="panel" id="fkResult" hidden></div>
@@ -318,11 +440,9 @@ a{color:var(--jade)}
 </div>
 
 <nav class="tabs" role="tablist">
-  <button role="tab" data-v="trilha" aria-selected="true"><span class="ic">路</span>Trilha</button>
-  <button role="tab" data-v="hoje" aria-selected="false"><span class="ic">今</span>Hoje</button>
-  <button role="tab" data-v="frases" aria-selected="false"><span class="ic">句</span>Frases</button>
-  <button role="tab" data-v="tons" aria-selected="false"><span class="ic">声</span>Tons</button>
-  <button role="tab" data-v="falar" aria-selected="false"><span class="ic">说</span>Falar</button>
+  <button role="tab" data-v="trilha" aria-selected="true"><span class="ic">学</span>Aprender</button>
+  <button role="tab" data-v="hoje" aria-selected="false"><span class="ic">复</span>Revisão</button>
+  <button role="tab" data-v="praticar" aria-selected="false"><span class="ic">练</span>Praticar</button>
   <button role="tab" data-v="palavras" aria-selected="false"><span class="ic">词</span>Palavras</button>
 </nav>
 
@@ -740,71 +860,92 @@ async function newTarget(preset){
       <button class="back" id="plBack">← Lição ${li+1}</button><span class="small">Frase ${PL.i+1} de ${n}</span></div>`);
     $("fkNext").textContent=PL.i+1<n?"Próxima frase →":"Terminar";
     $("plBack").onclick=()=>{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");};}
-  if(keys){try{const parts=[];for(const k of keys){parts.push(await decode16k(b64ToBuf(AUDIO[k])));parts.push(new Float32Array(1200));}
-    const len=parts.reduce((a,p)=>a+p.length,0),all=new Float32Array(len);let o=0;for(const p of parts){all.set(p,o);o+=p.length;}
-    if(fkCur===t)fkNative=await analyze(all);}catch(e){fkNative=null;}}
+  const nat=await nativeAnalysis(t);if(fkCur===t)fkNative=nat;
 }
+async function nativeAnalysis(t){const keys=nativeKeysFor(t);if(!keys)return null;
+  try{const parts=[];for(const k of keys){parts.push(await decode16k(b64ToBuf(AUDIO[k])));parts.push(new Float32Array(1200));}
+    const len=parts.reduce((a,p)=>a+p.length,0),all=new Float32Array(len);let o=0;for(const p of parts){all.set(p,o);o+=p.length;}
+    return await analyze(all);}catch(e){return null;}}
+function makeTarget(o){const t={...o,tones:pinyinTones(o.p)||[],chars:hanChars(o.h)};if(t.tones.length!==t.chars.length)t.tones=t.chars.map(()=>5);
+  if(t.k==="sent"&&!t.seg)t.seg=segOf(t.h).map(w=>[w,AUDIO["w:"+w]?1:0]);return t;}
 function fkGoNext(){
   if(PL){if(PL.i+1<PL.list.length){PL.i++;newTarget(PL.list[PL.i]);}else{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");}}
   else newTarget();window.scrollTo(0,0);
 }
-function goTab(v){document.querySelectorAll("nav.tabs button").forEach(x=>{const on=x.dataset.v===v;x.setAttribute("aria-selected",on);$("v-"+x.dataset.v).hidden=!on;});}
+const NAVOF={trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",palavras:"palavras"};
+function goTab(v){document.querySelectorAll("section[id^='v-']").forEach(s=>s.hidden=s.id!=="v-"+v);
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===NAVOF[v]));
+  stopAll();if(rec&&rec.state==="recording")stopRec();window.scrollTo(0,0);
+  if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="hoje"&&!session)renderToday();
+  if(v!=="falar")MIC=null;}
 function toneSvgSmall(t){if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
 
 /* gravação: botão de microfone (toque para gravar/enviar, ou segure e solte) */
 let rec=null,recChunks=[],recStream=null,recStart=0,pressAt=0,recTimer=null,recAC=null,starting=false;
+/* contexto do microfone: a aba Falar (padrão) ou um passo de fala dentro de uma lição */
+let MIC=null; // {root, t, native, onResult}
+const M=k=>((MIC&&MIC.root)||document.getElementById("micDefault")).querySelector(`[data-m="${k}"]`);
+const IDLE_TXT="Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp";
+function bindMic(root){const b=root.querySelector('[data-m="btn"]');
+  b.addEventListener("pointerdown",e=>{e.preventDefault();pressAt=Date.now();if(rec&&rec.state==="recording")stopRec();else startRec();});
+  b.addEventListener("pointerup",()=>{if(rec&&rec.state==="recording"&&Date.now()-pressAt>600)stopRec();});
+  b.addEventListener("contextmenu",e=>e.preventDefault());
+  b.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();rec&&rec.state==="recording"?stopRec():startRec();}});
+  const f=root.querySelector('[data-m="file"]');if(f)f.onchange=e=>{const x=e.target.files[0];if(x)handleRecording(x);e.target.value="";};}
+function micHtml(){return `<div class="micwrap"><button data-m="btn" class="mic" aria-label="Gravar minha voz"><svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
+  <div class="level"><i data-m="level"></i></div><div class="rectime" data-m="time">${IDLE_TXT}</div></div>
+  <div class="small" data-m="msg" style="text-align:center"></div>
+  <div data-m="fb" class="note" hidden style="font-size:13px;line-height:1.5;background:var(--bg);border-radius:10px;padding:10px;text-align:left"><b>O microfone não foi liberado nesta tela.</b> <span data-m="why"></span>
+  <label class="btn" style="margin-top:8px;display:flex;justify-content:center;align-items:center;color:var(--ink);font-size:14px;cursor:pointer">📁 Enviar uma gravação<input type="file" data-m="file" accept="audio/*" capture hidden></label></div>`;}
 function inClaude(){try{return window.self!==window.top;}catch(e){return true;}}
 async function startRec(){
   if(starting||(rec&&rec.state==="recording"))return;starting=true;stopAll();
   try{
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)throw new Error("unsupported");
     recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-    $("recFallback").hidden=true;
+    M("fb").hidden=true;
     const mt=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg"].find(m=>{try{return MediaRecorder.isTypeSupported(m);}catch(e){return false;}});
     recChunks=[];rec=mt?new MediaRecorder(recStream,{mimeType:mt}):new MediaRecorder(recStream);
     rec.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data);};
     rec.onstop=()=>{const type=rec.mimeType||"audio/webm";cleanupRec();
-      if(Date.now()-recStart<400){$("recMsg").textContent="Gravação muito curta. Toque e fale a frase inteira.";return;}
+      if(Date.now()-recStart<400){M("msg").textContent="Gravação muito curta. Toque e fale a frase inteira.";return;}
       handleRecording(new Blob(recChunks,{type}));};
     rec.start(100);recStart=Date.now();
-    $("recBtn").classList.add("recording");$("recMsg").textContent="Gravando… fale agora.";
+    M("btn").classList.add("recording");M("msg").textContent="Gravando… fale agora.";
     try{recAC=new (window.AudioContext||window.webkitAudioContext)();const src=recAC.createMediaStreamSource(recStream);const an=recAC.createAnalyser();an.fftSize=512;src.connect(an);
       const buf=new Uint8Array(an.fftSize);
-      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));$("recLevel").style.width=Math.min(100,m/90*100)+"%";
-        const s=(Date.now()-recStart)/1000;$("recTime").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
+      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));M("level").style.width=Math.min(100,m/90*100)+"%";
+        const s=(Date.now()-recStart)/1000;M("time").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
         if(s>=20)stopRec();},80);}catch(e){}
   }catch(e){
-    cleanupRec();$("recFallback").hidden=false;
-    $("recWhy").textContent=inClaude()?
+    cleanupRec();M("fb").hidden=false;
+    M("why").textContent=inClaude()?
       "Dentro do Claude, as páginas não podem usar o microfone. Abra a versão do app no navegador (Chrome ou Safari) para gravar direto por aqui. Enquanto isso, dá para enviar uma gravação feita no celular:":
       (e&&e.name==="NotAllowedError"?"Você negou a permissão. Libere o microfone para este site nas configurações do navegador (ícone de cadeado ao lado do endereço) e tente de novo.":"Não consegui acessar o microfone deste aparelho. Você pode enviar uma gravação:");
-    $("recMsg").textContent="";
+    M("msg").textContent="";
   }finally{starting=false;}
 }
 function stopRec(){if(rec&&rec.state==="recording")rec.stop();}
 function cleanupRec(){clearInterval(recTimer);recTimer=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop());}catch(e){}recStream=null;
-  try{recAC&&recAC.close();}catch(e){}recAC=null;$("recBtn").classList.remove("recording");$("recLevel").style.width="0";
-  $("recTime").innerHTML="Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp";}
-$("recBtn").addEventListener("pointerdown",e=>{e.preventDefault();pressAt=Date.now();
-  if(rec&&rec.state==="recording")stopRec();else startRec();});
-$("recBtn").addEventListener("pointerup",()=>{if(rec&&rec.state==="recording"&&Date.now()-pressAt>600)stopRec();});
-$("recBtn").addEventListener("contextmenu",e=>e.preventDefault());
-$("recBtn").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();rec&&rec.state==="recording"?stopRec():startRec();}});
-$("recFile").onchange=e=>{const f=e.target.files[0];if(f)handleRecording(f);e.target.value="";};
+  try{recAC&&recAC.close();}catch(e){}recAC=null;M("btn").classList.remove("recording");M("level").style.width="0";
+  M("time").innerHTML=IDLE_TXT;}
+bindMic(document.getElementById("micDefault"));
 
 async function handleRecording(blob){
-  const t=fkCur;if(!t)return;
-  $("recMsg").textContent="Analisando sua pronúncia…";
+  const t=MIC?MIC.t:fkCur;if(!t)return;
+  M("msg").textContent="Analisando sua pronúncia…";
   if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(blob);
   let you;
   try{you=await analyze(await decode16k(await blob.arrayBuffer()));}
-  catch(e){$("recMsg").textContent="Não consegui ler esse arquivo de áudio. Tente gravar de novo (formatos comuns: m4a, mp3, ogg, webm, wav).";return;}
-  $("recMsg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
+  catch(e){M("msg").textContent="Não consegui ler esse arquivo de áudio. Tente gravar de novo (formatos comuns: m4a, mp3, ogg, webm, wav).";return;}
+  if(MIC){M("msg").textContent="";MIC.onResult(t,you);return;}
+  M("msg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
   renderResult(t,you);
 }
-function renderResult(t,you){
-  const N=t.tones.length,exp=spokenTones(t.tones),box=$("fkResult");box.hidden=false;
-  if(you.voiced<8){box.innerHTML=`<h2>Não deu para ouvir sua voz</h2><p class="muted">A gravação ficou muito baixa ou curta. Fale mais perto do celular, num lugar silencioso, e tente de novo.</p>`;return;}
+function scoreSpeech(t,you,nat){
+  const N=t.tones.length,exp=spokenTones(t.tones);
+  if(you.voiced<8)return {silent:true};
+  const fkNative=nat;
   const runsY=segment(you.st,N),runsN=fkNative?segment(fkNative.st,N):null;
   const single=N===1;let judged=0,right=0;const res=[];
   for(let i=0;i<N;i++){
@@ -834,6 +975,16 @@ function renderResult(t,you){
     if(rate<0.55)tips.push("Você falou mais rápido que o nativo. Vá um pouco mais devagar para cada tom aparecer bem.");}
   if(t.tones.some((x,i)=>x===3&&t.tones[i+1]===3))tips.push("Atenção: quando dois tons 3 aparecem juntos, o primeiro vira tom 2 (ex.: 你好 = ní hǎo).");
   if(!tips.length)tips.push("Muito bom! Sua melodia está parecida com a do nativo. Tente agora sem olhar o texto, só de memória.");
+  return {N,res,runsY,runsN,sim,toneScore,main,tips,right,judged};
+}
+function logSpeech(t,sc){S.speak=S.speak||{};S.speak[t.h]=Math.max(S.speak[t.h]||0,sc.main);S.log.unshift({id:"f",h:t.h,m:`Pronúncia: ${sc.main} pontos`,ok:sc.main>=70,t:Date.now()});S.log=S.log.slice(0,200);
+  sc.res.forEach(r=>{if(!r.skip&&r.e<5){S.tones[r.e][1]++;if(r.ok)S.tones[r.e][0]++;}});save();}
+function sylChips(sc){return `<div class="sylrow" style="justify-content:center">${sc.res.map(r=>`<span class="syl ${r.skip?"skip":r.ok?"ok":"no"}"><span class="hz">${esc(r.c)}</span>${toneSvgSmall(r.e)}<small>${r.skip?(r.e===5?"neutro":"não ouvi"):r.ok?"certo":"você: tom "+r.got}</small></span>`).join("")}</div>`;}
+function renderResult(t,you){
+  const box=$("fkResult");box.hidden=false;
+  const sc=scoreSpeech(t,you,fkNative);
+  if(sc.silent){box.innerHTML=`<h2>Não deu para ouvir sua voz</h2><p class="muted">A gravação ficou muito baixa ou curta. Fale mais perto do celular, num lugar silencioso, e tente de novo.</p>`;return;}
+  const {N,res,runsY,runsN,sim,toneScore,main,tips,right,judged}=sc;
   // gráfico
   const W=340,Hh=150,pad=16;const yMap=v=>Hh/2-v*6;
   const lines=(an,runs)=>runs?contourPoints(an,runs,24).map((seg,i)=>{let d="",pen=false;seg.forEach((v,j)=>{if(v==null){pen=false;return;}const x=pad+(i+j/23)*(W-2*pad)/N;const y=Math.max(4,Math.min(Hh-4,yMap(v)));d+=(pen?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)+" ";pen=true;});return d;}).join(""):"";
@@ -853,8 +1004,7 @@ function renderResult(t,you){
   $("fkMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
   $("fkNat2").onclick=()=>{const k=nativeKeysFor(t);k?playSeq(k):saySentence(t.h);};
   $("fkAgain").onclick=fkGoNext;$("fkRetry").onclick=()=>{window.scrollTo(0,0);startRec();};
-  S.speak=S.speak||{};S.speak[t.h]=Math.max(S.speak[t.h]||0,main);S.log.unshift({id:"f",h:t.h,m:`Pronúncia: ${main} pontos`,ok:main>=70,t:Date.now()});S.log=S.log.slice(0,200);
-  res.forEach(r=>{if(!r.skip&&r.e<5){S.tones[r.e][1]++;if(r.ok)S.tones[r.e][0]++;}});save();renderRecent();renderStats();renderTAcc();
+  logSpeech(t,sc);renderRecent();renderStats();renderTAcc();
   box.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -878,14 +1028,15 @@ function renderTrilha(){
   $("trLevels").querySelectorAll(".lesson:not([disabled])").forEach(b=>b.onclick=()=>openLesson(+b.dataset.i,"learn"));
 }
 let LS=null; // lição aberta
-function openLesson(i,step){
+let LS_I=0;
+function openLesson(i,step){LS_I=i;
   const l=LESSONS[i];LS={i,l,step};stopAll();
-  $("trilhaHome").hidden=true;const v=$("lessonView");v.hidden=false;window.scrollTo(0,0);
-  v.innerHTML=`<button class="back" id="lsBack">← Trilha</button>
+  $("trilhaHome").hidden=true;$("sessionView").hidden=true;const v=$("lessonView");v.hidden=false;window.scrollTo(0,0);
+  v.innerHTML=`<button class="back" id="lsBack">← Voltar à lição</button>
     <div><div class="small">${esc(l.lvl)} · Lição ${i+1}</div><h2 style="font-size:22px">${esc(l.t)}</h2><div class="muted">${esc(l.goal)}</div></div>
     <div class="steps" role="tablist"><button data-s="learn">1. Palavras</button><button data-s="phrases">2. Frases</button><button data-s="ex">3. Exercícios</button><button data-s="speak">4. Falar</button></div>
     <div id="lsBody" style="display:flex;flex-direction:column;gap:14px"></div>`;
-  $("lsBack").onclick=()=>{LS=null;stopAll();renderTrilha();};
+  $("lsBack").onclick=()=>{LS=null;stopAll();openLessonPage(LS_I);};
   v.querySelectorAll(".steps button").forEach(b=>{b.setAttribute("aria-selected",b.dataset.s===step);b.onclick=()=>openLesson(i,b.dataset.s);});
   if(step==="learn")renderLearn(l);if(step==="phrases")renderPhrases(l);if(step==="ex")startEx(l);if(step==="speak")renderSpeak(l);
 }
@@ -1007,15 +1158,14 @@ function finishEx(){
     ${passed?"As palavras e frases desta lição entraram na sua revisão diária (aba Hoje).":"Releia as palavras e as frases e tente de novo. Você precisa de 70% para liberar a próxima lição."}</p>
     <div class="row" style="width:100%">${passed?`<button class="btn primary" id="exSpeak">🎙 Agora fale as frases</button>`:""}${passed&&nextI!=null?`<button class="btn" id="exGoNext">Próxima lição →</button>`:""}<button class="btn ${passed?"":"primary"}" id="exRetry">Refazer exercícios</button><button class="btn" id="exHome">Voltar à trilha</button></div></div>`;
   if($("exGoNext"))$("exGoNext").onclick=()=>openLesson(nextI,"learn");if($("exSpeak"))$("exSpeak").onclick=()=>openLesson(LS.i,"speak");
-  $("exRetry").onclick=()=>openLesson(LS.i,"ex");$("exHome").onclick=()=>{LS=null;renderTrilha();};
+  $("exRetry").onclick=()=>openLesson(LS.i,"ex");$("exHome").onclick=()=>{LS=null;openLessonPage(LS_I);};
 }
 /* falar da lição: lista de frases em sequência */
 let PL=null;
 function lessonTargets(l){return l.ph.map(([tk,p,m])=>({k:"sent",h:tk.join(""),p,m,seg:tk.map(t=>[t,AUDIO["w:"+t]?1:0])}));}
 function openFalar(list,i,lessonI){
   PL={list,i:i||0,lessonI};
-  document.querySelectorAll("nav.tabs button").forEach(x=>{const on=x.dataset.v==="falar";x.setAttribute("aria-selected",on);$("v-"+x.dataset.v).hidden=!on;});
-  window.scrollTo(0,0);newTarget(PL.list[PL.i]);
+  goTab("falar");newTarget(PL.list[PL.i]);
 }
 function renderSpeak(l){
   const sp=S.speak||{};const list=lessonTargets(l);
@@ -1031,14 +1181,312 @@ function renderSpeak(l){
   $("lsBody").querySelectorAll(".play[data-k]").forEach(b=>b.onclick=()=>openFalar(list,+b.dataset.k,LS.i));
 }
 
+/* ================= APRENDER: mapa, página da lição e sessão guiada ================= */
+const GLYPH={1:"好",2:"吗",3:"名",16:"王",4:"国",5:"八",6:"个",7:"工",8:"说",9:"帮",10:"点",11:"发",12:"吃",13:"喜",14:"谢",15:"周",17:"请",18:"错",19:"进",20:"急",21:"钱",22:"货",23:"喂",24:"家"};
+const LEVELS=[...new Set(LESSONS.map(l=>l.lvl))];
+const lvIdx=l=>LEVELS.indexOf(l.lvl);
+const lvShort=s=>s.split(" · ")[1]||s;
+const lessonDone=l=>!!(S.lessons[l.id]&&S.lessons[l.id].done);
+const nonp=ph=>ph[0].filter(t=>!PUNCT.test(t));
+if(!S.units)S.units={};if(S.xp==null)S.xp=0;if(!S.goal)S.goal=15;
+
+function unitsOf(l){
+  const w=l.new,out=[];
+  const g=w.filter(x=>GRAMMAR.includes(x)||/^\((partícula|classificador)/.test(GL[x][1]));
+  const v=w.filter(x=>!g.includes(x));
+  if(v.length>5){const h=Math.ceil(v.length/2);
+    out.push({k:"v1",t:"Vocabulário 1",ic:"字",cls:"u-v",kind:"v",words:v.slice(0,h)},{k:"v2",t:"Vocabulário 2",ic:"字",cls:"u-v",kind:"v",words:v.slice(h)});}
+  else if(v.length)out.push({k:"v1",t:"Vocabulário",ic:"字",cls:"u-v",kind:"v",words:v});
+  if(g.length)out.push({k:"g",t:"Gramática e partículas",ic:"法",cls:"u-g",kind:"g",words:g});
+  out.push({k:"f",t:"Frases",ic:"句",cls:"u-f",kind:"f"},{k:"s",t:"Fale você",ic:"说",cls:"u-s",kind:"s"},{k:"t",t:"Teste da lição",ic:"考",cls:"u-t",kind:"t"});
+  return out;
+}
+function unitSub(l,u){
+  if(u.words)return u.words.join("，");
+  if(u.kind==="f")return `${l.ph.length} frases para ouvir, entender e montar`;
+  if(u.kind==="s")return `Grave as ${l.ph.length} frases e compare com o nativo`;
+  return "10 perguntas · acerte 70% para liberar a próxima lição";
+}
+function uState(l,u){const r=S.units[l.id]&&S.units[l.id][u.k];if(r)return r;return lessonDone(l)?{done:true}:null;}
+function uOpen(l,us,i){return i===0||us.slice(0,i).every(u=>uState(l,u)&&uState(l,u).done);}
+function lProgress(l){const us=unitsOf(l);return us.filter(u=>uState(l,u)&&uState(l,u).done).length/us.length;}
+function lOpen(i){return i===0||lessonDone(LESSONS[i-1]);}
+function streakDays(){let st=0;for(let i=0;i<400;i++){const k=dayKey(Date.now()-i*DAY);const a=(S.time[k]||0)>60000||S.log.some(x=>dayKey(x.t)===k);if(a)st++;else if(i>0)break;}return st;}
+const ICON={
+  fire:`<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M13.5 2.5s.7 2.6-.9 4.9C11 9.7 8 10.8 8 14.6A4.2 4.2 0 0 0 12 19a4.4 4.4 0 0 0 4.4-4.5c0-1.6-.8-2.8-.8-2.8s2.9 1 2.9 4.6A6.5 6.5 0 0 1 12 22.5 6.8 6.8 0 0 1 5 15.6c0-6.9 8.5-8 8.5-13.1Z"/></svg>`,
+  bolt:`<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>`,
+  lock:`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 0 1 4 0v2h-4V7Z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  chev:`<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  close:`<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  ear:`<svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3Zm13.5 2A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4ZM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6Z"/></svg>`,
+};
+
+/* ---------- mapa ---------- */
+let LP=null,mapScrolled=false;
+function renderMap(){
+  LP=null;LS=null;$("trilhaHome").hidden=false;$("lessonView").hidden=true;$("sessionView").hidden=true;
+  const cur=LESSONS.findIndex((l,i)=>lOpen(i)&&!lessonDone(l));const ci=cur<0?LESSONS.length-1:cur;
+  $("mhLevel").textContent="N"+(lvIdx(LESSONS[ci])+1);
+  $("mhStreak").innerHTML=ICON.fire+`<b>${streakDays()}</b>`;
+  $("mhXp").innerHTML=ICON.bolt+`<b>${S.xp}</b>`;
+  const mins=Math.round((S.time[dayKey()]||0)/60000);
+  $("goalTxt").innerHTML=`<b>${mins}</b>/${S.goal} min hoje`;$("goalBar").style.width=Math.min(100,mins/S.goal*100)+"%";
+  const due=dueList().length+newList().length;$("rvCount").textContent=due?due:"";$("rvCount").hidden=!due;
+  const box=$("mapPath"),W=box.clientWidth||360,maxOff=Math.max(0,W/2-84);
+  const PAT=[0,.72,1,.72,0,-.72,-1,-.72];
+  let y=8,html="",pts=[],k=0,last=null;
+  LESSONS.forEach((l,i)=>{
+    if(l.lvl!==last){last=l.lvl;const ls=LESSONS.filter(x=>x.lvl===l.lvl),d=ls.filter(lessonDone).length;
+      html+=`<div class="lvband" style="top:${y}px;--nc:var(--c${lvIdx(l)%7+1})"><span class="lvn">N${lvIdx(l)+1}</span><span class="lvt">${esc(lvShort(l.lvl))}</span><span class="lvp">${d}/${ls.length}</span></div>`;
+      y+=72;k=0;}
+    const x=W/2+PAT[k%8]*maxOff;k++;
+    const open=lOpen(i),done=lessonDone(l),p=lProgress(l),isCur=i===ci;
+    pts.push([x,y+46,done]);
+    html+=`<button class="node ${done?"done":open?"open":"locked"} ${isCur?"cur":""}" data-i="${i}" style="left:${x}px;top:${y}px;--nc:var(--c${lvIdx(l)%7+1})" ${open?"":"aria-disabled=\"true\""} aria-label="Lição ${i+1}: ${esc(l.t)}">
+      ${isCur?`<span class="go">${p>0?"CONTINUAR":"COMEÇAR"}</span>`:""}
+      <span class="ringw"><svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="prg" stroke-dasharray="${(p*289).toFixed(1)} 289"/></svg>
+      <span class="disc"><span class="g">${GLYPH[l.id]||esc(l.new[0][0])}</span></span>
+      ${!open?`<span class="badge lk">${ICON.lock}</span>`:done?`<span class="badge ok">${ICON.check}</span>`:""}</span>
+      <span class="lbl"><b>${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</b> ${esc(l.t)}</span></button>`;
+    y+=128;
+  });
+  let d="",dd="";
+  for(let i=1;i<pts.length;i++){const [x0,y0,dn]=pts[i-1],[x1,y1]=pts[i],m=(y1-y0)/2;const seg=`M${x0} ${y0} C${x0} ${y0+m} ${x1} ${y1-m} ${x1} ${y1} `;d+=seg;if(dn)dd+=seg;}
+  box.style.height=(y+20)+"px";
+  box.innerHTML=`<svg class="pathsvg" width="${W}" height="${y+20}" aria-hidden="true"><path d="${d}" class="pbase"/><path d="${dd}" class="pdone"/></svg>`+html;
+  box.querySelectorAll(".node").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!lOpen(i)){b.classList.add("shake");setTimeout(()=>b.classList.remove("shake"),400);return;}openLessonPage(i);});
+  if(!mapScrolled){mapScrolled=true;const n=box.querySelector(".node.cur");if(n&&ci>1)requestAnimationFrame(()=>n.scrollIntoView({block:"center"}));}
+}
+let rsT=null;addEventListener("resize",()=>{clearTimeout(rsT);rsT=setTimeout(()=>{if(!$("trilhaHome").hidden&&!$("v-trilha").hidden)renderMap();},150);});
+
+/* ---------- página da lição ---------- */
+function openLessonPage(i){
+  LP=i;LS=null;stopAll();const l=LESSONS[i],us=unitsOf(l);
+  $("trilhaHome").hidden=true;$("sessionView").hidden=true;const v=$("lessonView");v.hidden=false;window.scrollTo(0,0);
+  const dn=us.filter(u=>uState(l,u)&&uState(l,u).done).length;
+  const mins=Math.round(l.new.length*0.6+l.ph.length*1.3+3);
+  const nextU=us.findIndex((u,k)=>uOpen(l,us,k)&&!(uState(l,u)&&uState(l,u).done));
+  v.innerHTML=`<button class="back" id="lpBack">← Mapa</button>
+    <div class="lhero" style="--nc:var(--c${lvIdx(l)%7+1})">
+      <span class="ltile">${GLYPH[l.id]||esc(l.new[0][0])}</span>
+      <div style="min-width:0"><div class="lsup">${esc(lvShort(l.lvl))} · Lição ${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</div>
+        <h2 class="ltitle">${esc(l.t)}</h2>
+        <div class="lchips"><span>${ICON.clock}${mins} min</span><span>${l.new.length} palavras · ${l.ph.length} frases</span><span>${dn}/${us.length} etapas</span></div></div>
+    </div>
+    <p class="muted" style="margin:0">${esc(l.goal)}</p>
+    <div class="units">${us.map((u,k)=>{const st=uState(l,u),op=uOpen(l,us,k),d=st&&st.done;
+      return `<button class="unit ${u.cls} ${d?"done":op?"open":"locked"} ${k===nextU?"next":""}" data-k="${u.k}" ${op?"":"aria-disabled=\"true\""}>
+        <span class="uic">${u.ic}</span><span class="ut"><b>${esc(u.t)}</b><span class="${u.words?"uhz":""}">${esc(unitSub(l,u))}</span></span>
+        <span class="ust">${!op?ICON.lock:d?(st.best!=null&&u.kind!=="s"?`<em>${st.best}%</em>`:"")+`<i class="okc">${ICON.check}</i>`:ICON.chev}</span></button>`;}).join("")}</div>
+    <button class="unit u-r" id="lpRef"><span class="uic">本</span><span class="ut"><b>Material de consulta</b><span>Todas as palavras e frases, com explicações</span></span><span class="ust">${ICON.chev}</span></button>
+    ${nextU>=0?`<div class="lpbar"><button class="btn primary" id="lpGo">${dn?"Continuar":"Começar"}: ${esc(us[nextU].t)}</button></div>`:""}`;
+  $("lpBack").onclick=()=>renderMap();
+  v.querySelectorAll(".unit[data-k]").forEach(b=>b.onclick=()=>{const k=us.findIndex(u=>u.k===b.dataset.k);if(!uOpen(l,us,k))return;startUnit(i,b.dataset.k);});
+  $("lpRef").onclick=()=>openLesson(i,"learn");
+  if($("lpGo"))$("lpGo").onclick=()=>startUnit(i,us[nextU].k);
+}
+
+/* ---------- montagem dos passos ---------- */
+function poolFor(l){return [...new Set(upTo(l).flatMap(x=>x.new))];}
+function knownUntil(l,u){const us=unitsOf(l),k=us.indexOf(u);const s=new Set(upTo(l).slice(0,-1).flatMap(x=>x.new));us.slice(0,k+1).forEach(x=>(x.words||[]).forEach(w=>s.add(w)));return s;}
+function canSpeakWord(h){const t=pinyinTones(GL[h][0]);return t&&t.length===hanChars(h).length;}
+function fillQ(ph,pref){const c=ph[0].map((t,i)=>[t,i]).filter(([t])=>!PUNCT.test(t));const g=c.filter(([t])=>pref?t===pref:GRAMMAR.includes(t));const [,idx]=pick(g.length?g:c);return {q:"fill",ph,idx};}
+function buildSteps(l,u){
+  const st=[];
+  if(u.kind==="v"||u.kind==="g"){
+    const ws=u.words;
+    for(let c=0;c<ws.length;c+=3){const ch=ws.slice(c,c+3);
+      ch.forEach(h=>st.push({learn:"w",h,gram:u.kind==="g"}));
+      shuffle(ch).forEach((h,k)=>{
+        if(u.kind==="g"){const ph=l.ph.find(p=>p[0].includes(h));if(ph&&k!==1){st.push(fillQ(ph,h));return;}st.push({q:"w2pt",h});return;}
+        st.push({q:["w2pt","hear","pt2w"][k%3],h});});
+      if(u.kind==="v"){const sp=ch.find(canSpeakWord);if(sp)st.push({q:"speak",k:"word",h:sp});}
+    }
+    if(ws.length>3)shuffle(ws).slice(0,3).forEach((h,k)=>st.push({q:["pt2w","hear","w2pt"][k],h}));
+    const known=knownUntil(l,u);
+    const ph=l.ph.filter(p=>nonp(p).length>=2&&nonp(p).every(t=>known.has(t))&&nonp(p).some(t=>ws.includes(t)));
+    if(ph.length)st.push({q:"build",ph:pick(ph)});
+  }
+  if(u.kind==="f"){
+    for(let c=0;c<l.ph.length;c+=2){const ch=l.ph.slice(c,c+2);
+      ch.forEach(ph=>st.push({learn:"p",ph}));
+      st.push({q:"listen",ph:pick(ch)});
+      const b=ch.filter(p=>nonp(p).length>=2);if(b.length)st.push({q:"build",ph:pick(b)});}
+    shuffle(l.ph.filter(p=>nonp(p).length>=2)).slice(0,2).forEach(ph=>st.push(fillQ(ph)));
+  }
+  if(u.kind==="s")l.ph.forEach(ph=>st.push({q:"speak",k:"sent",ph}));
+  if(u.kind==="t"){
+    const ws=shuffle(l.new);ws.slice(0,3).forEach((h,k)=>st.push({q:["w2pt","pt2w","hear"][k],h}));
+    shuffle(l.ph).slice(0,2).forEach(ph=>st.push({q:"listen",ph}));
+    shuffle(l.ph.filter(p=>nonp(p).length>=2)).slice(0,3).forEach(ph=>st.push({q:"build",ph}));
+    shuffle(l.ph.filter(p=>nonp(p).length>=2)).slice(0,2).forEach(ph=>st.push(fillQ(ph)));
+    return shuffle(st).slice(0,10);
+  }
+  return st;
+}
+
+/* ---------- sessão ---------- */
+let SS=null;
+function startUnit(li,uk){
+  const l=LESSONS[li],u=unitsOf(l).find(x=>x.k===uk);const steps=buildSteps(l,u);
+  SS={li,l,u,steps,i:0,ok:0,scored:steps.filter(s=>s.q&&s.q!=="speak").length,xp:0,start:Date.now(),spoke:[]};
+  $("trilhaHome").hidden=true;$("lessonView").hidden=true;$("sessionView").hidden=false;document.body.classList.add("insession");
+  $("sessionView").innerHTML=`<div class="sestop"><button class="sx" id="sesX" aria-label="Sair da etapa">${ICON.close}</button>
+    <div class="progress sesprog"><i id="sesProg"></i></div><span class="sesn" id="sesN"></span></div>
+    <div class="sesbody" id="sesBody"></div>
+    <div class="sesbar" id="sesBar"><div class="sesfb" id="sesFb" hidden></div><button class="btn primary" id="sesGo">Continuar</button></div>`;
+  $("sesX").onclick=exitSession;
+  audioReady.then(renderStep);
+}
+function exitSession(){stopAll();stopRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
+  if(LP!=null)openLessonPage(LP);else renderMap();}
+function barState(kind,html,label,fn){const fb=$("sesFb"),bar=$("sesBar"),go=$("sesGo");
+  bar.className="sesbar"+(kind?" "+kind:"");fb.hidden=!html;fb.innerHTML=html||"";go.textContent=label;go.disabled=!fn;go.onclick=fn||null;}
+function nextStep(){stopAll();MIC=null;SS.i++;renderStep();window.scrollTo(0,0);}
+function distract(l,h,n){const pool=poolFor(l).filter(x=>x!==h&&GL[x][1]!==GL[h][1]);let out=shuffle(pool).slice(0,n);
+  if(out.length<n)out=out.concat(shuffle(Object.keys(GL).filter(x=>x!==h&&!out.includes(x))).slice(0,n-out.length));return out;}
+function ansInfo(s){if(s.h)return `<span class="hzi">${esc(s.h)}</span> <span class="pyi">${esc(GL[s.h][0])}</span> · ${esc(GL[s.h][1])}`;
+  return `<span class="hzi">${esc(s.ph[0].join(""))}</span><br><span class="pyi">${esc(s.ph[1])}</span><br>${esc(s.ph[2])}`;}
+function grade(s,ok){
+  if(!s.retry){if(ok){SS.ok++;SS.xp+=10;}else SS.steps.push({...s,retry:true});}
+  else if(!ok)SS.steps.push({...s,retry:true});
+  S.log.unshift({id:"l"+SS.l.id,h:s.h||s.ph[0].join(""),m:`${SS.u.t} · ${SS.l.t}`,ok,t:Date.now()});S.log=S.log.slice(0,200);save();
+  const play=s.ph?`<button class="play sm" id="fbPlay">▶ Ouvir</button>`:`<button class="play sm" id="fbPlay">▶</button>`;
+  barState(ok?"good":"bad",`<div class="fbt">${ok?"Muito bem!":"Resposta certa:"}</div><div class="fbi">${ansInfo(s)}</div>${play}`,"Continuar",nextStep);
+  $("fbPlay").onclick=()=>s.ph?saySentence(s.ph[0].join("")):sayWord(s.h);
+  if(s.ph)saySentence(s.ph[0].join(""));else if(s.q!=="w2pt")sayWord(s.h);
+}
+function renderStep(){
+  const s=SS.steps[SS.i],body=$("sesBody");
+  const total=SS.steps.length;$("sesProg").style.width=(SS.i/total*100)+"%";$("sesN").textContent=`${Math.min(SS.i+1,total)}/${total}`;
+  if(!s){finishUnit();return;}
+  barState("","", "Continuar",null);
+  if(s.learn==="w"){const [p,m,n]=GL[s.h];const ex=SS.l.ph.find(ph=>ph[0].includes(s.h));
+    body.innerHTML=`<div class="stepcard"><div class="kicker">${s.gram?"Gramática":"Palavra nova"}</div>${hanBox(s.h)}
+      <div class="bigpy">${esc(p)}</div><div class="bigm">${esc(m)}</div>
+      <button class="play" id="stPlay">▶ Ouvir de novo</button>
+      ${n?`<div class="notebox">${esc(n)}</div>`:""}
+      ${ex?`<div class="exbox"><div class="kicker">Exemplo</div><div class="toks" style="justify-content:center">${ex[0].map((t,i)=>PUNCT.test(t)?`<span class="tok p"><small>&nbsp;</small><span>${esc(t)}</span></span>`:`<span class="tok ${t===s.h?"sel":""}"><small>${esc(GL[t][0])}</small><span>${esc(t)}</span></span>`).join("")}</div>
+        <div class="muted">${esc(ex[2])}</div><button class="play sm" id="stEx">▶ Ouvir a frase</button></div>`:""}</div>`;
+    $("stPlay").onclick=()=>sayWord(s.h);if($("stEx"))$("stEx").onclick=()=>saySentence(ex[0].join(""));
+    sayWord(s.h);barState("","","Continuar",nextStep);return;}
+  if(s.learn==="p"){const [tk,p,m]=s.ph;
+    body.innerHTML=`<div class="stepcard"><div class="kicker">Frase nova · toque nas palavras</div>
+      <div class="toks" style="justify-content:center">${tk.map(tokHtml).join("")}</div>
+      <div class="bigpy" style="font-size:18px">${esc(p)}</div><div class="bigm">${esc(m)}</div>
+      <div class="lit">Palavra por palavra: ${nonp(s.ph).map(t=>esc(short(GL[t][1]))).join(" · ")}</div>
+      <div id="stG" style="width:100%"></div>
+      <div class="row" style="justify-content:center" id="stL">${listenBtns()}</div></div>`;
+    body.querySelectorAll(".tok[data-i]").forEach(x=>x.onclick=()=>{const t=tk[+x.dataset.i];body.querySelectorAll(".tok").forEach(y=>y.classList.toggle("sel",y===x));$("stG").innerHTML=glossBox(t);sayWord(t);});
+    bindListen($("stL"),tk.join(""),i=>body.querySelectorAll(".tok[data-i]").forEach(y=>y.classList.toggle("sel",+y.dataset.i===i)));
+    saySentence(tk.join(""));barState("","","Continuar",nextStep);return;}
+  if(s.q==="speak"){renderSpeakStep(s);return;}
+  if(s.q==="build"){renderBuild(s);return;}
+  let prompt="",opts=[],hz=false;
+  if(s.q==="w2pt"){prompt=`<div class="kicker">O que significa?</div>${hanBox(s.h)}<button class="play" id="qp">▶ Ouvir</button>`;
+    opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:esc(GL[x][1]),ok:x===s.h}));}
+  if(s.q==="pt2w"){prompt=`<div class="kicker">Como se diz em chinês?</div><div class="ptbig">${esc(GL[s.h][1])}</div>`;hz=true;
+    opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:`<small>${esc(GL[x][0])}</small>${esc(x)}`,ok:x===s.h}));}
+  if(s.q==="hear"){prompt=`<div class="kicker">Ouça e escolha a palavra</div><button class="earbtn" id="qp" aria-label="Ouvir">${ICON.ear}</button>`;hz=true;
+    opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:esc(x),ok:x===s.h}));}
+  if(s.q==="listen"){const others=shuffle(upTo(SS.l).flatMap(x=>x.ph).filter(p=>p[2]!==s.ph[2])).slice(0,3);
+    prompt=`<div class="kicker">Ouça e escolha a tradução</div><button class="earbtn" id="qp" aria-label="Ouvir">${ICON.ear}</button><div class="row" style="justify-content:center" id="qL">${listenBtns()}</div>`;
+    opts=shuffle([s.ph,...others]).map(p=>({lab:esc(p[2]),ok:p===s.ph}));}
+  if(s.q==="fill"){const tk=s.ph[0],t=tk[s.idx];
+    const d=shuffle([...new Set([...GRAMMAR.filter(g=>GL[g]&&poolFor(SS.l).includes(g)),...poolFor(SS.l)])].filter(x=>x!==t&&!tk.includes(x))).slice(0,3);
+    prompt=`<div class="kicker">Complete a frase</div><div class="toks" style="justify-content:center">${tk.map((x,i)=>i===s.idx?`<span class="tok blank"><small>?</small><span>＿</span></span>`:tokHtml(x,i)).join("")}</div><div class="ptbig" style="font-size:18px">${esc(s.ph[2])}</div>`;hz=true;
+    opts=shuffle([t,...d]).map(x=>({lab:`<small>${esc(GL[x][0])}</small>${esc(x)}`,ok:x===t}));
+    s.h=null;}
+  body.innerHTML=`<div class="stepcard">${prompt}<div class="opts ${s.q==="listen"?"one":""}" id="qo"></div></div>`;
+  const play=()=>s.q==="listen"?saySentence(s.ph[0].join("")):sayWord(s.h);
+  if($("qp"))$("qp").onclick=play;if($("qL"))bindListen($("qL"),s.ph[0].join(""));
+  if(s.q==="w2pt"||s.q==="hear"||s.q==="listen")play();
+  const oc=$("qo");
+  opts.forEach(o=>{const b=document.createElement("button");b.className="opt"+(hz?" hz":"");b.innerHTML=o.lab;
+    b.onclick=()=>{if(oc.dataset.done)return;oc.dataset.done=1;[...oc.children].forEach((y,k)=>{if(opts[k].ok)y.classList.add("right");});if(!o.ok)b.classList.add("wrong");
+      if(s.q==="fill"){grade({...s,h:null},o.ok);$("sesFb").insertAdjacentHTML("beforeend",`<div class="fbg">${glossBox(s.ph[0][s.idx])}</div>`);}else grade(s,o.ok);};
+    oc.append(b);});
+}
+function renderBuild(s){
+  const tk=nonp(s.ph),order=shuffle(tk.map((t,i)=>i)),chosen=[];
+  $("sesBody").innerHTML=`<div class="stepcard"><div class="kicker">Monte a frase em chinês</div><div class="ptbig">${esc(s.ph[2])}</div>
+    <div class="build" id="bA"></div><div class="pool" id="bP">${order.map(i=>`<button class="tok" data-i="${i}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("")}</div></div>`;
+  let locked=false;
+  const sync=()=>{$("bA").innerHTML=chosen.map((i,k)=>`<button class="tok" data-k="${k}"><small>${esc(GL[tk[i]][0])}</small><span>${esc(tk[i])}</span></button>`).join("");
+    $("bA").querySelectorAll(".tok").forEach(x=>x.onclick=()=>{if(locked)return;chosen.splice(+x.dataset.k,1);sync();});
+    $("bP").querySelectorAll(".tok").forEach(x=>x.disabled=chosen.includes(+x.dataset.i));
+    barState("","","Conferir",chosen.length===tk.length?check:null);};
+  const check=()=>{locked=true;const ok=chosen.map(i=>tk[i]).join("")===tk.join("");$("bA").classList.add(ok?"okb":"badb");grade(s,ok);};
+  $("bP").querySelectorAll(".tok").forEach(x=>x.onclick=()=>{if(locked)return;chosen.push(+x.dataset.i);sayWord(tk[+x.dataset.i]);sync();});
+  sync();
+}
+function renderSpeakStep(s){
+  const o=s.k==="word"?{k:"word",h:s.h,p:GL[s.h][0],m:GL[s.h][1]}:{k:"sent",h:s.ph[0].join(""),p:s.ph[1],m:s.ph[2]};
+  const t=makeTarget(o);
+  $("sesBody").innerHTML=`<div class="stepcard"><div class="kicker">Agora fale você</div>${hanBox(t.h)}
+    <div class="bigpy" style="font-size:${t.k==="sent"?18:24}px">${esc(t.p)}</div><div class="bigm">${esc(t.m)}</div>
+    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz">${esc(c)}</span>${toneSvgSmall(spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    <div class="row" style="justify-content:center" id="spL">${t.k==="sent"?listenBtns():`<button class="play" id="spW">▶ Ouvir o nativo</button>`}</div>
+    <div id="spMic" style="width:100%">${micHtml()}</div><div id="spRes" style="width:100%"></div></div>`;
+  if(t.k==="sent")bindListen($("spL"),t.h);else $("spW").onclick=()=>sayWord(t.h);
+  const ctx={root:$("spMic"),t,native:null,onResult:(tt,you)=>{
+    const sc=scoreSpeech(tt,you,ctx.native);
+    if(sc.silent){$("spRes").innerHTML=`<div class="notebox">Não deu para ouvir sua voz. Fale mais perto do celular e tente de novo.</div>`;return;}
+    logSpeech(tt,sc);SS.spoke.push(sc.main);if(sc.main>=70)SS.xp+=10;
+    const col=sc.main>=75?"good":sc.main>=50?"warn":"bad";
+    $("spRes").innerHTML=`<div class="spscore"><span class="score" style="color:var(--${col})">${sc.main}</span><span class="muted">${sc.main>=75?"Ótima pronúncia!":sc.main>=50?"Bom, dá para melhorar.":"Vamos tentar de novo?"}</span></div>
+      ${sylChips(sc)}<ul class="tips">${sc.tips.slice(0,2).map(x=>`<li>${x}</li>`).join("")}</ul>
+      <div class="row" style="justify-content:center"><button class="play sm" id="spMine">▶ Minha voz</button><button class="play sm" id="spNat">▶ Nativo</button></div>`;
+    $("spMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
+    $("spNat").onclick=()=>t.k==="sent"?saySentence(t.h):sayWord(t.h);
+    barState(sc.main>=70?"good":"", "", "Continuar",nextStep);
+  }};
+  MIC=ctx;bindMic($("spMic"));
+  nativeAnalysis(t).then(n=>{ctx.native=n;});
+  if(t.k==="sent")saySentence(t.h);else sayWord(t.h);
+  barState("","","Pular por agora",nextStep);
+}
+function finishUnit(){
+  const {l,u}=SS;MIC=null;
+  const score=SS.scored?Math.round(SS.ok/SS.scored*100):(SS.spoke.length?Math.round(SS.spoke.reduce((a,b)=>a+b,0)/SS.spoke.length):null);
+  const prev=uState(l,u)||{};const pass=u.kind!=="t"||score>=70;
+  S.units[l.id]=S.units[l.id]||{};
+  const first=pass&&!prev.done;
+  S.units[l.id][u.k]={done:!!(prev.done||pass),best:score==null?prev.best:Math.max(prev.best||0,score),last:Date.now()};
+  if(first)SS.xp+=20;
+  S.xp+=SS.xp;
+  let lessonFirst=false;
+  if(u.kind==="t"&&pass){const st=S.lessons[l.id]||{best:0,tries:0,done:false};lessonFirst=!st.done;st.tries++;st.best=Math.max(st.best,score);st.done=true;st.last=Date.now();S.lessons[l.id]=st;
+    if(lessonFirst)lessonItems(l).forEach(it=>{if(!S.srs[it.id])S.srs[it.id]={lv:1,due:Date.now()+DAY-3600000,n:1,miss:0,last:Date.now()};});}
+  save();renderStats();renderRecent();
+  const us=unitsOf(l),k=us.indexOf(u),nu=us[k+1];const li=SS.li;const nextL=LESSONS[li+1];
+  const mins=Math.max(1,Math.round((Date.now()-SS.start)/60000));
+  $("sesProg").style.width="100%";$("sesN").textContent="";
+  $("sesBody").innerHTML=`<div class="stepcard finish">
+    <div class="bigring" style="--p:${score??100}"><span>${score==null?"✓":score+"%"}</span></div>
+    <h2>${!pass?"Quase lá!":u.kind==="t"?(lessonFirst?"Lição concluída!":"Teste concluído!"):"Etapa concluída!"}</h2>
+    <p class="muted">${!pass?"Você precisa de 70% no teste para liberar a próxima lição. Revise as etapas e tente de novo.":u.kind==="t"&&lessonFirst?"A próxima lição foi liberada e as palavras desta entraram na sua revisão diária.":u.kind==="s"?"Continue praticando a fala sempre que puder.":"Bom trabalho! Siga para a próxima etapa."}</p>
+    <div class="fstats"><span>${SS.scored?`<b>${SS.ok}/${SS.scored}</b>certas de primeira`:`<b>${SS.spoke.length}</b>gravações`}</span><span><b>+${SS.xp}</b>XP</span><span><b>${mins}</b>min</span></div></div>`;
+  const goNext=()=>{SS=null;document.body.classList.remove("insession");
+    if(!pass){startUnit(li,u.k);return;}
+    if(nu)startUnit(li,nu.k);else if(nextL){openLessonPage(li+1);}else renderMap();};
+  barState(pass?"good":"",``,!pass?"Tentar de novo":nu?`Próxima: ${nu.t}`:nextL?"Ir para a próxima lição":"Voltar ao mapa",goNext);
+  $("sesBar").insertAdjacentHTML("beforeend",`<button class="btn" id="sesBack">Voltar à lição</button>`);
+  $("sesBack").onclick=()=>{SS=null;document.body.classList.remove("insession");openLessonPage(li);};
+}
+
 /* ---------- abas ---------- */
-document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll("nav.tabs button").forEach(x=>{x.setAttribute("aria-selected",x===b);$("v-"+x.dataset.v).hidden=x!==b;});
-  stopAll();window.scrollTo(0,0);
-  if(b.dataset.v==="tons"&&!tq)newTone();if(b.dataset.v==="trilha"&&!LS)renderTrilha();if(b.dataset.v==="falar"&&!fkCur)newTarget();if(b.dataset.v==="hoje"&&!session)renderToday();
-});
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;
+  if(SS){SS=null;MIC=null;document.body.classList.remove("insession");}
+  goTab(v);if(v==="trilha")renderMap();});
+document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>goTab("praticar"));
+document.querySelectorAll("#v-praticar [data-go]").forEach(b=>b.onclick=()=>goTab(b.dataset.go));
+document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ICON[e.dataset.ic]);
+$("rvBtn").onclick=()=>goTab("hoje");$("goalBtn").onclick=()=>goTab("hoje");
 $("startReview").onclick=()=>{audioReady.then(startSession);};
 
-renderTrilha();renderToday();renderSents();renderWords();renderTAcc();
+renderMap();renderToday();renderSents();renderWords();renderTAcc();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script></body></html>
