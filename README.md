@@ -4,4 +4,6 @@ App para aprender a falar mandarim no trabalho.
 
 Abra: https://lsamuels0.github.io/Hanzi/
 
-Áudios: projeto audio-cmn (Chen Wang e Yue Tan, CC BY-SA).
+Créditos:
+- Áudios: projeto audio-cmn (Chen Wang e Yue Tan, CC BY-SA).
+- Ordem dos traços: Hanzi Writer (MIT) e dados de Make Me a Hanzi (Arphic Public License).
