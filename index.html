@@ -3253,7 +3253,7 @@ const dayKey=(t=Date.now())=>{const d=new Date(t);return d.getFullYear()+"-"+Str
    Sem entrar na conta, o progresso vale só para esta aba e some ao fechá-la.
    Sem contas configuradas (ou dentro do Claude), o progresso fica salvo neste aparelho. */
 const KEY="hanzi-caderno-v2";
-const FIREBASE=/*FIREBASE_CONFIG*/null;
+const FIREBASE={"apiKey":"AIzaSyAnTB1pZWYvUjxB736Mu_Kr9pBHld-wmmU","authDomain":"caderno-hanzi.firebaseapp.com","projectId":"caderno-hanzi","storageBucket":"caderno-hanzi.firebasestorage.app","messagingSenderId":"665884797153","appId":"1:665884797153:web:8253c153e27313e67cefa0"};
 function inFrame(){try{return window.self!==window.top;}catch(e){return true;}}
 const ACC={mode:(FIREBASE&&!inFrame())?"guest":"local",user:null,dirty:false,timer:null,lastSync:0,status:"",fb:null,ready:false};
 function freshS(){return {custom:[],removed:[],srs:{},log:[],time:{},tones:{1:[0,0],2:[0,0],3:[0,0],4:[0,0]},voice:"",rate:0.85,newPerDay:8,newIntro:{},lessons:{},units:{},xp:0,goal:15,fc:{},fcNew:{},wrote:{},speak:{}};}
@@ -4492,7 +4492,9 @@ async function initAccounts(){
   renderAccBtn();
   if(ACC.mode==="local")return;
   try{
-    for(const m of ["app","auth","firestore"])await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);
+    for(const m of ["app","auth","firestore"]){
+      try{await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);}
+      catch(e){await loadScript(`https://cdn.jsdelivr.net/npm/firebase@${FBV}/firebase-${m}-compat.js`);}}
     firebase.initializeApp(FIREBASE);
     ACC.fb={auth:firebase.auth(),db:firebase.firestore()};
     ACC.fb.auth.onAuthStateChanged(u=>{onUser(u).catch(e=>{console.error(e);setAccStatus("Erro ao carregar a conta.");});});
