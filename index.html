@@ -3543,12 +3543,22 @@ function downmix(ab,target){
   for(let i=0;i<out.length;i++){const a=Math.floor(i*ratio),b=Math.min(len,Math.floor((i+1)*ratio));let s=0;for(let k=a;k<b;k++)s+=src[k];out[i]=s/Math.max(1,b-a);}
   return out;
 }
+/* aumenta o volume de gravações baixas antes de analisar (até 40×), com limitador suave */
+function boost(x){
+  let mean=0;for(let i=0;i<x.length;i++)mean+=x[i];mean/=x.length||1;
+  const W=320,rs=[];for(let s=0;s+W<=x.length;s+=W){let e=0;for(let i=0;i<W;i++){const v=x[s+i]-mean;e+=v*v;}rs.push(Math.sqrt(e/W));}
+  if(!rs.length)return x;const so=[...rs].sort((a,b)=>a-b);const loud=so[Math.floor(so.length*0.95)]||so[so.length-1];
+  const g=Math.max(1,Math.min(40,0.2/(loud||1e-6)));const y=new Float32Array(x.length);
+  for(let i=0;i<x.length;i++){const v=(x[i]-mean)*g;y[i]=Math.tanh(v*1.2)/1.2;}
+  return y;}
 /* altura da voz quadro a quadro (método YIN), 10 ms por quadro */
 function pitchTrack(x,sr=16000){
+  x=boost(x);
   const W=640,H=160,minT=Math.floor(sr/420),maxT=Math.floor(sr/70),frames=[];
   let maxR=0;const rms=[];
   for(let s=0;s+W<=x.length;s+=H){let e=0;for(let i=0;i<W;i++)e+=x[s+i]*x[s+i];const r=Math.sqrt(e/W);rms.push(r);if(r>maxR)maxR=r;}
-  const thr=Math.max(maxR*0.12,0.004);const d=new Float32Array(maxT+1);
+  const srt=[...rms].sort((a,b)=>a-b),noise=srt[Math.floor(srt.length*0.1)]||0;
+  const thr=Math.max(noise*2.2,maxR*0.06,0.002);const d=new Float32Array(maxT+1);
   for(let f=0;f<rms.length;f++){
     if(rms[f]<thr){frames.push(null);continue;}
     const s=f*H,half=W-maxT;
@@ -3557,7 +3567,7 @@ function pitchTrack(x,sr=16000){
     for(let t=minT;t<=maxT;t++){run+=d[t];const c=d[t]*(t-minT+1)/(run||1);
       if(c<0.2){let tt=t;while(tt+1<=maxT&&d[tt+1]<d[tt])tt++;best=tt;bestV=c;break;}
       if(c<bestV){bestV=c;best=t;}}
-    if(best<0||bestV>0.35){frames.push(null);continue;}
+    if(best<0||bestV>0.45){frames.push(null);continue;}
     frames.push(sr/best);
   }
   // remove saltos de oitava e suaviza
@@ -3669,7 +3679,7 @@ async function startRec(){
   if(starting||(rec&&rec.state==="recording"))return;starting=true;stopAll();
   try{
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)throw new Error("unsupported");
-    recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:true,channelCount:1}});
     M("fb").hidden=true;
     const mt=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg"].find(m=>{try{return MediaRecorder.isTypeSupported(m);}catch(e){return false;}});
     recChunks=[];rec=mt?new MediaRecorder(recStream,{mimeType:mt}):new MediaRecorder(recStream);
@@ -3681,7 +3691,7 @@ async function startRec(){
     M("btn").classList.add("recording");M("msg").textContent="Gravando… fale agora.";
     try{recAC=new (window.AudioContext||window.webkitAudioContext)();const src=recAC.createMediaStreamSource(recStream);const an=recAC.createAnalyser();an.fftSize=512;src.connect(an);
       const buf=new Uint8Array(an.fftSize);
-      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));M("level").style.width=Math.min(100,m/90*100)+"%";
+      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));M("level").style.width=Math.min(100,m/30*100)+"%";
         const s=(Date.now()-recStart)/1000;M("time").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
         if(s>=20)stopRec();},80);}catch(e){}
   }catch(e){
@@ -3711,7 +3721,7 @@ async function handleRecording(blob){
 }
 function scoreSpeech(t,you,nat){
   const N=t.tones.length,exp=spokenTones(t.tones);
-  if(you.voiced<8)return {silent:true};
+  if(you.voiced<5)return {silent:true};
   const fkNative=nat;
   const runsY=segment(you.st,N),runsN=fkNative?segment(fkNative.st,N):null;
   const single=N===1;let judged=0,right=0;const res=[];
