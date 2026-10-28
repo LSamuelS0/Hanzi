@@ -324,13 +324,38 @@ hr.sep{border:0;border-top:1px dashed var(--line);width:100%;margin:6px 0}
 .fcbar .btn{padding:14px 4px;font-size:14px}
 .fc0{border-color:var(--bad)!important;color:var(--bad)!important}.fc1{border-color:var(--warn)!important;color:var(--warn)!important}
 .fc2{border-color:var(--good)!important;color:var(--good)!important}.fc3{background:var(--good)!important;border-color:var(--good)!important;color:#fff!important}
+.reflink{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 12px;color:var(--ink);font:inherit;text-align:left;cursor:pointer;width:100%}
+.reflink .uic{width:44px;height:44px;border-radius:12px;font-size:22px}
+.csec{margin-top:8px;scroll-margin-top:16px}
+.chips a.chip{text-decoration:none}
+.cwords{gap:0;padding-block:6px}
+.cw{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.cw:first-child{border-top:0}
+.cwh{font-family:var(--f-han);font-size:26px;font-weight:700;background:none;border:0;color:var(--ink);padding:0;cursor:pointer;text-align:left;line-height:1.2;word-break:keep-all}
+.cwt{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:15px;line-height:1.45}
+.cwn{font-size:13px;color:var(--muted);background:var(--bg);border-radius:8px;padding:6px 8px;line-height:1.5}
+.cph{gap:10px}
+.hbtns{display:flex;gap:8px;align-items:center}
+#acctBody .btn,#acctBody form .row .btn{flex:none}
+#acctBody form .row .btn{flex:1 1 0}
+header h1{font-size:18px;white-space:nowrap;min-width:0}
+.gear.acc{background:var(--jade);border-color:var(--jade);color:#fff;padding:6px 12px}
+.gear.acc:has(.avatar){background:none;border:0;padding:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--c3);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+.avatar.sm{width:34px;height:34px;font-size:15px}
+.accwho{display:flex;gap:12px;align-items:center}
+.guestnote{display:flex;gap:10px;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--c5) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--c5) 40%,transparent);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.4;margin-top:8px}
+.guestnote .btn{flex:none;padding:8px 14px;font-size:14px}
+.sepor{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}.sepor::before,.sepor::after{content:"";flex:1;border-top:1px solid var(--line)}
+.linkbtn{background:none;border:0;color:var(--jade);font:600 14px var(--f-body);cursor:pointer;padding:4px}
+.accmsg{font-size:14px;min-height:18px}.accmsg.bad{color:var(--bad)}.accmsg.good{color:var(--good)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
 <div class="app">
   <header>
     <h1><span class="seal">字</span>Caderno de Hanzi</h1>
-    <button class="gear" id="openSettings">Voz e ajustes</button>
+    <div class="hbtns"><button class="gear acc" id="accBtn" hidden>Entrar</button><button class="gear" id="openSettings">Ajustes</button></div>
   </header>
 
   <!-- TRILHA -->
@@ -341,6 +366,7 @@ hr.sep{border:0;border-top:1px dashed var(--line);width:100%;margin:6px 0}
         <span class="mstat fire" id="mhStreak" title="Dias seguidos de estudo"></span>
         <span class="mstat xp" id="mhXp" title="Pontos de experiência"></span>
       </div>
+      <div id="guestNote" class="guestnote" hidden></div>
       <div id="mapPath" class="mappath"></div>
       <div class="mapbar">
         <button class="goal" id="goalBtn"><span class="gtxt" id="goalTxt"></span><span class="gbar"><i id="goalBar"></i></span></button>
@@ -505,6 +531,7 @@ hr.sep{border:0;border-top:1px dashed var(--line);width:100%;margin:6px 0}
   <button role="tab" data-v="palavras" aria-selected="false"><span class="ic">词</span>Palavras</button>
 </nav>
 
+<dialog id="acct"><div id="acctBody" style="display:flex;flex-direction:column;gap:12px"></div></dialog>
 <dialog id="settings">
   <div style="display:flex;flex-direction:column;gap:14px">
     <h2>Voz das frases</h2>
@@ -3221,12 +3248,26 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const DAY=86400000;
 const dayKey=(t=Date.now())=>{const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
 
-/* ---------- estado ---------- */
+/* ---------- estado e contas ----------
+   Com contas ativadas (Firebase), cada pessoa tem o próprio progresso salvo na nuvem.
+   Sem entrar na conta, o progresso vale só para esta aba e some ao fechá-la.
+   Sem contas configuradas (ou dentro do Claude), o progresso fica salvo neste aparelho. */
 const KEY="hanzi-caderno-v2";
-let S={custom:[],removed:[],srs:{},log:[],time:{},tones:{1:[0,0],2:[0,0],3:[0,0],4:[0,0]},voice:"",rate:0.85,newPerDay:8,newIntro:{},lessons:{}};
-try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)S=Object.assign(S,s);if(!S.lessons)S.lessons={};
-  else{const o=JSON.parse(localStorage.getItem("hanzi-caderno-v1")||"null");if(o&&o.custom)S.custom=o.custom.map(w=>({h:w.h,p:w.p,m:w.m,c:"Minhas"}));}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const FIREBASE=/*FIREBASE_CONFIG*/null;
+function inFrame(){try{return window.self!==window.top;}catch(e){return true;}}
+const ACC={mode:(FIREBASE&&!inFrame())?"guest":"local",user:null,dirty:false,timer:null,lastSync:0,status:"",fb:null,ready:false};
+function freshS(){return {custom:[],removed:[],srs:{},log:[],time:{},tones:{1:[0,0],2:[0,0],3:[0,0],4:[0,0]},voice:"",rate:0.85,newPerDay:8,newIntro:{},lessons:{},units:{},xp:0,goal:15,fc:{},fcNew:{},wrote:{},speak:{}};}
+function normS(s){const f=freshS();s=Object.assign(f,s||{});for(const k of ["lessons","units","fc","fcNew","wrote","speak","srs","time","newIntro"])if(!s[k]||typeof s[k]!=="object")s[k]={};
+  if(!Array.isArray(s.log))s.log=[];if(s.xp==null)s.xp=0;if(!s.goal)s.goal=15;return s;}
+function readJSON(store,k){try{return JSON.parse(store.getItem(k)||"null");}catch(e){return null;}}
+let S=freshS();
+if(ACC.mode==="local"){S=normS(readJSON(localStorage,KEY));}
+else{S=normS(readJSON(sessionStorage,KEY+":guest"));}
+function save(){try{
+  if(ACC.mode==="local")localStorage.setItem(KEY,JSON.stringify(S));
+  else if(ACC.mode==="guest")sessionStorage.setItem(KEY+":guest",JSON.stringify(S));
+  else if(ACC.mode==="user"&&ACC.user){localStorage.setItem(KEY+":u:"+ACC.user.uid,JSON.stringify(S));ACC.dirty=true;clearTimeout(ACC.timer);ACC.timer=setTimeout(pushCloud,2500);setAccStatus("Salvando…");}
+}catch(e){}}
 
 const VOCAB=()=>[...C.vocab.filter(v=>!S.removed.includes(v[0])).map(v=>({h:v[0],p:v[1],m:v[2],c:v[3],a:v[4]})),...S.custom];
 const SENTS=C.sentences.map(s=>({h:s[0],p:s[1],m:s[2],c:s[3],seg:s[4]}));
@@ -4080,18 +4121,44 @@ function openLessonPage(i){
         <div class="lchips"><span>${ICON.clock}${mins} min</span><span>${l.new.length} palavras · ${l.ph.length} frases</span><span>${dn}/${us.length} etapas</span></div></div>
     </div>
     <p class="muted" style="margin:0">${esc(l.goal)}</p>
+    <button class="reflink" id="lpRef"><span class="uic" style="--uc:var(--c7)">本</span><span class="ut"><b>Material de consulta</b><span>Gramática, palavras e frases da lição para ler e ouvir</span></span><span class="ust">${ICON.chev}</span></button>
     <div class="units">${us.map((u,k)=>{const st=uState(l,u),op=uOpen(l,us,k),d=st&&st.done;
       return `<button class="unit ${u.cls} ${d?"done":op?"open":"locked"} ${k===nextU?"next":""}" data-k="${u.k}" ${op?"":"aria-disabled=\"true\""}>
         <span class="uic">${u.ic}</span><span class="ut"><b>${esc(u.t)}</b><span class="${u.words?"uhz":""}">${esc(unitSub(l,u))}</span></span>
         <span class="ust">${!op?ICON.lock:d?(st.best!=null&&u.kind!=="s"&&u.kind!=="w"?`<em>${st.best}%</em>`:"")+`<i class="okc">${ICON.check}</i>`:ICON.chev}</span></button>`;}).join("")}</div>
-    <button class="unit u-r" id="lpRef"><span class="uic">本</span><span class="ut"><b>Material de consulta</b><span>Todas as palavras e frases, com explicações</span></span><span class="ust">${ICON.chev}</span></button>
-    ${nextU>=0?`<div class="lpbar"><button class="btn primary" id="lpGo">${dn?"Continuar":"Começar"}: ${esc(us[nextU].t)}</button></div>`:""}`;
+    <div style="height:12px"></div>${nextU>=0?`<div class="lpbar"><button class="btn primary" id="lpGo">${dn?"Continuar":"Começar"}: ${esc(us[nextU].t)}</button></div>`:""}`;
   $("lpBack").onclick=()=>renderMap();
   v.querySelectorAll(".unit[data-k]").forEach(b=>b.onclick=()=>{const k=us.findIndex(u=>u.k===b.dataset.k);if(!uOpen(l,us,k))return;startUnit(i,b.dataset.k);});
-  $("lpRef").onclick=()=>openLesson(i,"learn");
+  $("lpRef").onclick=()=>openConsulta(i);
   if($("lpGo"))$("lpGo").onclick=()=>startUnit(i,us[nextU].k);
 }
 
+/* ---------- material de consulta (página de leitura) ---------- */
+function openConsulta(i){
+  LP=i;LS={i};LS_I=i;stopAll();const l=LESSONS[i],gps=C.gp[l.id]||[];
+  $("trilhaHome").hidden=true;$("sessionView").hidden=true;const v=$("lessonView");v.hidden=false;window.scrollTo(0,0);
+  v.innerHTML=`<button class="back" id="cBack">← Voltar à lição</button>
+    <div><div class="small">${esc(lvShort(l.lvl))} · Lição ${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</div><h2 style="font-size:22px;margin:2px 0">Material de consulta</h2><div class="muted">${esc(l.t)}</div></div>
+    <div class="chips"><a class="chip" href="#c-gram">Gramática</a><a class="chip" href="#c-pal">Palavras (${l.new.length})</a><a class="chip" href="#c-fra">Frases (${l.ph.length})</a></div>
+    ${gps.length?`<h3 id="c-gram" class="csec">Como as frases funcionam</h3>${gps.map(g=>`<div class="panel">${gpCard(g,true)}</div>`).join("")}`:""}
+    <h3 id="c-pal" class="csec">Palavras da lição</h3>
+    <div class="panel cwords">${l.new.map(h=>{const [p,m,n]=GL[h];return `<div class="cw">
+      <button class="cwh" data-h="${esc(h)}" aria-label="Ouvir ${esc(h)}">${esc(h)}</button>
+      <div class="cwt"><div><b class="pyi">${esc(p)}</b> · ${esc(m)}</div>${n?`<div class="cwn">${esc(n)}</div>`:""}
+      ${[...h].length>1?`<div class="cwn">${[...h].map(c=>`<b class="hzi" style="font-size:15px">${esc(c)}</b> (${esc(C.cpy[c]||"")}) ${esc(charMean(c))}`).join(" + ")}</div>`:""}</div></div>`;}).join("")}</div>
+    <h3 id="c-fra" class="csec">Frases da lição</h3>
+    ${l.ph.map(([tk,p,m],k)=>`<div class="panel cph" data-k="${k}"><div class="toks">${tk.map(tokHtml).join("")}</div>
+      <div class="pin" style="font-size:16px">${esc(p)}</div><div style="font-size:16px;font-weight:600">${esc(m)}</div>${formulaHtml(tk,m)}<div class="gslot"></div>
+      <div class="row">${listenBtns()}</div></div>`).join("")}
+    <div style="height:24px"></div>`;
+  $("cBack").onclick=()=>{LS=null;openLessonPage(i);};
+  v.querySelectorAll(".chips a").forEach(a=>a.onclick=e=>{e.preventDefault();const t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth",block:"start"});});
+  v.querySelectorAll(".cwh").forEach(b=>b.onclick=()=>sayWord(b.dataset.h));
+  v.querySelectorAll(".cph").forEach(el=>{const [tk]=l.ph[+el.dataset.k];
+    el.querySelectorAll(".tok[data-i]").forEach(x=>x.onclick=()=>{const tt=tk[+x.dataset.i];el.querySelectorAll(".tok").forEach(y=>y.classList.toggle("sel",y===x));el.querySelector(".gslot").innerHTML=glossBox(tt);sayWord(tt);});
+    bindListen(el,tk.join(""),k=>el.querySelectorAll(".tok[data-i]").forEach(y=>y.classList.toggle("sel",+y.dataset.i===k)));});
+  v.querySelectorAll(".gpcard .tok[data-i]").forEach(x=>x.onclick=()=>sayWord(x.querySelector("span").textContent));
+}
 /* ---------- montagem dos passos ---------- */
 function poolFor(l){return [...new Set(upTo(l).flatMap(x=>x.new))];}
 function knownUntil(l,u){const us=unitsOf(l),k=us.indexOf(u);const s=new Set(upTo(l).slice(0,-1).flatMap(x=>x.new));us.slice(0,k+1).forEach(x=>(x.words||[]).forEach(w=>s.add(w)));return s;}
@@ -4268,7 +4335,7 @@ function renderSpeakStep(s){
 }
 /* ---------- escrita com ordem dos traços ---------- */
 let WR=null;
-function charMean(ch){const i=wInfo(ch);if(i&&i[1])return shortM(ch);const s=C.story[ch]||"";const m=[...s.matchAll(/:\s([^.:]+)\./g)];return m.length?m[m.length-1][1].trim():"";}
+function charMean(ch){const s=C.story[ch]||"";const m=[...s.matchAll(/:\s([^.:]+)\./g)];if(m.length)return m[m.length-1][1].trim();const i=wInfo(ch);return i&&i[1]?shortM(ch):"";}
 function insideWord(h,mean){const cs=[...h].filter(c=>/[\u4e00-\u9fff]/.test(c));if(cs.length<2)return "";
   return `<div class="inside"><div class="kicker">Por dentro da palavra</div>
     <div class="formula">${cs.map((c,i)=>`${i?'<span class="fplus">+</span>':''}<span class="fw"><b>${esc(c)}</b><small>${esc(C.cpy[c]||"")}</small><em>${esc(charMean(c))}</em></span>`).join("")}<span class="feq">=</span><span class="fpt">${esc(mean)}</span></div>
@@ -4416,6 +4483,134 @@ function finishUnit(){
   $("sesBack").onclick=()=>{SS=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";openLessonPage(li);};
 }
 
+/* ---------- contas (Firebase: login e progresso na nuvem) ---------- */
+const FBV="10.12.2";
+function setAccStatus(s){ACC.status=s;const e=$("accStatus");if(e)e.textContent=s;}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+const hasProgress=s=>!!s&&(Object.keys(s.lessons||{}).length||Object.keys(s.srs||{}).length||Object.keys(s.units||{}).length);
+async function initAccounts(){
+  renderAccBtn();
+  if(ACC.mode==="local")return;
+  try{
+    for(const m of ["app","auth","firestore"])await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);
+    firebase.initializeApp(FIREBASE);
+    ACC.fb={auth:firebase.auth(),db:firebase.firestore()};
+    ACC.fb.auth.onAuthStateChanged(u=>{onUser(u).catch(e=>{console.error(e);setAccStatus("Erro ao carregar a conta.");});});
+    ACC.fb.auth.getRedirectResult().catch(e=>accError(e));
+  }catch(e){setAccStatus("Não consegui carregar o login. Confira a internet e abra o app de novo.");renderAccBtn();}
+}
+function refreshAll(){
+  if(SS){SS=null;MIC=null;document.body.classList.remove("insession");}
+  mapScrolled=false;
+  try{renderStats();renderRecent();renderTAcc();renderWords();renderToday();}catch(e){}
+  if(!$("v-trilha").hidden)renderMap();
+}
+async function onUser(u){
+  ACC.ready=true;
+  if(!u){
+    if(ACC.mode==="user"){ACC.mode="guest";ACC.user=null;S=normS(readJSON(sessionStorage,KEY+":guest"));refreshAll();}
+    renderAccBtn();return;}
+  ACC.mode="user";ACC.user=u;renderAccBtn();
+  const ck=KEY+":u:"+u.uid,cache=readJSON(localStorage,ck);
+  if(cache){S=normS(cache);refreshAll();}
+  setAccStatus("Carregando seu progresso…");
+  let doc;
+  try{doc=await ACC.fb.db.collection("users").doc(u.uid).get();}
+  catch(e){setAccStatus("Sem conexão: usando o progresso guardado neste aparelho.");return;}
+  if(doc.exists&&doc.data().state){
+    const d=doc.data();
+    if(!ACC.dirty){S=normS(JSON.parse(d.state));}
+    ACC.lastSync=d.updatedAt||Date.now();
+    try{localStorage.setItem(ck,JSON.stringify(S));}catch(e){}
+    setAccStatus("Progresso sincronizado com a sua conta.");
+  }else{
+    const legacy=readJSON(localStorage,KEY),guest=readJSON(sessionStorage,KEY+":guest");
+    const cand=[];
+    if(hasProgress(legacy))cand.push({t:"O progresso que já estava salvo neste aparelho",s:legacy});
+    if(hasProgress(guest))cand.push({t:"O progresso que você fez agora, sem conta",s:guest});
+    let chosen=cache;
+    if(cand.length){const r=await askImport(cand);if(r)chosen=r;}
+    S=normS(chosen||null);
+    await pushCloud();
+  }
+  try{localStorage.removeItem(KEY);sessionStorage.removeItem(KEY+":guest");}catch(e){}
+  refreshAll();renderAccBtn();
+}
+function askImport(cand){return new Promise(res=>{
+  const d=$("acct");$("acctBody").innerHTML=`<h2>Sua conta é nova</h2><p class="muted">Encontrei progresso feito antes de você entrar. Quer levar para a sua conta?</p>
+    ${cand.map((c,i)=>`<button class="btn primary" data-i="${i}">Levar: ${esc(c.t)}</button>`).join("")}
+    <button class="btn" data-i="-1">Começar do zero</button>`;
+  $("acctBody").querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;try{d.close();}catch(e){}res(i>=0?cand[i].s:null);});
+  try{d.showModal();}catch(e){d.setAttribute("open","");}});}
+async function pushCloud(){
+  if(ACC.mode!=="user"||!ACC.fb||!ACC.user)return;clearTimeout(ACC.timer);
+  const now=Date.now();
+  try{await ACC.fb.db.collection("users").doc(ACC.user.uid).set({state:JSON.stringify(S),updatedAt:now});
+    ACC.dirty=false;ACC.lastSync=now;setAccStatus("Progresso salvo na sua conta às "+new Date(now).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+".");}
+  catch(e){setAccStatus("Sem conexão agora. Vou salvar na sua conta quando a internet voltar.");ACC.timer=setTimeout(pushCloud,15000);}
+}
+async function pullCloud(){
+  if(ACC.mode!=="user"||!ACC.fb||!ACC.user||ACC.dirty)return;
+  try{const doc=await ACC.fb.db.collection("users").doc(ACC.user.uid).get();
+    if(doc.exists&&(doc.data().updatedAt||0)>ACC.lastSync&&!ACC.dirty){S=normS(JSON.parse(doc.data().state));ACC.lastSync=doc.data().updatedAt;
+      try{localStorage.setItem(KEY+":u:"+ACC.user.uid,JSON.stringify(S));}catch(e){}if(!SS)refreshAll();}}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){if(ACC.dirty)pushCloud();}else pullCloud();});
+addEventListener("pagehide",()=>{if(ACC.dirty)pushCloud();});
+const AUTH_ERR={"auth/invalid-email":"E-mail inválido.","auth/user-not-found":"Não existe conta com esse e-mail. Toque em “Criar conta”.",
+  "auth/wrong-password":"Senha incorreta.","auth/invalid-credential":"E-mail ou senha incorretos.","auth/email-already-in-use":"Já existe uma conta com esse e-mail. Toque em “Entrar”.",
+  "auth/weak-password":"A senha precisa ter pelo menos 6 caracteres.","auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.",
+  "auth/network-request-failed":"Sem internet. Tente de novo.","auth/unauthorized-domain":"Este endereço ainda não foi autorizado no Firebase (Authentication → Settings → Authorized domains).",
+  "auth/operation-not-allowed":"Esse tipo de login não foi ativado no Firebase (Authentication → Sign-in method).","auth/too-many-requests":"Muitas tentativas. Espere alguns minutos."};
+function accError(e){if(!e)return;const m=AUTH_ERR[e.code]||("Não deu certo: "+(e.message||e.code||"erro"));const el=$("accMsg");if(el){el.textContent=m;el.className="accmsg bad";}else setAccStatus(m);}
+function accMsg(m,ok){const el=$("accMsg");if(el){el.textContent=m;el.className="accmsg"+(ok?" good":"");}}
+async function googleLogin(){const p=new firebase.auth.GoogleAuthProvider();accMsg("Abrindo o Google…");
+  try{await ACC.fb.auth.signInWithPopup(p);closeAcct();}
+  catch(e){if(["auth/popup-blocked","auth/operation-not-supported-in-this-environment","auth/cancelled-popup-request"].includes(e.code)){try{await ACC.fb.auth.signInWithRedirect(p);}catch(e2){accError(e2);}}else accError(e);}}
+async function emailAuth(kind){const em=$("accEmail").value.trim(),pw=$("accPass").value;
+  if(!em){accMsg("Digite seu e-mail.");return;}
+  try{if(kind==="reset"){await ACC.fb.auth.sendPasswordResetEmail(em);accMsg("Enviei um e-mail para você criar uma nova senha.",true);return;}
+    if(pw.length<6){accMsg("A senha precisa ter pelo menos 6 caracteres.");return;}
+    accMsg(kind==="new"?"Criando sua conta…":"Entrando…");
+    if(kind==="new")await ACC.fb.auth.createUserWithEmailAndPassword(em,pw);else await ACC.fb.auth.signInWithEmailAndPassword(em,pw);closeAcct();}
+  catch(e){accError(e);}}
+async function logout(){if(ACC.dirty)await pushCloud();const uid=ACC.user&&ACC.user.uid;await ACC.fb.auth.signOut();
+  try{if(uid)localStorage.removeItem(KEY+":u:"+uid);}catch(e){}closeAcct();}
+function closeAcct(){try{$("acct").close();}catch(e){$("acct").removeAttribute("open");}}
+function openAcct(){
+  const b=$("acctBody");
+  if(ACC.mode==="user"&&ACC.user){const u=ACC.user;
+    b.innerHTML=`<h2>Sua conta</h2><div class="accwho"><span class="avatar">${esc((u.displayName||u.email||"?").trim()[0].toUpperCase())}</span><div style="min-width:0"><b>${esc(u.displayName||"")}</b><div class="muted" style="overflow-wrap:anywhere">${esc(u.email||"")}</div></div></div>
+      <p class="small" id="accStatus">${esc(ACC.status||"")}</p>
+      <p class="muted" style="margin:0">Seu progresso fica salvo na sua conta. Entre com ela em qualquer celular ou computador para continuar de onde parou.</p>
+      <button class="btn" id="accSync">Salvar agora</button><button class="btn" id="accOut">Sair da conta</button><button class="btn primary" id="accClose">Fechar</button>`;
+    $("accSync").onclick=()=>pushCloud();$("accOut").onclick=logout;$("accClose").onclick=closeAcct;
+  }else{
+    b.innerHTML=`<h2>Entrar</h2><p class="muted" style="margin:0">Com uma conta, seu progresso fica salvo e aparece em qualquer aparelho. Sem conta, ele vale só enquanto esta aba estiver aberta.</p>
+      <button class="btn primary" id="accG">Entrar com o Google</button>
+      <div class="sepor"><span>ou com e-mail</span></div>
+      <form id="accForm" style="display:flex;flex-direction:column;gap:10px">
+        <label>E-mail<input id="accEmail" type="email" autocomplete="email" required></label>
+        <label>Senha<input id="accPass" type="password" autocomplete="current-password" minlength="6"></label>
+        <div class="row"><button class="btn primary" type="submit">Entrar</button><button class="btn" type="button" id="accNew">Criar conta</button></div>
+        <button class="linkbtn" type="button" id="accReset">Esqueci a senha</button></form>
+      <div class="accmsg" id="accMsg" aria-live="polite">${esc(ACC.status&&!ACC.fb?ACC.status:"")}</div>
+      <button class="btn" id="accClose">Continuar sem conta</button>`;
+    $("accG").onclick=()=>ACC.fb?googleLogin():accMsg("O login ainda está carregando. Tente em alguns segundos.");
+    $("accForm").addEventListener("submit",e=>{e.preventDefault();ACC.fb&&emailAuth("in");});
+    $("accNew").onclick=()=>ACC.fb&&emailAuth("new");$("accReset").onclick=()=>ACC.fb&&emailAuth("reset");$("accClose").onclick=closeAcct;
+  }
+  try{$("acct").showModal();}catch(e){$("acct").setAttribute("open","");}
+}
+function renderAccBtn(){
+  const b=$("accBtn"),g=$("guestNote");if(!b)return;
+  if(ACC.mode==="local"){b.hidden=true;if(g)g.hidden=true;return;}
+  b.hidden=false;
+  if(ACC.mode==="user"&&ACC.user){const u=ACC.user;b.innerHTML=`<span class="avatar sm">${esc((u.displayName||u.email||"?").trim()[0].toUpperCase())}</span>`;b.setAttribute("aria-label","Sua conta");if(g)g.hidden=true;}
+  else{b.textContent="Entrar";b.removeAttribute("aria-label");
+    if(g){g.hidden=false;g.innerHTML=`<span>Você está sem conta: o progresso vale só enquanto esta aba estiver aberta.</span><button class="btn primary" id="gnIn">Entrar</button>`;$("gnIn").onclick=openAcct;}}
+}
+$("accBtn").onclick=openAcct;
+
 /* ---------- abas ---------- */
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;
   if(SS){SS=null;MIC=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";}
@@ -4426,6 +4621,6 @@ document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ICON[e.dataset.ic]
 $("rvBtn").onclick=()=>goTab("hoje");$("goalBtn").onclick=()=>goTab("hoje");
 $("startReview").onclick=()=>{audioReady.then(startSession);};
 
-renderMap();renderToday();renderSents();renderWords();renderTAcc();
+renderMap();renderToday();renderSents();renderWords();renderTAcc();initAccounts();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script></body></html>
