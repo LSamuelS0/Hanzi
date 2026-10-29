@@ -349,6 +349,8 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
 .sepor{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}.sepor::before,.sepor::after{content:"";flex:1;border-top:1px solid var(--line)}
 .linkbtn{background:none;border:0;color:var(--jade);font:600 14px var(--f-body);cursor:pointer;padding:4px}
 .accmsg{font-size:14px;min-height:18px}.accmsg.bad{color:var(--bad)}.accmsg.good{color:var(--good)}
+.tgl{flex-direction:row!important;align-items:flex-start;gap:10px;color:var(--ink)!important;font-size:14px!important;line-height:1.4}
+.tgl input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--jade)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -539,6 +541,9 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
     <label>Voz<select id="voiceSel"></select></label>
     <label>Velocidade: <span id="rateLbl"></span><input type="range" id="rate" min="0.5" max="1.1" step="0.05"></label>
     <button class="btn" id="testVoice">Testar: 你好，很高兴认识你。 (nǐ hǎo, hěn gāoxìng rènshi nǐ = olá, prazer em te conhecer)</button>
+    <label>Microfone<select id="micSel"><option value="">Padrão do celular</option></select></label>
+    <p class="small" style="margin:-6px 0 0">Se o seu fone for Bluetooth, o microfone dele costuma gravar baixo e cortado. Teste escolher o microfone do celular ou usar fone com fio.</p>
+    <label class="tgl"><input type="checkbox" id="noiseOpt"> <span><b>Filtro de ruído</b> (desligado é o recomendado)<br><span class="small">Ligue só se estiver num lugar muito barulhento. Ligado, ele pode cortar e abaixar a sua voz.</span></span></label>
     <label>Novos itens por dia<select id="newPerDay"><option>5</option><option>8</option><option>12</option><option>20</option></select></label>
     <p class="small">Seu progresso fica salvo neste aparelho e neste navegador.</p>
     <button class="btn primary" id="closeSettings">Fechar</button>
@@ -3541,10 +3546,15 @@ $("addForm").addEventListener("submit",e=>{e.preventDefault();
 function fillVoices(){const vs=voices();const cur=bestVoice();
   $("voiceSel").innerHTML=vs.length?vs.map(v=>`<option ${cur&&v.name===cur.name?"selected":""}>${esc(v.name)}</option>`).join(""):`<option>Nenhuma voz chinesa encontrada</option>`;}
 try{speechSynthesis.onvoiceschanged=fillVoices;}catch(e){}
-$("openSettings").onclick=()=>{fillVoices();$("rate").value=S.rate;$("rateLbl").textContent=S.rate+"×";$("newPerDay").value=S.newPerDay;try{$("settings").showModal();}catch(e){$("settings").setAttribute("open","");}};
+$("openSettings").onclick=()=>{fillVoices();fillMics();$("noiseOpt").checked=S.noiseFilter===true;$("rate").value=S.rate;$("rateLbl").textContent=S.rate+"×";$("newPerDay").value=S.newPerDay;try{$("settings").showModal();}catch(e){$("settings").setAttribute("open","");}};
 $("closeSettings").onclick=()=>{try{$("settings").close();}catch(e){$("settings").removeAttribute("open");}};
 $("voiceSel").onchange=e=>{S.voice=e.target.value;save();};
 $("rate").oninput=e=>{S.rate=+e.target.value;$("rateLbl").textContent=S.rate+"×";save();};
+$("noiseOpt").onchange=e=>{S.noiseFilter=e.target.checked;save();};
+async function fillMics(){const sel=$("micSel");try{const ds=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="audioinput"&&d.deviceId&&d.deviceId!=="default");
+  sel.innerHTML=`<option value="">Padrão do celular</option>`+ds.map((d,i)=>`<option value="${esc(d.deviceId)}" ${S.micId===d.deviceId?"selected":""}>${esc(d.label||("Microfone "+(i+1)))}</option>`).join("");
+  if(!ds.some(d=>d.label))sel.insertAdjacentHTML("beforeend",`<option disabled>Grave uma vez para ver os nomes dos microfones</option>`);}catch(e){}}
+$("micSel").onchange=e=>{S.micId=e.target.value;save();};
 $("newPerDay").onchange=e=>{S.newPerDay=+e.target.value;save();renderToday();};
 $("testVoice").onclick=()=>tts("你好，很高兴认识你。");
 
@@ -3585,6 +3595,12 @@ function downmix(ab,target){
   return out;
 }
 /* aumenta o volume de gravações baixas antes de analisar (até 40×), com limitador suave */
+/* filtro de voz: corta graves (ruído de motor, vento, zumbido) e agudos (chiado), deixando a faixa da voz */
+function biquad(x,type,f,sr=16000,q=0.707){const w=2*Math.PI*f/sr,c=Math.cos(w),a=Math.sin(w)/(2*q);let b0,b1,b2;
+  if(type==="hp"){b0=(1+c)/2;b1=-(1+c);b2=(1+c)/2;}else{b0=(1-c)/2;b1=1-c;b2=(1-c)/2;}
+  const a0=1+a,a1=-2*c,a2=1-a;const y=new Float32Array(x.length);let x1=0,x2=0,y1=0,y2=0;
+  for(let i=0;i<x.length;i++){const v=(b0*x[i]+b1*x1+b2*x2-a1*y1-a2*y2)/a0;x2=x1;x1=x[i];y2=y1;y1=v;y[i]=v;}return y;}
+function voiceFilter(x){return biquad(biquad(biquad(x,"hp",75),"hp",75),"lp",1100);}
 function boost(x){
   let mean=0;for(let i=0;i<x.length;i++)mean+=x[i];mean/=x.length||1;
   const W=320,rs=[];for(let s=0;s+W<=x.length;s+=W){let e=0;for(let i=0;i<W;i++){const v=x[s+i]-mean;e+=v*v;}rs.push(Math.sqrt(e/W));}
@@ -3594,7 +3610,7 @@ function boost(x){
   return y;}
 /* altura da voz quadro a quadro (método YIN), 10 ms por quadro */
 function pitchTrack(x,sr=16000){
-  x=boost(x);
+  x=boost(S.noiseFilter===true?voiceFilter(x):x);
   const W=640,H=160,minT=Math.floor(sr/420),maxT=Math.floor(sr/70),frames=[];
   let maxR=0;const rms=[];
   for(let s=0;s+W<=x.length;s+=H){let e=0;for(let i=0;i<W;i++)e+=x[s+i]*x[s+i];const r=Math.sqrt(e/W);rms.push(r);if(r>maxR)maxR=r;}
@@ -3645,7 +3661,14 @@ function contourPoints(an,runs,n){ // reamostra cada sílaba em n pontos, normal
   return runs.map(([a,b])=>{const seg=an.st.slice(a,b);const out=[];for(let i=0;i<n;i++){const v=seg[Math.floor(i*seg.length/n)];out.push(v==null?null:v-an.ref);}return out;});
 }
 
-let fkMode="word",fkCur=null,fkNative=null,lastRecUrl=null;
+let fkMode="word",fkCur=null,fkNative=null,lastRecUrl=null,lastRecSamples=null,mineSrc=null;
+/* toca a sua gravação com o volume aumentado (mesmo ganho usado na análise) */
+function playMine(){stopAll();try{mineSrc&&mineSrc.stop();}catch(e){}
+  if(!lastRecSamples){if(lastRecUrl){const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});}return;}
+  try{if(!ACtx)ACtx=new (window.AudioContext||window.webkitAudioContext)();if(ACtx.state==="suspended")ACtx.resume();
+    const y=boost(lastRecSamples);const buf=ACtx.createBuffer(1,y.length,16000);buf.getChannelData(0).set(y);
+    const s=ACtx.createBufferSource();s.buffer=buf;s.connect(ACtx.destination);s.start();mineSrc=s;}
+  catch(e){const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});}}
 document.querySelectorAll("#fkMode .chip").forEach(b=>b.onclick=()=>{fkMode=b.dataset.m;PL=null;document.querySelectorAll("#fkMode .chip").forEach(x=>x.setAttribute("aria-pressed",x===b));newTarget();});
 function nativeKeysFor(t){
   if(t.k==="syl")return ["s:"+t.key];
@@ -3720,7 +3743,8 @@ async function startRec(){
   if(starting||(rec&&rec.state==="recording"))return;starting=true;stopAll();
   try{
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)throw new Error("unsupported");
-    recStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:true,channelCount:1}});
+    const nf=S.noiseFilter===true;const ac={echoCancellation:nf,noiseSuppression:nf,autoGainControl:nf,channelCount:1};if(S.micId)ac.deviceId={exact:S.micId};
+    try{recStream=await navigator.mediaDevices.getUserMedia({audio:ac});}catch(err){if(S.micId){delete ac.deviceId;S.micId="";save();recStream=await navigator.mediaDevices.getUserMedia({audio:ac});}else throw err;}
     M("fb").hidden=true;
     const mt=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg"].find(m=>{try{return MediaRecorder.isTypeSupported(m);}catch(e){return false;}});
     recChunks=[];rec=mt?new MediaRecorder(recStream,{mimeType:mt}):new MediaRecorder(recStream);
@@ -3754,7 +3778,7 @@ async function handleRecording(blob){
   M("msg").textContent="Analisando sua pronúncia…";
   if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(blob);
   let you;
-  try{you=await analyze(await decode16k(await blob.arrayBuffer()));}
+  try{const smp=await decode16k(await blob.arrayBuffer());lastRecSamples=smp;you=await analyze(smp);}
   catch(e){M("msg").textContent="Não consegui ler esse arquivo de áudio. Tente gravar de novo (formatos comuns: m4a, mp3, ogg, webm, wav).";return;}
   if(MIC){M("msg").textContent="";MIC.onResult(t,you);return;}
   M("msg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
@@ -3819,7 +3843,7 @@ function renderResult(t,you){
     <div class="sylrow">${res.map(r=>`<span class="syl ${r.skip?"skip":r.ok?"ok":"no"}"><span class="hz">${esc(r.c)}</span>${toneSvgSmall(r.e)}<small>${r.skip?(r.e===5?"neutro":"não ouvi"):r.ok?"certo":"você: tom "+r.got}</small></span>`).join("")}</div>
     <h3>O que melhorar</h3><ul class="tips">${tips.map(x=>`<li>${x}</li>`).join("")}</ul>
     <div class="row"><button class="play" id="fkMine">▶ Minha gravação</button><button class="play" id="fkNat2">▶ Nativo</button><button class="play" id="fkRetry">🎙 Gravar de novo</button><button class="play" id="fkAgain">${PL?"Próxima frase →":"Outra"}</button></div>`;
-  $("fkMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
+  $("fkMine").onclick=playMine;
   $("fkNat2").onclick=()=>{const k=nativeKeysFor(t);k?playSeq(k):saySentence(t.h);};
   $("fkAgain").onclick=fkGoNext;$("fkRetry").onclick=()=>{window.scrollTo(0,0);startRec();};
   logSpeech(t,sc);renderRecent();renderStats();renderTAcc();
@@ -4324,7 +4348,7 @@ function renderSpeakStep(s){
     $("spRes").innerHTML=`<div class="spscore"><span class="score" style="color:var(--${col})">${sc.main}</span><span class="muted">${sc.main>=75?"Ótima pronúncia!":sc.main>=50?"Bom, dá para melhorar.":"Vamos tentar de novo?"}</span></div>
       ${sylChips(sc)}<ul class="tips">${sc.tips.slice(0,2).map(x=>`<li>${x}</li>`).join("")}</ul>
       <div class="row" style="justify-content:center"><button class="play sm" id="spMine">▶ Minha voz</button><button class="play sm" id="spNat">▶ Nativo</button></div>`;
-    $("spMine").onclick=()=>{stopAll();const a=new Audio(lastRecUrl);curAudio=a;a.play().catch(()=>{});};
+    $("spMine").onclick=playMine;
     $("spNat").onclick=()=>t.k==="sent"?saySentence(t.h):sayWord(t.h);
     barState(sc.main>=70?"good":"", "", "Continuar",nextStep);padForBar();keepAboveBar($("spRes"));
   }};
