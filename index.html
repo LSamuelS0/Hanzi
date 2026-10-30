@@ -396,6 +396,8 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
 .scene.hb:not(.ha) .s-bg:only-child{left:50%;transform:translateX(-50%)}
 .cwl{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .cwi{width:34px;height:34px;flex:none}
+.sandhi{display:flex;align-items:center;gap:2px;font-size:10px;color:var(--muted);white-space:nowrap}
+.sandnote{text-align:center;max-width:320px;line-height:1.4}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -3650,7 +3652,7 @@ function boost(x){
   let mean=0;for(let i=0;i<x.length;i++)mean+=x[i];mean/=x.length||1;
   const W=320,rs=[];for(let s=0;s+W<=x.length;s+=W){let e=0;for(let i=0;i<W;i++){const v=x[s+i]-mean;e+=v*v;}rs.push(Math.sqrt(e/W));}
   if(!rs.length)return x;const so=[...rs].sort((a,b)=>a-b);const loud=so[Math.floor(so.length*0.95)]||so[so.length-1];
-  const g=Math.max(1,Math.min(40,0.2/(loud||1e-6)));const y=new Float32Array(x.length);
+  const g=Math.max(1,Math.min(300,0.25/(loud||1e-7)));const y=new Float32Array(x.length);
   for(let i=0;i<x.length;i++){const v=(x[i]-mean)*g;y[i]=Math.tanh(v*1.2)/1.2;}
   return y;}
 /* altura da voz quadro a quadro (método YIN), 10 ms por quadro */
@@ -3660,7 +3662,7 @@ function pitchTrack(x,sr=16000){
   let maxR=0;const rms=[];
   for(let s=0;s+W<=x.length;s+=H){let e=0;for(let i=0;i<W;i++)e+=x[s+i]*x[s+i];const r=Math.sqrt(e/W);rms.push(r);if(r>maxR)maxR=r;}
   const srt=[...rms].sort((a,b)=>a-b),noise=srt[Math.floor(srt.length*0.1)]||0;
-  const thr=Math.max(noise*2.2,maxR*0.06,0.002);const d=new Float32Array(maxT+1);
+  const thr=Math.max(noise*1.8,maxR*0.05,0.0008);const d=new Float32Array(maxT+1);
   for(let f=0;f<rms.length;f++){
     if(rms[f]<thr){frames.push(null);continue;}
     const s=f*H,half=W-maxT;
@@ -3733,7 +3735,8 @@ async function newTarget(preset){
   fkCur=t;fkNative=null;$("fkResult").hidden=true;$("fkMode").hidden=!!(PL&&preset);
   const keys=nativeKeysFor(t);
   $("fkTarget").innerHTML=`${t.k==="syl"?`<div class="big-syl">${esc(t.h)}</div>`:hanBox(t.h)}<div class="pin">${esc(t.p)}</div><div>${esc(t.m)}</div>
-    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz" style="font-size:${t.k==="syl"?16:22}px">${esc(c)}</span>${toneSvgSmall(spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz" style="font-size:${t.k==="syl"?16:22}px">${esc(c)}</span>${toneChipInner(t.tones[i],spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    ${t.tones.some((x,i)=>x===3&&t.tones[i+1]===3)?`<div class="small sandnote">Dois 3º tons seguidos: o primeiro é falado como 2º tom (sobe). Ex.: 你好 (nǐ hǎo) soa “ní hǎo”.</div>`:""}
     <div class="row" style="justify-content:center">${t.k==="sent"?"":`<button class="play" id="fkPlay">▶ Ouvir nativo</button>`}<button class="play" id="fkNext">Outra</button></div>
     ${t.k==="sent"?`<div class="row" style="justify-content:center" id="fkListen">${listenBtns()}</div>`:""}
     ${t.k==="sent"&&!keys?`<div class="small">Esta frase tem palavras sem gravação nativa; a comparação usa só os tons esperados.</div>`:""}
@@ -3761,10 +3764,12 @@ function fkGoNext(){
 const NAVOF={trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"praticar",palavras:"palavras"};
 function goTab(v){closePop();document.querySelectorAll("section[id^='v-']").forEach(s=>s.hidden=s.id!=="v-"+v);
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===NAVOF[v]));
-  stopAll();if(rec&&rec.state==="recording")stopRec();window.scrollTo(0,0);
+  stopAll();cancelRec();window.scrollTo(0,0);
   if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="cartoes")renderFcHome();if(v==="hoje"&&!session)renderToday();
   if(v!=="falar")MIC=null;}
-function toneSvgSmall(t){if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+const TN={1:"1º tom",2:"2º tom",3:"3º tom",4:"4º tom",5:"neutro"};
+function toneChipInner(w,s){return toneSvgSmall(w)+(s!==w?`<small class="sandhi" title="Na fala, este 3º tom vira 2º tom porque vem antes de outro 3º tom">na fala: ${toneSvgSmall(s,true)}</small>`:"");}
+function toneSvgSmall(t,mini){if(mini)return t===5?"neutro":`<svg viewBox="0 0 56 40" width="18" height="13" aria-hidden="true" style="vertical-align:middle"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
 
 /* gravação: botão de microfone (toque para gravar/enviar, ou segure e solte) */
 let rec=null,recChunks=[],recStream=null,recStart=0,pressAt=0,recTimer=null,recAC=null,starting=false;
@@ -3773,10 +3778,10 @@ let MIC=null; // {root, t, native, onResult}
 const M=k=>((MIC&&MIC.root)||document.getElementById("micDefault")).querySelector(`[data-m="${k}"]`);
 const IDLE_TXT="Toque para gravar · toque de novo para enviar<br>ou segure e solte, como no WhatsApp";
 function bindMic(root){const b=root.querySelector('[data-m="btn"]');
-  b.addEventListener("pointerdown",e=>{e.preventDefault();pressAt=Date.now();if(rec&&rec.state==="recording")stopRec();else startRec();});
-  b.addEventListener("pointerup",()=>{if(rec&&rec.state==="recording"&&Date.now()-pressAt>600)stopRec();});
+  b.addEventListener("pointerdown",e=>{e.preventDefault();pressAt=Date.now();if(recOn)stopRec();else startRec();});
+  b.addEventListener("pointerup",()=>{if(recOn&&Date.now()-pressAt>600)stopRec();});
   b.addEventListener("contextmenu",e=>e.preventDefault());
-  b.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();rec&&rec.state==="recording"?stopRec():startRec();}});
+  b.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();recOn?stopRec():startRec();}});
   const f=root.querySelector('[data-m="file"]');if(f)f.onchange=e=>{const x=e.target.files[0];if(x)handleRecording(x);e.target.value="";};}
 function micHtml(){return `<div class="micwrap"><button data-m="btn" class="mic" aria-label="Gravar minha voz"><svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button>
   <div class="level"><i data-m="level"></i></div><div class="rectime" data-m="time">${IDLE_TXT}</div></div>
@@ -3784,26 +3789,27 @@ function micHtml(){return `<div class="micwrap"><button data-m="btn" class="mic"
   <div data-m="fb" class="note" hidden style="font-size:13px;line-height:1.5;background:var(--bg);border-radius:10px;padding:10px;text-align:left"><b>O microfone não foi liberado nesta tela.</b> <span data-m="why"></span>
   <label class="btn" style="margin-top:8px;display:flex;justify-content:center;align-items:center;color:var(--ink);font-size:14px;cursor:pointer">📁 Enviar uma gravação<input type="file" data-m="file" accept="audio/*" capture hidden></label></div>`;}
 function inClaude(){try{return window.self!==window.top;}catch(e){return true;}}
+let pcm=[],pcmRate=48000,proc=null,recSrc=null,recOn=false,peak=0;
 async function startRec(){
-  if(starting||(rec&&rec.state==="recording"))return;starting=true;stopAll();
+  if(starting||recOn)return;starting=true;stopAll();
   try{
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder)throw new Error("unsupported");
-    const nf=S.noiseFilter===true;const ac={echoCancellation:nf,noiseSuppression:nf,autoGainControl:nf,channelCount:1};if(S.micId)ac.deviceId={exact:S.micId};
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("unsupported");
+    const nf=S.noiseFilter===true;
+    const ac={echoCancellation:nf,noiseSuppression:nf,autoGainControl:true};if(S.micId)ac.deviceId={exact:S.micId};
     try{recStream=await navigator.mediaDevices.getUserMedia({audio:ac});}catch(err){if(S.micId){delete ac.deviceId;S.micId="";save();recStream=await navigator.mediaDevices.getUserMedia({audio:ac});}else throw err;}
     M("fb").hidden=true;
-    const mt=["audio/webm;codecs=opus","audio/mp4","audio/webm","audio/ogg"].find(m=>{try{return MediaRecorder.isTypeSupported(m);}catch(e){return false;}});
-    recChunks=[];rec=mt?new MediaRecorder(recStream,{mimeType:mt}):new MediaRecorder(recStream);
-    rec.ondataavailable=e=>{if(e.data&&e.data.size)recChunks.push(e.data);};
-    rec.onstop=()=>{const type=rec.mimeType||"audio/webm";cleanupRec();
-      if(Date.now()-recStart<400){M("msg").textContent="Gravação muito curta. Toque e fale a frase inteira.";return;}
-      handleRecording(new Blob(recChunks,{type}));};
-    rec.start(100);recStart=Date.now();
+    recAC=new (window.AudioContext||window.webkitAudioContext)();if(recAC.state==="suspended")await recAC.resume();
+    pcmRate=recAC.sampleRate;pcm=[];peak=0;
+    recSrc=recAC.createMediaStreamSource(recStream);
+    proc=recAC.createScriptProcessor(4096,1,1);
+    proc.onaudioprocess=ev=>{if(!recOn)return;const d=ev.inputBuffer.getChannelData(0);pcm.push(new Float32Array(d));
+      let m=0;for(let i=0;i<d.length;i+=4){const v=Math.abs(d[i]);if(v>m)m=v;}if(m>peak)peak=m;lastLvl=m;};
+    const mute=recAC.createGain();mute.gain.value=0;recSrc.connect(proc);proc.connect(mute);mute.connect(recAC.destination);
+    recOn=true;recStart=Date.now();
     M("btn").classList.add("recording");M("msg").textContent="Gravando… fale agora.";
-    try{recAC=new (window.AudioContext||window.webkitAudioContext)();const src=recAC.createMediaStreamSource(recStream);const an=recAC.createAnalyser();an.fftSize=512;src.connect(an);
-      const buf=new Uint8Array(an.fftSize);
-      recTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let m=0;for(const v of buf)m=Math.max(m,Math.abs(v-128));M("level").style.width=Math.min(100,m/30*100)+"%";
-        const s=(Date.now()-recStart)/1000;M("time").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
-        if(s>=20)stopRec();},80);}catch(e){}
+    recTimer=setInterval(()=>{M("level").style.width=Math.min(100,Math.sqrt(lastLvl)*140)+"%";
+      const s=(Date.now()-recStart)/1000;M("time").textContent=`● ${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")} · toque para enviar`;
+      if(s>=20)stopRec();},80);
   }catch(e){
     cleanupRec();M("fb").hidden=false;
     M("why").textContent=inClaude()?
@@ -3812,12 +3818,35 @@ async function startRec(){
     M("msg").textContent="";
   }finally{starting=false;}
 }
-function stopRec(){if(rec&&rec.state==="recording")rec.stop();}
-function cleanupRec(){clearInterval(recTimer);recTimer=null;try{recStream&&recStream.getTracks().forEach(t=>t.stop());}catch(e){}recStream=null;
+let lastLvl=0;
+function cancelRec(){if(recOn){pcm=[];cleanupRec();}}
+function stopRec(){if(!recOn)return;recOn=false;const dur=Date.now()-recStart,rate=pcmRate,chunks=pcm,pk=peak;pcm=[];cleanupRec();
+  if(dur<400){M("msg").textContent="Gravação muito curta. Toque e fale a frase inteira.";return;}
+  const n=chunks.reduce((a,c)=>a+c.length,0),all=new Float32Array(n);let o=0;for(const c of chunks){all.set(c,o);o+=c.length;}
+  const smp=resampleTo16k(all,rate);
+  if(pk<0.003){M("msg").textContent="O microfone não captou som. Confira se ele não está mudo, aproxime o celular da boca ou escolha outro microfone em Ajustes.";return;}
+  handleSamples(smp);}
+function resampleTo16k(x,sr){if(sr===16000)return x;const r=sr/16000,out=new Float32Array(Math.floor(x.length/r));
+  for(let i=0;i<out.length;i++){const a=Math.floor(i*r),b=Math.min(x.length,Math.floor((i+1)*r));let s=0;for(let k=a;k<b;k++)s+=x[k];out[i]=s/Math.max(1,b-a);}return out;}
+function wavBlob(x){const b=new ArrayBuffer(44+x.length*2),v=new DataView(b);const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  w(0,"RIFF");v.setUint32(4,36+x.length*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,x.length*2,true);
+  for(let i=0;i<x.length;i++)v.setInt16(44+i*2,Math.max(-1,Math.min(1,x[i]))*0x7fff,true);return new Blob([b],{type:"audio/wav"});}
+function cleanupRec(){recOn=false;clearInterval(recTimer);recTimer=null;
+  try{proc&&proc.disconnect();recSrc&&recSrc.disconnect();}catch(e){}proc=null;recSrc=null;
+  try{recStream&&recStream.getTracks().forEach(t=>t.stop());}catch(e){}recStream=null;
   try{recAC&&recAC.close();}catch(e){}recAC=null;M("btn").classList.remove("recording");M("level").style.width="0";
   M("time").innerHTML=IDLE_TXT;}
 bindMic(document.getElementById("micDefault"));
 
+async function handleSamples(smp){
+  const t=MIC?MIC.t:fkCur;if(!t)return;
+  if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(wavBlob(smp));lastRecSamples=smp;
+  M("msg").textContent="Analisando sua pronúncia…";
+  const you=await analyze(smp);
+  if(MIC){M("msg").textContent="";MIC.onResult(t,you);return;}
+  M("msg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
+  renderResult(t,you);}
 async function handleRecording(blob){
   const t=MIC?MIC.t:fkCur;if(!t)return;
   M("msg").textContent="Analisando sua pronúncia…";
@@ -3837,8 +3866,8 @@ function scoreSpeech(t,you,nat){
   const single=N===1;let judged=0,right=0;const res=[];
   for(let i=0;i<N;i++){
     let got=null;if(runsY){got=classify(you.st.slice(runsY[i][0],runsY[i][1]),you.ref,single);}
-    const e=exp[i];const skip=e===5||got==null;const ok=!skip&&got===e;if(!skip){judged++;if(ok)right++;}
-    res.push({c:t.chars[i],e,got,ok,skip});
+    const e=exp[i];const skip=e===5||got==null;const ok=!skip&&(got===e||(t.tones[i]!==e&&got===t.tones[i]));if(!skip){judged++;if(ok)right++;}
+    res.push({c:t.chars[i],e,w:t.tones[i],got,ok,skip});
   }
   // semelhança da melodia com o nativo
   let sim=null;
@@ -3866,7 +3895,7 @@ function scoreSpeech(t,you,nat){
 }
 function logSpeech(t,sc){S.speak=S.speak||{};S.speak[t.h]=Math.max(S.speak[t.h]||0,sc.main);S.log.unshift({id:"f",h:t.h,m:`Pronúncia: ${sc.main} pontos`,ok:sc.main>=70,t:Date.now()});S.log=S.log.slice(0,200);
   sc.res.forEach(r=>{if(!r.skip&&r.e<5){S.tones[r.e][1]++;if(r.ok)S.tones[r.e][0]++;}});save();}
-function sylChips(sc){return `<div class="sylrow" style="justify-content:center">${sc.res.map(r=>`<span class="syl ${r.skip?"skip":r.ok?"ok":"no"}"><span class="hz">${esc(r.c)}</span>${toneSvgSmall(r.e)}<small>${r.skip?(r.e===5?"neutro":"não ouvi"):r.ok?"certo":"você: tom "+r.got}</small></span>`).join("")}</div>`;}
+function sylChips(sc){return `<div class="sylrow" style="justify-content:center">${sc.res.map(r=>`<span class="syl ${r.skip?"skip":r.ok?"ok":"no"}"><span class="hz">${esc(r.c)}</span>${toneChipInner(r.w??r.e,r.e)}<small>${r.skip?(r.e===5?"neutro":"não ouvi"):r.ok?"certo":"você: tom "+r.got}</small></span>`).join("")}</div>`;}
 function renderResult(t,you){
   const box=$("fkResult");box.hidden=false;
   const sc=scoreSpeech(t,you,fkNative);
@@ -4351,7 +4380,7 @@ let barRO=null;
 function padForBar(){const b=$("sesBar"),s=$("sesSpacer");if(!b||!s)return;s.style.height=(b.offsetHeight+28)+"px";}
 function keepAboveBar(el){if(!el)return;requestAnimationFrame(()=>{const b=$("sesBar");if(!b)return;const r=el.getBoundingClientRect(),top=b.getBoundingClientRect().top;
   if(r.bottom>top-12)window.scrollBy({top:Math.min(r.bottom-top+20,Math.max(0,r.top-70)),behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});}
-function exitSession(){try{barRO&&barRO.disconnect();}catch(e){}document.body.style.paddingBottom="";stopAll();stopRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
+function exitSession(){try{barRO&&barRO.disconnect();}catch(e){}document.body.style.paddingBottom="";stopAll();cancelRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
   if(LP!=null)openLessonPage(LP);else renderMap();}
 function barState(kind,html,label,fn){setTimeout(padForBar,0);const fb=$("sesFb"),bar=$("sesBar"),go=$("sesGo");
   bar.className="sesbar"+(kind?" "+kind:"");fb.hidden=!html;fb.innerHTML=html||"";go.textContent=label;go.disabled=!fn;go.onclick=fn||null;}
@@ -4443,7 +4472,8 @@ function renderSpeakStep(s){
   const t=makeTarget(o);
   $("sesBody").innerHTML=`<div class="stepcard"><div class="kicker">Agora fale você</div>${s.ph?sceneHtml(sceneFor(s.ph[0])):wordScene(t.h)}${hanBox(t.h)}
     <div class="bigpy" style="font-size:${t.k==="sent"?18:24}px">${esc(t.p)}</div><div class="bigm">${esc(t.m)}</div>
-    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz">${esc(c)}</span>${toneSvgSmall(spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    <div class="sylrow" style="justify-content:center">${t.chars.map((c,i)=>`<span class="syl"><span class="hz">${esc(c)}</span>${toneChipInner(t.tones[i],spokenTones(t.tones)[i])}</span>`).join("")}</div>
+    ${t.tones.some((x,i)=>x===3&&t.tones[i+1]===3)?`<div class="small sandnote">Dois 3º tons seguidos: o primeiro é falado como 2º tom (sobe). Ex.: 你好 (nǐ hǎo) soa “ní hǎo”.</div>`:""}
     <div class="row" style="justify-content:center" id="spL">${t.k==="sent"?listenBtns():`<button class="play" id="spW">▶ Ouvir o nativo</button>`}</div>
     <div id="spMic" style="width:100%">${micHtml()}</div><div id="spRes" style="width:100%"></div></div>`;
   if(t.k==="sent")bindListen($("spL"),t.h);else $("spW").onclick=()=>sayWord(t.h);
