@@ -1,0 +1,9 @@
+src/hanzi.html
+src/__pycache__/
+src/dl/
+src/sent_mp3/
+src/audio.json
+src/strokes.json
+src/conv_api.txt
+server/node_modules/
+server/.wrangler/

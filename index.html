@@ -399,6 +399,37 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
 .sandhi{display:flex;align-items:center;gap:2px;font-size:10px;color:var(--muted);white-space:nowrap}
 .sandnote{text-align:center;max-width:320px;line-height:1.4}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* conversa */
+.cvwarn{background:color-mix(in srgb,var(--warn) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 35%,var(--line));border-radius:12px;padding:12px;font-size:14px;line-height:1.5}
+.cvwarn.good{background:var(--jade-soft);border-color:var(--jade);color:var(--ink)}
+.cvhead{display:flex;gap:12px;align-items:center}
+.cvlog{display:flex;flex-direction:column;gap:10px}
+.cvmsg{scroll-margin-top:12px;max-width:88%;border-radius:16px;padding:10px 14px;display:flex;flex-direction:column;gap:3px;border:1px solid var(--line)}
+.cvmsg.t{align-self:flex-start;background:var(--surface);border-bottom-left-radius:4px}
+.cvmsg.s{align-self:flex-end;background:var(--jade-soft);border-color:color-mix(in srgb,var(--jade) 30%,var(--line));border-bottom-right-radius:4px}
+.cvmsg.s.bad{background:var(--bg)}
+.cvzh{font:500 22px/1.45 var(--f-han)}
+.cvw{border-bottom:2px dotted var(--line);cursor:pointer}
+.cvpy{font-size:14px;color:var(--jade);font-weight:600}
+.cvpt{font-size:14px;color:var(--muted)}
+.cvnw{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:4px;margin-top:2px}
+.cvtools{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.cvtools button,.cvplay,.cvmini{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.cvplay{align-self:flex-end;margin-top:4px;background:transparent}
+.cvmini{padding:2px 8px;font-size:12px;vertical-align:middle}
+.cvfb{align-self:stretch;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.cvfb.good{border-left-color:var(--good);font-size:14px;align-self:flex-end;max-width:88%}
+.cvhelp{display:flex;flex-direction:column;gap:8px}
+.cvhb{flex:none;width:100%;font-size:14px;padding:12px}
+.cvsug{display:flex;flex-direction:column;gap:8px}
+.cvs{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 12px;cursor:pointer}
+.cvform{display:flex;flex-direction:row;gap:8px;align-items:center}
+.cvin{gap:10px}
+.cvul{margin:0;padding-left:20px;line-height:1.6}
+.typing{flex-direction:row;gap:5px;padding:14px}
+.typing span{width:8px;height:8px;border-radius:50%;background:var(--muted);animation:cvdot 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes cvdot{0%,100%{opacity:.25}50%{opacity:1}}
 </style>
 
 <div class="app">
@@ -459,12 +490,21 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
     <div style="display:flex;flex-direction:column;gap:12px">
       <h2 style="font-size:20px">Praticar livremente</h2>
       <p class="muted" style="margin:0">Treinos avulsos, fora das lições. Use quando quiser reforçar um ponto específico.</p>
+      <button class="unit u-r pr" data-go="conversa"><span class="uic">话</span><span class="ut"><b>Conversa com o professor</b><span>Converse em chinês sobre o dia a dia, falando ou escrevendo, com ajuda quando travar</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-t pr" data-go="cartoes"><span class="uic">卡</span><span class="ut"><b>Flashcards de hanzi</b><span>Memorize os caracteres: veja, lembre, vire o cartão e avalie</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-w pr" data-go="escrever"><span class="uic">写</span><span class="ut"><b>Escrever hanzi</b><span>Todos os caracteres do curso, com ordem dos traços e história</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-s pr" data-go="falar"><span class="uic">说</span><span class="ut"><b>Pronúncia</b><span>Grave sílabas, palavras ou frases e compare com o nativo</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-g pr" data-go="tons"><span class="uic">声</span><span class="ut"><b>Treino dos 4 tons</b><span>Ouça e identifique o tom de cada sílaba</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-f pr" data-go="frases"><span class="uic">句</span><span class="ut"><b>Escuta de frases</b><span>Todas as frases por tema, com modo escuta</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-v pr" data-go="palavras"><span class="uic">词</span><span class="ut"><b>Lista de palavras</b><span>Todas as palavras, com áudio, e adicionar as suas</span></span><span class="ust" data-ic="chev"></span></button>
+    </div>
+  </section>
+
+  <!-- CONVERSA -->
+  <section id="v-conversa" hidden>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <button class="back" data-back>← Praticar</button>
+      <div id="cvBox" style="display:flex;flex-direction:column;gap:14px"></div>
     </div>
   </section>
 
@@ -3306,11 +3346,12 @@ const dayKey=(t=Date.now())=>{const d=new Date(t);return d.getFullYear()+"-"+Str
    Sem contas configuradas (ou dentro do Claude), o progresso fica salvo neste aparelho. */
 const KEY="hanzi-caderno-v2";
 const FIREBASE={"apiKey":"AIzaSyAnTB1pZWYvUjxB736Mu_Kr9pBHld-wmmU","authDomain":"caderno-hanzi.firebaseapp.com","projectId":"caderno-hanzi","storageBucket":"caderno-hanzi.firebasestorage.app","messagingSenderId":"665884797153","appId":"1:665884797153:web:8253c153e27313e67cefa0"};
+const CONV_API=/*CONV_API*/"";
 function inFrame(){try{return window.self!==window.top;}catch(e){return true;}}
 const ACC={mode:(FIREBASE&&!inFrame())?"guest":"local",user:null,dirty:false,timer:null,lastSync:0,status:"",fb:null,ready:false};
 function freshS(){return {custom:[],removed:[],srs:{},log:[],time:{},tones:{1:[0,0],2:[0,0],3:[0,0],4:[0,0]},voice:"",rate:0.85,newPerDay:8,newIntro:{},lessons:{},units:{},xp:0,goal:15,fc:{},fcNew:{},wrote:{},speak:{}};}
 function normS(s){const f=freshS();s=Object.assign(f,s||{});for(const k of ["lessons","units","fc","fcNew","wrote","speak","srs","time","newIntro"])if(!s[k]||typeof s[k]!=="object")s[k]={};
-  if(!Array.isArray(s.log))s.log=[];if(s.xp==null)s.xp=0;if(!s.goal)s.goal=15;return s;}
+  if(!Array.isArray(s.log))s.log=[];if(!s.conv||typeof s.conv!=="object")s.conv={};if(s.xp==null)s.xp=0;if(!s.goal)s.goal=15;return s;}
 function readJSON(store,k){try{return JSON.parse(store.getItem(k)||"null");}catch(e){return null;}}
 let S=freshS();
 if(ACC.mode==="local"){S=normS(readJSON(localStorage,KEY));}
@@ -3363,7 +3404,7 @@ function studying(){
   if(typeof SS!=="undefined"&&SS)return true;
   if(vis("v-hoje")&&session)return true;
   if(vis("v-trilha")&&typeof LS!=="undefined"&&LS&&vis("lessonView"))return true;
-  if(vis("v-tons")||vis("v-falar")||vis("v-frases")||(vis("v-escrever")&&WCH&&vis("escPanel"))||(vis("v-cartoes")&&vis("fcPlay")))return true;
+  if((vis("v-conversa")&&CV)||vis("v-tons")||vis("v-falar")||vis("v-frases")||(vis("v-escrever")&&WCH&&vis("escPanel"))||(vis("v-cartoes")&&vis("fcPlay")))return true;
   return false;}
 setInterval(()=>{const now=Date.now();
   if(document.visibilityState==="visible"&&studying()&&now-lastAct<90000){const d=Math.min(now-lastTick,6000);const k=dayKey();S.time[k]=(S.time[k]||0)+d;save();renderStats();
@@ -3761,12 +3802,12 @@ function fkGoNext(){
   if(PL){if(PL.i+1<PL.list.length){PL.i++;newTarget(PL.list[PL.i]);}else{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");}}
   else newTarget();window.scrollTo(0,0);
 }
-const NAVOF={trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"praticar",palavras:"palavras"};
+const NAVOF={conversa:"praticar",trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"praticar",palavras:"palavras"};
 function goTab(v){closePop();document.querySelectorAll("section[id^='v-']").forEach(s=>s.hidden=s.id!=="v-"+v);
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===NAVOF[v]));
   stopAll();cancelRec();window.scrollTo(0,0);
-  if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="cartoes")renderFcHome();if(v==="hoje"&&!session)renderToday();
-  if(v!=="falar")MIC=null;}
+  if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="cartoes")renderFcHome();if(v==="conversa")renderCvHome();if(v==="hoje"&&!session)renderToday();
+  if(v!=="falar"||(MIC&&MIC.onSamples))MIC=null;}
 const TN={1:"1º tom",2:"2º tom",3:"3º tom",4:"4º tom",5:"neutro"};
 function toneChipInner(w,s){return toneSvgSmall(w)+(s!==w?`<small class="sandhi" title="Na fala, este 3º tom vira 2º tom porque vem antes de outro 3º tom">na fala: ${toneSvgSmall(s,true)}</small>`:"");}
 function toneSvgSmall(t,mini){if(mini)return t===5?"neutro":`<svg viewBox="0 0 56 40" width="18" height="13" aria-hidden="true" style="vertical-align:middle"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;if(t===5)return `<small>neutro</small>`;return `<svg viewBox="0 0 56 40" width="34" height="24" aria-hidden="true"><path d="${CONTOUR[t]}" fill="none" stroke="var(--t${t})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
@@ -3840,6 +3881,7 @@ function cleanupRec(){recOn=false;clearInterval(recTimer);recTimer=null;
 bindMic(document.getElementById("micDefault"));
 
 async function handleSamples(smp){
+  if(MIC&&MIC.onSamples){M("msg").textContent="";MIC.onSamples(smp);return;}
   const t=MIC?MIC.t:fkCur;if(!t)return;
   if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(wavBlob(smp));lastRecSamples=smp;
   M("msg").textContent="Analisando sua pronúncia…";
@@ -3848,6 +3890,7 @@ async function handleSamples(smp){
   M("msg").textContent="Pronto! Veja o resultado abaixo. Grave de novo quantas vezes quiser.";
   renderResult(t,you);}
 async function handleRecording(blob){
+  if(MIC&&MIC.onFile){MIC.onFile(blob);return;}
   const t=MIC?MIC.t:fkCur;if(!t)return;
   M("msg").textContent="Analisando sua pronúncia…";
   if(lastRecUrl)URL.revokeObjectURL(lastRecUrl);lastRecUrl=URL.createObjectURL(blob);
@@ -4667,6 +4710,7 @@ function refreshAll(){
   mapScrolled=false;
   try{renderStats();renderRecent();renderTAcc();renderWords();renderToday();}catch(e){}
   if(!$("v-trilha").hidden)renderMap();
+  if(!$("v-conversa").hidden&&!CV)renderCvHome();
 }
 async function onUser(u){
   ACC.ready=true;
@@ -4778,6 +4822,166 @@ $("accBtn").onclick=openAcct;
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;
   if(SS){SS=null;MIC=null;document.body.classList.remove("insession");document.body.style.paddingBottom="";}
   goTab(v);if(v==="trilha")renderMap();});
+/* ---------- Conversa com o professor (IA) ----------
+   Turno a turno: o aluno fala ou escreve, o servidor (Cloudflare Worker + Gemini)
+   transcreve, responde em hanzi/pinyin/português e sugere ajuda. As chaves ficam no servidor. */
+const CV_SC=[
+  {id:"cafe",mod:1,ic:"☕",title:"Primeiro café com um colega",role:"Você é 小王 (Xiǎo Wáng), colega chinês simpático da Midea, conhecendo o aluno no intervalo do café.",goal:"Cumprimentar, dizer o nome, de onde é e se despedir.",
+   pt:"Cumprimente, diga seu nome e de onde você é."},
+  {id:"travar",mod:2,ic:"🙋",title:"Quando você não entende",role:"Você é 李娜 (Lǐ Nà), colega chinesa que às vezes fala rápido demais.",goal:"Pedir para repetir, falar mais devagar e confirmar que entendeu.",
+   pt:"Peça para repetir e para falar mais devagar."},
+  {id:"familia",mod:3,ic:"👨‍👩‍👧",title:"Família e cidade",role:"Você é 张伟 (Zhāng Wěi), colega curioso sobre a vida do aluno no Brasil.",goal:"Falar da família, onde mora e perguntar da família do colega.",
+   pt:"Conte da sua família e de onde você mora."},
+  {id:"numeros",mod:4,ic:"🔢",title:"Idade, telefone e preços",role:"Você é 王芳 (Wáng Fāng), colega que quer trocar WeChat e conversar sobre preços.",goal:"Dizer idade, número de telefone e perguntar preços.",
+   pt:"Troque números e pergunte quanto custa."},
+  {id:"horas",mod:5,ic:"🕒",title:"Combinar um horário",role:"Você é 陈静 (Chén Jìng), colega organizando uma reunião.",goal:"Combinar dia e hora de uma reunião.",
+   pt:"Combine o dia e a hora de uma reunião."},
+  {id:"almoco",mod:6,ic:"🍚",title:"Almoço no refeitório",role:"Você é 小王 (Xiǎo Wáng), colega chamando o aluno para almoçar.",goal:"Responder 你吃了吗 (nǐ chī le ma), escolher comida e dizer do que gosta.",
+   pt:"Combine o almoço e diga o que gosta de comer."},
+  {id:"ontem",mod:9,ic:"📅",title:"Como foi o seu dia",role:"Você é 张工 (Zhāng gōng), engenheiro colega do aluno.",goal:"Contar o que fez ontem e o que vai fazer amanhã.",
+   pt:"Conte o que você fez ontem e o que vai fazer."},
+  {id:"trabalho",mod:11,ic:"🏭",title:"Problema na produção",role:"Você é 张经理 (Zhāng jīnglǐ), gerente chinês na fábrica da Midea.",goal:"Explicar um atraso, perguntar prazos e combinar a solução.",
+   pt:"Explique um atraso e combine o prazo."},
+  {id:"livre",mod:1,ic:"💬",title:"Conversa livre",role:"Você é 小王 (Xiǎo Wáng), colega amigo do aluno na Midea. Converse sobre o que ele quiser.",goal:"Manter uma conversa natural sobre qualquer assunto do dia a dia.",
+   pt:"Converse sobre o que quiser."},
+];
+let CV=null; // {sc,msgs,help,busy,ended}
+const cvDoneN=()=>LESSONS.filter(l=>S.lessons[l.id]&&S.lessons[l.id].done).length;
+function cvAutoDisplay(){const n=cvDoneN();return n<12?"full":n<30?"py":"zh";}
+function cvDisplay(){return (S.conv&&S.conv.display)||cvAutoDisplay();}
+const CV_DISP={full:"Hanzi + pinyin + português",py:"Hanzi + pinyin",zh:"Só hanzi"};
+function cvVocab(sc){const set=new Set();
+  LESSONS.forEach(l=>{if(l.mod<=sc.mod||(S.lessons[l.id]&&S.lessons[l.id].done))l.new.forEach(w=>set.add(w));});
+  (S.custom||[]).forEach(w=>set.add(w.h));return [...set];}
+/* divide o texto em palavras conhecidas (as maiores primeiro) para o toque mostrar a tradução */
+function cvSeg(zh){const out=[];let i=0;const s=String(zh||"");
+  while(i<s.length){const ch=s[i];if(!/[一-鿿]/.test(ch)){out.push([ch,0]);i++;continue;}
+    let w=ch;for(const L of [4,3,2]){const x=s.slice(i,i+L);if(x.length===L&&GL[x]){w=x;break;}}out.push([w,1]);i+=w.length;}
+  return out.map(([w,h])=>h?`<span class="cvw" data-w="${esc(w)}">${esc(w)}</span>`:esc(w)).join("");}
+
+function renderCvHome(){
+  CV=null;MIC=null;
+  const d=cvDisplay(),n=cvDoneN();
+  const ready=!!CONV_API,logged=ACC.mode==="user";
+  let warn="";
+  if(!ready)warn=`<div class="cvwarn"><b>O professor ainda não está ligado.</b> Falta configurar o servidor da conversa. Assim que ele estiver no ar, esta tela funciona.</div>`;
+  else if(!logged)warn=`<div class="cvwarn"><b>Entre na sua conta para conversar.</b> A conversa usa uma IA na nuvem, por isso só funciona com login. <button class="btn primary" id="cvLogin" style="margin-top:8px;width:100%">Entrar</button></div>`;
+  const hist=(S.conv&&S.conv.hist)||[];
+  $("cvBox").innerHTML=`
+    <h2 style="font-size:20px;margin:0">Conversa com o professor</h2>
+    <p class="muted" style="margin:0">Converse em chinês sobre situações do dia a dia. Fale ou escreva como conseguir: o professor entende, responde e mostra a forma mais natural, sem julgar. Peça ajuda quando travar.</p>
+    ${warn}
+    <div class="panel" style="gap:8px"><h3>O que aparece na tela</h3>
+      <div class="chips" id="cvDisp">${Object.entries(CV_DISP).map(([k,v])=>`<button class="chip" data-d="${k}" aria-pressed="${k===d}">${v}</button>`).join("")}</div>
+      <p class="small" style="margin:0">${S.conv&&S.conv.display?"Você escolheu. ":"Escolhido pelo seu nível ("+n+" lições concluídas). "}Com o tempo, tire o português e depois o pinyin: é assim que a conversa fica natural.</p></div>
+    <h3>Escolha a situação</h3>
+    <div style="display:flex;flex-direction:column;gap:10px">${CV_SC.map(sc=>{const m=C.modules.find(x=>x.n===sc.mod);const ahead=sc.id!=="livre"&&m&&!m.ids.some(i=>S.lessons[i]&&S.lessons[i].done)&&sc.mod>1;
+      return `<button class="unit u-s pr" data-sc="${sc.id}" ${ready&&logged?"":"disabled"}><span class="uic" style="font-size:24px">${sc.ic}</span><span class="ut"><b>${esc(sc.title)}</b><span>${esc(sc.pt)}${sc.id!=="livre"?` · Módulo ${sc.mod}${ahead?" (ainda não estudado)":""}`:""}</span></span><span class="ust" data-ic="chev"></span></button>`;}).join("")}</div>
+    ${hist.length?`<div class="panel"><h3>Suas últimas conversas</h3>${hist.slice(0,5).map(h=>`<div class="rec"><span class="dot ok"></span><div style="min-width:0"><div class="h">${esc(h.title)}</div><div class="m">${h.turns} falas suas · ${new Date(h.t).toLocaleDateString("pt-BR")}</div></div><span></span></div>`).join("")}</div>`:""}`;
+  $("cvBox").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.conv.display=b.dataset.d;save();renderCvHome();});
+  $("cvBox").querySelectorAll("[data-sc]").forEach(b=>b.onclick=()=>cvStart(CV_SC.find(s=>s.id===b.dataset.sc)));
+  const lb=$("cvLogin");if(lb)lb.onclick=()=>openAcct();
+  $("cvBox").querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ICON[e.dataset.ic]);
+}
+function cvBody(extra,ex){const sc=CV.sc;
+  return Object.assign({scenario:{title:sc.title,role:sc.role,goal:sc.goal},level:`${cvDoneN()} lições concluídas de ${LESSONS.length}`,display:cvDisplay(),
+    vocab:CV.vocab,memory:(S.conv&&S.conv.mem)||"",history:CV.msgs.filter(m=>m.zh&&m!==ex).map(m=>({r:m.r,zh:m.zh}))},extra);}
+async function cvCall(body){
+  if(!CONV_API)throw {msg:"O servidor da conversa ainda não foi configurado."};
+  if(ACC.mode!=="user"||!ACC.user)throw {msg:"Entre na sua conta para conversar."};
+  let tok;try{tok=await ACC.user.getIdToken();}catch(e){throw {msg:"Não consegui confirmar seu login. Saia e entre de novo."};}
+  let r;try{r=await fetch(CONV_API.replace(/\/+$/,"")+"/chat",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tok},body:JSON.stringify(body)});}
+  catch(e){throw {msg:"Sem internet ou servidor fora do ar. Tente de novo."};}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw {msg:j.msg||("Erro "+r.status)};return j;}
+async function cvStart(sc){
+  CV={sc,msgs:[],help:0,busy:false,ended:false,vocab:cvVocab(sc),t0:Date.now()};
+  $("cvBox").innerHTML=`<div class="cvhead"><span style="font-size:26px">${sc.ic}</span><div><b>${esc(sc.title)}</b><div class="small">${esc(sc.goal)}</div></div></div>
+    <div id="cvLog" class="cvlog"></div>
+    <div id="cvHelp" class="cvhelp"></div>
+    <div class="panel cvin" id="cvMic">${micHtml()}
+      <form id="cvForm" class="cvform"><input id="cvText" style="flex:1;min-width:0;width:auto" autocomplete="off" placeholder="ou escreva: hanzi, pinyin ou português"><button class="btn primary" style="flex:0 0 auto;padding:10px 16px">Enviar</button></form></div>
+    <button class="btn" id="cvEnd">Terminar e ver resumo</button>`;
+  bindMic($("cvMic"));
+  MIC={root:$("cvMic"),t:{},onSamples:cvSamples,onFile:cvFile};
+  $("cvForm").onsubmit=e=>{e.preventDefault();const v=$("cvText").value.trim();if(!v||CV.busy)return;$("cvText").value="";cvSend({text:v},{zh:v});};
+  $("cvEnd").onclick=cvEnd;
+  cvRender();
+  await cvRequest({mode:"start"});
+}
+function cvFile(blob){blob.arrayBuffer().then(decode16k).then(cvSamples).catch(()=>{M("msg").textContent="Não consegui ler esse áudio.";});}
+async function cvSamples(smp){if(!CV||CV.busy)return;
+  const blob=wavBlob(smp),url=URL.createObjectURL(blob);
+  const b64=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result).split(",")[1]);fr.readAsDataURL(blob);});
+  cvSend({audio:b64},{zh:"",rec:url,pending:true});}
+async function cvSend(payload,mine){
+  const m=Object.assign({r:"s"},mine);CV.msgs.push(m);CV.help=0;cvRender();
+  await cvRequest(Object.assign({mode:"turn"},payload),m);}
+async function cvRequest(payload,mine){
+  CV.busy=true;CV.err="";cvRender();
+  try{
+    const j=await cvCall(cvBody(payload,mine));
+    if(mine){if(j.heard){mine.zh=j.heard.zh;mine.py=j.heard.py;mine.pt=j.heard.pt;}mine.pending=false;mine.ok=j.understood!==false;
+      if(j.correction&&j.correction.zh)mine.corr=j.correction;if(j.praise)mine.praise=j.praise;if(j.understood===false)mine.zh=mine.zh||"(não entendi)";}
+    const t={r:"t",zh:j.reply.zh,py:j.reply.py,pt:j.reply.pt,nw:j.new_words||[]};CV.msgs.push(t);
+    CV.hint=j.hint;CV.sug=j.suggestions||[];CV.help=0;CV.done=!!j.finished;
+    CV.busy=false;cvRender();cvSay(t);
+  }catch(e){CV.busy=false;if(mine&&mine.pending){CV.msgs.splice(CV.msgs.indexOf(mine),1);}CV.err=(e&&e.msg)||"Algo deu errado. Tente de novo.";cvRender();}
+}
+function cvSay(t,slow){if(!t||!t.zh)return;tts(t.zh,slow?Math.max(.5,S.rate-.3):S.rate);}
+function cvRender(){
+  if(!CV||!$("cvLog"))return;const d=cvDisplay(),last=[...CV.msgs].reverse().find(m=>m.r==="t");
+  $("cvLog").innerHTML=CV.msgs.map((m,i)=>{
+    if(m.r==="t"){const isLast=m===last;const showPy=d!=="zh"||(isLast&&CV.help>=1)||m.showPy,showPt=d==="full"||(isLast&&CV.help>=2)||m.showPt;
+      return `<div class="cvmsg t" data-i="${i}"><div class="cvzh">${cvSeg(m.zh)}</div>
+        ${showPy?`<div class="cvpy">${esc(m.py)}</div>`:""}${showPt?`<div class="cvpt">${esc(m.pt)}</div>`:""}
+        ${m.nw&&m.nw.length?`<div class="cvnw">Palavra nova: ${m.nw.map(w=>`<b>${esc(w.zh)}</b> (${esc(w.py)}) = ${esc(w.pt)}`).join(" · ")}</div>`:""}
+        <div class="cvtools"><button data-a="say" aria-label="Ouvir">🔊</button><button data-a="slow" aria-label="Ouvir devagar">🐢</button>${showPy?"":`<button data-a="py">拼 pinyin</button>`}${showPt?"":`<button data-a="pt">PT</button>`}</div></div>`;}
+    return `<div class="cvmsg s ${m.ok===false?"bad":""}">${m.pending?`<div class="small">${m.rec?"🎙️ Enviando sua fala…":"Enviando…"}</div>`:
+      `<div class="cvzh">${esc(m.zh)}</div>${m.py&&m.py!==m.zh?`<div class="cvpy">${esc(m.py)}</div>`:""}${m.pt&&d==="full"?`<div class="cvpt">${esc(m.pt)}</div>`:""}`}
+      ${m.rec?`<button class="cvplay" data-rec="${i}">▶ ouvir minha voz</button>`:""}</div>
+      ${m.praise?`<div class="cvfb good">👏 ${esc(m.praise)}</div>`:""}
+      ${m.corr?`<div class="cvfb"><div class="small" style="font-weight:700">💡 Uma forma mais natural</div><div class="cvzh" style="font-size:20px">${cvSeg(m.corr.zh)} <button class="cvmini" data-corr="${i}" aria-label="Ouvir">🔊</button></div><div class="cvpy">${esc(m.corr.py)}</div><div class="cvpt">${esc(m.corr.pt)}</div><div class="small">${esc(m.corr.note||"")}</div></div>`:""}`;}).join("")+
+    (CV.busy?`<div class="cvmsg t typing"><span></span><span></span><span></span></div>`:"")+
+    (CV.err?`<div class="cvwarn">${esc(CV.err)}</div>`:"")+
+    (CV.done&&!CV.busy?`<div class="cvwarn good">🎉 Você cumpriu o objetivo! Pode continuar conversando ou tocar em <b>Terminar e ver resumo</b>.</div>`:"");
+  $("cvLog").querySelectorAll(".cvmsg.t[data-i]").forEach(el=>{const m=CV.msgs[+el.dataset.i];
+    el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==="say")cvSay(m);else if(a==="slow")cvSay(m,true);else if(a==="py"){m.showPy=true;cvRender();}else if(a==="pt"){m.showPt=true;cvRender();}});});
+  $("cvLog").querySelectorAll("[data-rec]").forEach(b=>b.onclick=()=>{stopAll();const a=new Audio(CV.msgs[+b.dataset.rec].rec);curAudio=a;a.play().catch(()=>{});});
+  $("cvLog").querySelectorAll("[data-corr]").forEach(b=>b.onclick=()=>tts(CV.msgs[+b.dataset.corr].corr.zh));
+  // ajuda progressiva
+  const H=["🐢 Ouvir devagar"+(d==="zh"?" e ver o pinyin":""),"Ver a tradução","Dica: começo da resposta","Ver respostas possíveis"];
+  let hh="";
+  if(last&&!CV.busy){
+    if(CV.help>=3&&CV.hint)hh+=`<div class="cvfb"><div class="small" style="font-weight:700">Comece assim</div><div class="cvzh" style="font-size:20px">${esc(CV.hint.zh)}</div><div class="cvpy">${esc(CV.hint.py)}</div><div class="cvpt">${esc(CV.hint.pt)}</div></div>`;
+    if(CV.help>=4&&CV.sug&&CV.sug.length)hh+=`<div class="cvsug">${CV.sug.map((s,i)=>`<button class="cvs" data-s="${i}"><span class="cvzh" style="font-size:18px">${esc(s.zh)}</span><span class="cvpy">${esc(s.py)}</span><span class="cvpt">${esc(s.pt)}</span></button>`).join("")}<p class="small" style="margin:0">Toque para ouvir. Depois fale você mesmo no microfone.</p></div>`;
+    if(CV.help<4)hh+=`<button class="btn cvhb" id="cvHelpBtn">🆘 Preciso de ajuda · ${H[CV.help]}</button>`;
+  }
+  $("cvHelp").innerHTML=hh;
+  const hb=$("cvHelpBtn");if(hb)hb.onclick=()=>{CV.help++;if(CV.help===1)cvSay(last,true);cvRender();};
+  $("cvHelp").querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>tts(CV.sug[+b.dataset.s].zh));
+  const turns=CV.msgs.filter(m=>m.r==="s").length;$("cvEnd").hidden=turns<1;
+  const lg=$("cvLog"),le=CV.busy?lg.lastElementChild:[...lg.querySelectorAll(".cvmsg")].pop();if(le)le.scrollIntoView({block:"start",behavior:"smooth"});
+}
+async function cvEnd(){
+  if(!CV||CV.busy)return;const turns=CV.msgs.filter(m=>m.r==="s"&&m.zh).length;
+  $("cvEnd").disabled=true;$("cvEnd").textContent="Preparando o resumo…";MIC=null;cancelRec();
+  let j=null;try{j=await cvCall(cvBody({mode:"summary"}));}catch(e){}
+  const sc=CV.sc;
+  S.conv=S.conv||{};S.conv.hist=[{t:Date.now(),id:sc.id,title:sc.title,turns,good:j?j.good:[],train:j?j.train:[]},...(S.conv.hist||[])].slice(0,20);
+  if(j&&j.memory)S.conv.mem=String(j.memory).slice(0,800);
+  S.log.unshift({id:"c",h:sc.title,m:`Conversa: ${turns} falas suas`,ok:true,t:Date.now()});S.log=S.log.slice(0,200);save();
+  const corr=CV.msgs.filter(m=>m.corr).map(m=>m.corr);
+  $("cvBox").innerHTML=`<div class="panel"><h2 style="margin:0;font-size:20px">Conversa concluída 🎉</h2><p class="muted" style="margin:0">${esc(sc.title)} · ${turns} falas suas</p>
+    ${j?`<h3>O que você fez bem</h3><ul class="cvul">${(j.good||[]).map(g=>`<li>${esc(g)}</li>`).join("")}</ul>
+    <h3>Para treinar</h3>${(j.train||[]).map((x,i)=>`<div class="cvfb"><div class="cvzh" style="font-size:20px">${esc(x.zh)} <button class="cvmini" data-tr="${i}" aria-label="Ouvir">🔊</button></div><div class="cvpy">${esc(x.py)}</div><div class="cvpt">${esc(x.pt)}</div><div class="small">${esc(x.why)}</div></div>`).join("")}`:
+    `<p class="muted">Não consegui gerar o resumo agora, mas a conversa foi registrada.</p>`}
+    ${corr.length?`<h3>Formas naturais que apareceram</h3>${corr.map(c=>`<div class="small" style="font-size:14px"><b>${esc(c.zh)}</b> (${esc(c.py)}) = ${esc(c.pt)}</div>`).join("")}`:""}
+    <div class="row" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" id="cvAgain">Conversar de novo</button><button class="btn" id="cvOther">Outra situação</button></div></div>`;
+  $("cvBox").querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>tts(j.train[+b.dataset.tr].zh));
+  $("cvAgain").onclick=()=>cvStart(sc);$("cvOther").onclick=renderCvHome;
+  CV=null;
+}
+
 document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>goTab("praticar"));
 document.querySelectorAll("#v-praticar [data-go]").forEach(b=>b.onclick=()=>goTab(b.dataset.go));
 document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ICON[e.dataset.ic]);
