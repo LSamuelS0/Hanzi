@@ -249,12 +249,14 @@ L = [
   ("我 听 不 懂 。","Wǒ tīng bu dǒng.","Não entendo (o que ouço)."),
   ("请 说 慢 一点 。","Qǐng shuō màn yìdiǎn.","Fale mais devagar, por favor."),
  ]),
- (9,"Nível 3 · No trabalho","Pedindo ajuda","Pedir ajuda, perguntar significados e pedir para repetir.",[
-  ("你 可以 帮 我 一下 吗 ？","Nǐ kěyǐ bāng wǒ yíxià ma?","Você pode me ajudar rapidinho?"),
+ (9,"Nível 3 · No trabalho","Pedindo ajuda · formal","Pedir ajuda com educação, perguntar significados e pedir para repetir.",[
+  ("麻烦 您 ， 可以 帮 我 一下 吗 ？","Máfan nín, kěyǐ bāng wǒ yíxià ma?","Desculpe incomodar, o senhor pode me ajudar?"),
   ("这 是 什么 意思 ？","Zhè shì shénme yìsi?","O que isso significa?"),
   ("这个 用 中文 怎么 说 ？","Zhège yòng Zhōngwén zěnme shuō?","Como se diz isso em chinês?"),
-  ("请 再 说 一 遍 。","Qǐng zài shuō yí biàn.","Diga mais uma vez, por favor."),
+  ("能 再 说 一 遍 吗 ？","Néng zài shuō yí biàn ma?","Pode repetir, por favor?"),
+  ("请 再 说 一 遍 。","Qǐng zài shuō yí biàn.","Diga mais uma vez, por favor. (de sala de aula)"),
   ("不好意思 ， 我 听 不 懂 。","Bù hǎoyìsi, wǒ tīng bu dǒng.","Desculpa, não entendi."),
+  ("我 没 听 清楚 。","Wǒ méi tīng qīngchu.","Não ouvi direito."),
   ("我 明白 了 ， 谢谢 ！","Wǒ míngbai le, xièxie!","Entendi, obrigado!"),
  ]),
  (10,"Nível 3 · No trabalho","Reuniões e horários","Perguntar e dizer horários de reunião.",[
@@ -289,13 +291,15 @@ L = [
   ("太 辣 了 ！","Tài là le!","Apimentado demais!"),
   ("我 喜欢 咖啡 ， 但是 不 喜欢 茶 。","Wǒ xǐhuan kāfēi, dànshì bù xǐhuan chá.","Gosto de café, mas não gosto de chá."),
  ]),
- (14,"Nível 5 · Conversa natural","Gentilezas","Agradecer, se desculpar e responder elogios como um nativo.",[
-  ("辛苦 了 ！","Xīnkǔ le!","Bom trabalho! / Obrigado pelo esforço!"),
+ (14,"Nível 5 · Conversa natural","Gentilezas · formal","Agradecer, se desculpar e responder elogios com educação.",[
+  ("您 辛苦 了 ！","Nín xīnkǔ le!","Obrigado pelo seu esforço! (para o chefe ou um cliente)"),
+  ("太 感谢 您 了 ！","Tài gǎnxiè nín le!","Muitíssimo obrigado!"),
+  ("麻烦 您 了 。","Máfan nín le.","Obrigado pelo incômodo."),
   ("你 的 中文 说 得 很 好 ！","Nǐ de Zhōngwén shuō de hěn hǎo!","Você fala chinês muito bem!"),
-  ("哪里哪里 。","Nǎlǐ nǎlǐ.","Que nada."),
+  ("过奖 了 。","Guòjiǎng le.","O senhor é muito gentil. (resposta a elogio)"),
+  ("哪里哪里 。","Nǎlǐ nǎlǐ.","Que nada. (antiga: hoje soa de livro)"),
   ("谢谢 ！ 不 客气 。","Xièxie! Bú kèqi.","Obrigado! — De nada."),
-  ("别 客气 。","Bié kèqi.","Fique à vontade."),
-  ("对不起 ！ 没关系 。","Duìbuqǐ! Méi guānxi.","Desculpa! — Não tem problema."),
+  ("对不起 ！ 没关系 。","Duìbuqǐ! Méi guānxi.","Desculpa! (por um erro sério) — Não tem problema."),
  ]),
  (15,"Nível 5 · Conversa natural","Fim de semana e planos","Falar de planos e combinar horários.",[
   ("你 周末 打算 做 什么 ？","Nǐ zhōumò dǎsuàn zuò shénme?","O que você pretende fazer no fim de semana?"),
@@ -396,7 +400,7 @@ G.update({
  "贵":("guì","caro",""),
  "便宜":("piányi","barato","便宜一点 = um pouco mais barato (pedido de desconto)."),
  "发票":("fāpiào","nota fiscal / fatura",""),
- "开":("kāi","abrir; emitir (nota)","开发票 = emitir nota fiscal."),
+ "开":("kāi","abrir; ligar (aparelho); emitir (nota)","开空调 = ligar o ar-condicionado. 开发票 = emitir nota fiscal."),
  "付":("fù","pagar",""),
  "报销":("bàoxiāo","pedir reembolso (de despesas)","Para despesas da empresa pagas por você, como táxi e refeição."),
  "成本":("chéngběn","custo",""),
@@ -484,7 +488,7 @@ L += [
   ("什么 时候 可以 交货 ？","Shénme shíhou kěyǐ jiāohuò?","Quando pode entregar?"),
   ("下 个 星期 发货 。","Xià ge xīngqī fāhuò.","Despachamos semana que vem."),
   ("货 到 了 吗 ？","Huò dào le ma?","A mercadoria chegou?"),
-  ("请 确认 一下 订单 。","Qǐng quèrèn yíxià dìngdān.","Por favor, confirme o pedido."),
+  ("麻烦 你 确认 一下 订单 。","Máfan nǐ quèrèn yíxià dìngdān.","Pode confirmar o pedido, por favor?"),
  ]),
  (23,LV7,"Telefone e WeChat","Atender ligações e combinar por mensagem.",[
   ("喂 ， 你 好 ！","Wéi, nǐ hǎo!","Alô!"),

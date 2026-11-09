@@ -349,7 +349,7 @@ M_LESSONS = [
   ("冰箱 里 有 水 和 水果 。","Bīngxiāng lǐ yǒu shuǐ hé shuǐguǒ.","Na geladeira tem água e frutas."),
   ("我 家 的 冰箱 是 美的 的 。","Wǒ jiā de bīngxiāng shì Měidì de.","A geladeira da minha casa é da Midea."),
   ("洗衣机 坏 了 。","Xǐyījī huài le.","A máquina de lavar quebrou."),
-  ("请 打开 空调 。","Qǐng dǎkāi kōngtiáo.","Por favor, ligue o ar-condicionado."),
+  ("可以 开 一下 空调 吗 ？","Kěyǐ kāi yíxià kōngtiáo ma?","Pode ligar o ar-condicionado?"),
   ("微波炉 在 厨房 。","Wēibōlú zài chúfáng.","O micro-ondas fica na cozinha."),
   ("燃气灶 不 能 用 了 。","Ránqìzào bù néng yòng le.","O fogão não está funcionando."),
   ("关掉 电视 吧 。","Guāndiào diànshì ba.","Desliga a televisão."),
@@ -359,7 +359,7 @@ M_LESSONS = [
   ("请 坐 在 椅子 上 。","Qǐng zuò zài yǐzi shàng.","Sente-se na cadeira, por favor."),
   ("床 很 舒服 。","Chuáng hěn shūfu.","A cama é muito confortável."),
   ("沙发 在 客厅 里 。","Shāfā zài kètīng lǐ.","O sofá fica na sala."),
-  ("请 关 门 。","Qǐng guān mén.","Feche a porta, por favor."),
+  ("帮 我 关 一下 门 ， 好 吗 ？","Bāng wǒ guān yíxià mén, hǎo ma?","Fecha a porta pra mim, pode ser?"),
   ("打开 窗户 吧 。","Dǎkāi chuānghu ba.","Abre a janela."),
   ("钥匙 在 哪里 ？","Yàoshi zài nǎlǐ?","Onde está a chave?"),
  ]),
@@ -419,7 +419,7 @@ M_LESSONS = [
 PHASES = [
  ("Fase 1 · Primeiros contatos",[
    ("Apresentação e cumprimentos",[1,50,2,51,3,52,16,4,8,25,53]),
-   ("Para não travar na conversa",[9,14]),
+   ("Para não travar na conversa",[54,55,56,57,58,9,59,60,14,61]),
    ("Família e onde você mora",[26,27,28]),
    ("Números, dinheiro e idade",[5,29,6,30,31]),
  ]),
