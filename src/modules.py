@@ -192,14 +192,14 @@ G2 = {
 }
 
 M_LESSONS = [
- (25,"Como vai o seu dia?","Perguntar como está o dia e o serviço, sem números.",[
-  ("你 今天 怎么样 ？","Nǐ jīntiān zěnmeyàng?","Como você está hoje?"),
+ (25,"Como vai o seu dia? · formal","Perguntar com educação como está o dia e o trabalho.",[
+  ("您 今天 怎么样 ？","Nín jīntiān zěnmeyàng?","Como o senhor está hoje?"),
   ("今天 很 好 ， 谢谢 。","Jīntiān hěn hǎo, xièxie.","Hoje está ótimo, obrigado."),
-  ("你 的 工作 忙 吗 ？","Nǐ de gōngzuò máng ma?","Seu trabalho está corrido?"),
+  ("您 的 工作 忙 吗 ？","Nín de gōngzuò máng ma?","O seu trabalho está corrido?"),
   ("工作 很 顺利 。","Gōngzuò hěn shùnlì.","O trabalho está indo bem."),
   ("你 累 不 累 ？","Nǐ lèi bu lèi?","Você está cansado?"),
   ("有 一点儿 累 。","Yǒu yìdiǎnr lèi.","Um pouco cansado."),
-  ("祝 你 今天 愉快 ！","Zhù nǐ jīntiān yúkuài!","Tenha um ótimo dia!"),
+  ("祝 您 今天 愉快 ！","Zhù nín jīntiān yúkuài!","Tenha um ótimo dia!"),
  ]),
  (26,"Pai, mãe e irmãos","Apresentar sua família e perguntar sobre irmãos.",[
   ("这 是 我 的 家人 。","Zhè shì wǒ de jiārén.","Esta é a minha família."),
@@ -418,7 +418,7 @@ M_LESSONS = [
 
 PHASES = [
  ("Fase 1 · Primeiros contatos",[
-   ("Apresentação e cumprimentos",[1,2,3,16,4,8,25]),
+   ("Apresentação e cumprimentos",[1,50,2,51,3,52,16,4,8,25,53]),
    ("Para não travar na conversa",[9,14]),
    ("Família e onde você mora",[26,27,28]),
    ("Números, dinheiro e idade",[5,29,6,30,31]),

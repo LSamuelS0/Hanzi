@@ -3,6 +3,7 @@ import json, subprocess, base64, os, sys, tempfile, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from curriculum import G, L
 from data import SENTENCES
+from registro import FORCE_SYL
 R = "dl/audio-cmn"
 SYL = set(open("syllables.txt").read().split())
 names = subprocess.run(["git","-c","core.quotepath=off","ls-tree","--name-only","HEAD","24k-abr/hsk/"],cwd=R,capture_output=True,text=True).stdout.split("\n")
@@ -50,7 +51,12 @@ def pieces_for(tokens, pinyin):
     for t in tokens:
         hz = [c for c in t if HAN(c)]
         if not hz: continue
-        if t in HSK: words.append([f"24k-abr/hsk/cmn-{t}.mp3"])
+        if t in FORCE_SYL and syl:
+            files = []
+            for k in range(len(hz)):
+                s_, tn = syl[ci+k]; files.append(f"24k-abr/syllabs/cmn-{s_}{tn if tn in (1,2,3,4) else 1}.mp3")
+            words.append(files)
+        elif t in HSK: words.append([f"24k-abr/hsk/cmn-{t}.mp3"])
         else:
             files = []
             for k, c in enumerate(hz):
@@ -116,4 +122,5 @@ def main():
     json.dump(audio, open("audio.json","w"), ensure_ascii=False, separators=(",",":"))
     print("frases:", sum(1 for k in audio if k.startswith("f:")), "bytes:", os.path.getsize("audio.json"))
 
-main()
+if __name__ == "__main__":
+    main()

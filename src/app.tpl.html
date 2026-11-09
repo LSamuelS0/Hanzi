@@ -34,7 +34,7 @@ h3{font-size:13px;margin:0;font-weight:800;letter-spacing:.06em;text-transform:u
 .seal{font-family:var(--f-han);background:var(--seal);color:#fff;width:34px;height:34px;border-radius:6px;display:grid;place-items:center;font-size:20px}
 .gear{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:600 13px var(--f-body);cursor:pointer}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(4,1fr);
+  display:grid;grid-template-columns:repeat(5,1fr);
   padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
 nav.tabs button{border:0;background:none;color:var(--muted);font:600 12px var(--f-body);padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:10px}
 nav.tabs button .ic{font-family:var(--f-han);font-size:20px;line-height:1.1}
@@ -263,6 +263,14 @@ body.insession{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .earbtn{width:110px;height:110px;border-radius:50%;border:0;background:var(--c2);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 0 color-mix(in srgb,var(--c2) 60%,#000)}
 .earbtn:active{transform:translateY(3px);box-shadow:0 3px 0 color-mix(in srgb,var(--c2) 60%,#000)}
 .opt small{display:block;font:600 12px var(--f-body);color:var(--jade)}
+.opt .optm{display:block;font:500 12px var(--f-body);color:var(--muted);margin-top:4px;line-height:1.25}
+.opt.right .optm,.opt.wrong .optm{color:inherit;opacity:.85}
+.rg{display:inline-block;font:700 10px var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:999px;vertical-align:middle;margin-left:4px;font-style:normal}
+.rg-formal{background:color-mix(in srgb,var(--c4) 22%,transparent);color:var(--c4)}
+.rg-informal{background:color-mix(in srgb,var(--c2) 22%,transparent);color:var(--c2)}
+.regnote{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;display:flex;flex-direction:column;gap:8px}
+.regnote .rg{align-self:flex-start;margin-left:0}
+.regnote .pair{align-self:flex-start;border:0;background:none;color:var(--jade);font:600 14px var(--f-body);padding:0;cursor:pointer;text-align:left}
 .tok.blank{border-style:dashed}
 .build.okb{border-color:var(--good);background:var(--jade-soft)}.build.badb{border-color:var(--bad)}
 .sesbar{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;
@@ -486,7 +494,6 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
       <h2 style="font-size:20px">Praticar livremente</h2>
       <p class="muted" style="margin:0">Treinos avulsos, fora das lições. Use quando quiser reforçar um ponto específico.</p>
       <button class="unit u-r pr" data-go="conversa"><span class="uic">话</span><span class="ut"><b>Conversa com o professor</b><span>Converse em chinês sobre o dia a dia, falando ou escrevendo, com ajuda quando travar</span></span><span class="ust" data-ic="chev"></span></button>
-      <button class="unit u-t pr" data-go="cartoes"><span class="uic">卡</span><span class="ut"><b>Flashcards de hanzi</b><span>Memorize os caracteres: veja, lembre, vire o cartão e avalie</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-w pr" data-go="escrever"><span class="uic">写</span><span class="ut"><b>Escrever hanzi</b><span>Todos os caracteres do curso, com ordem dos traços e história</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-s pr" data-go="falar"><span class="uic">说</span><span class="ut"><b>Pronúncia</b><span>Grave sílabas, palavras ou frases e compare com o nativo</span></span><span class="ust" data-ic="chev"></span></button>
       <button class="unit u-g pr" data-go="tons"><span class="uic">声</span><span class="ut"><b>Treino dos 4 tons</b><span>Ouça e identifique o tom de cada sílaba</span></span><span class="ust" data-ic="chev"></span></button>
@@ -506,7 +513,6 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
   <!-- FLASHCARDS -->
   <section id="v-cartoes" hidden>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <button class="back" data-back>← Praticar</button>
       <div id="fcHome"></div>
       <div id="fcPlay" hidden></div>
     </div>
@@ -611,6 +617,7 @@ header h1{font-size:18px;white-space:nowrap;min-width:0}
 <nav class="tabs" role="tablist">
   <button role="tab" data-v="trilha" aria-selected="true"><span class="ic">学</span>Aprender</button>
   <button role="tab" data-v="hoje" aria-selected="false"><span class="ic">复</span>Revisão</button>
+  <button role="tab" data-v="cartoes" aria-selected="false"><span class="ic">卡</span>Cartões</button>
   <button role="tab" data-v="praticar" aria-selected="false"><span class="ic">练</span>Praticar</button>
   <button role="tab" data-v="palavras" aria-selected="false"><span class="ic">词</span>Palavras</button>
 </nav>
@@ -778,6 +785,7 @@ function askQ(it){
       if(!$("rvNext").hidden)return;const ok=o.id===it.id;
       [...oc.children].forEach((x,i)=>{if(opts[i].id===it.id)x.classList.add("right");});
       if(!ok)b.classList.add("wrong");
+      if(mode==="pt2zh")[...oc.children].forEach((x,i)=>x.insertAdjacentHTML("beforeend",`<span class="optm">${esc(opts[i].p||"")} · ${esc(opts[i].m||"")}</span>`));
       grade(it,ok);if(ok)session.ok++;else session.q.push({it,again:true});
       $("rvFb").innerHTML=`<span style="color:var(--${ok?"good":"bad"})">${ok?"Certo!":"Quase."}</span> ${it.k==="s"&&segOf(it.h).every(w=>!/[\u4e00-\u9fff]/.test(w)||wInfo(w))?richLine(segOf(it.h)):`<button class="hzi wbtn" data-w="${esc(it.h)}">${esc(it.h)}</button>`} · <span style="color:var(--jade)">${esc(it.p)}</span><br>${esc(it.m)}`;
       $("rvNext").hidden=false;showNext("rvNext");if(mode==="pt2zh")playItem(it);
@@ -809,10 +817,14 @@ async function listenAction(kind,h,onStep){
   const gen=++listenGen;const tokens=segOf(h);
   if(kind==="n")return saySentence(h);if(kind==="s")return saySentence(h,true);
   if(kind==="w")return playWords(tokens,onStep,gen);
+  if(kind==="r")return repeatLoop(()=>saySentence(h),gen);
   if(kind==="c"){if(!await playWords(tokens,onStep,gen))return;await sleep(500);if(gen!==listenGen)return;
     await saySentence(h,true);await sleep(400);if(gen!==listenGen)return;await saySentence(h);}
 }
-function listenBtns(){return `<button class="play" data-l="n">▶ Frase inteira</button><button class="play" data-l="s">🐢 Devagar</button><button class="play" data-l="w">🔤 Palavra por palavra</button><button class="play" data-l="c">🎧 Camadas</button>`;}
+/* ouvir e repetir: toca 3 vezes, com uma pausa do tamanho da frase para você repetir em voz alta */
+async function repeatLoop(play,gen){for(let k=0;k<3;k++){const t0=Date.now();await play();if(gen!==listenGen)return;
+  if(k<2){await sleep(Math.max(1200,Date.now()-t0+700));if(gen!==listenGen)return;}}}
+function listenBtns(){return `<button class="play" data-l="r">🔁 Ouvir e repetir 3×</button><button class="play" data-l="n">▶ Frase inteira</button><button class="play" data-l="s">🐢 Devagar</button><button class="play" data-l="w">🔤 Palavra por palavra</button><button class="play" data-l="c">🎧 Camadas</button>`;}
 function bindListen(box,h,onStep){box.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>listenAction(b.dataset.l,h,onStep));}
 function playBtns(it){return it.k==="s"?listenBtns():`<button class="play" data-p="n">▶ Ouvir</button>`;}
 function bindPlay(box,it){if(it.k==="s")bindListen(box,it.h);box.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>playItem(it));}
@@ -1104,10 +1116,10 @@ function fkGoNext(){
   if(PL){if(PL.i+1<PL.list.length){PL.i++;newTarget(PL.list[PL.i]);}else{const k=PL.lessonI;PL=null;goTab("trilha");openLesson(k,"speak");}}
   else newTarget();window.scrollTo(0,0);
 }
-const NAVOF={conversa:"praticar",trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"praticar",palavras:"palavras"};
+const NAVOF={conversa:"praticar",trilha:"trilha",hoje:"hoje",praticar:"praticar",tons:"praticar",falar:"praticar",frases:"praticar",escrever:"praticar",cartoes:"cartoes",palavras:"palavras"};
 function goTab(v){closePop();document.querySelectorAll("section[id^='v-']").forEach(s=>s.hidden=s.id!=="v-"+v);
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===NAVOF[v]));
-  stopAll();cancelRec();window.scrollTo(0,0);
+  stopAll();listenGen++;cancelRec();window.scrollTo(0,0);
   if(v==="tons"&&!tq)newTone();if(v==="falar"&&!fkCur)newTarget();if(v==="escrever")renderEscrever();if(v==="cartoes")renderFcHome();if(v==="conversa")renderCvHome();if(v==="hoje"&&!session)renderToday();
   if(v!=="falar"||(MIC&&MIC.onSamples))MIC=null;}
 const TN={1:"1º tom",2:"2º tom",3:"3º tom",4:"4º tom",5:"neutro"};
@@ -1274,6 +1286,11 @@ function showNext(id){const b=$(id);if(!b)return;requestAnimationFrame(()=>{cons
 /* ---------- fórmula palavra por palavra ---------- */
 const VOCM={};C.vocab.forEach(v=>VOCM[v[0]]=[v[1],v[2]]);
 function wInfo(t){return GL[t]?[GL[t][0],GL[t][1]]:VOCM[t]||(t.length===1&&C.cpy[t]?[C.cpy[t],""]:null);}
+/* lições com registro (formal / informal) */
+function regChip(l){return l.reg?`<i class="rg rg-${l.reg}">${l.reg}</i>`:"";}
+function baseT(l){return l.reg?l.t.replace(/ · (formal|informal)$/,""):l.t;}
+function titleHtml(l){return esc(baseT(l))+regChip(l);}
+function regPair(l){if(!l.reg)return -1;return LESSONS.findIndex(x=>x!==l&&x.reg&&x.reg!==l.reg&&baseT(x)===baseT(l));}
 function shortM(t){const i=wInfo(t);let m=i?i[1]:"";if(!m)return "?";
   if(m.startsWith("(")){return m.slice(1).split(/[:)]/)[0].split(" / ")[0].trim();}
   return m.replace(/\s*\([^)]*\)\s*/g," ").split(/ \/ |; |, /)[0].trim();}
@@ -1553,8 +1570,12 @@ function uOpen(l,us,i){return i===0||us.slice(0,i).every(u=>uState(l,u)&&uState(
 function lProgress(l){const us=unitsOf(l);return us.filter(u=>uState(l,u)&&uState(l,u).done).length/us.length;}
 /* desbloqueio: o Módulo 1 é feito em ordem; depois dele, cada módulo pode ser começado,
    e dentro de cada módulo as lições seguem em ordem */
-const M1DONE=()=>LESSONS.filter(l=>l.mod===1).every(lessonDone);
+/* lições acrescentadas depois (l.added) não travam quem já tinha passado daquele ponto */
+const started=l=>lessonDone(l)||!!S.lessons[l.id]||!!S.units[l.id];
+const M1DONE=()=>{const m1=LESSONS.filter(l=>l.mod===1);if(m1.every(lessonDone))return true;
+  return m1.filter(l=>!l.added).every(lessonDone)&&LESSONS.some(l=>l.mod>1&&started(l));};
 function lOpen(i){const l=LESSONS[i];if(i===0)return true;const prev=LESSONS[i-1];
+  if(started(l))return true;
   if(l.mod===1)return lessonDone(prev);
   if(!M1DONE())return false;
   return prev.mod!==l.mod||lessonDone(prev);}
@@ -1596,7 +1617,7 @@ function renderMap(){closePop();CUR_NEW=new Set();
       <span class="ringw" data-done="${done?1:0}"><svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="prg" stroke-dasharray="${(p*289).toFixed(1)} 289"/></svg>
       <span class="disc"><span class="g">${GLYPH[l.id]||esc(l.new[0][0])}</span></span>
       ${!open?`<span class="badge lk">${ICON.lock}</span>`:done?`<span class="badge ok">${ICON.check}</span>`:""}</span>
-      <span class="lbl"><b>${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</b> ${esc(l.t)}</span></button></div>`;
+      <span class="lbl"><b>${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</b> ${titleHtml(l)}</span></button></div>`;
   });
   box.style.height="";
   box.innerHTML=`<svg class="pathsvg" aria-hidden="true"></svg>`+html+`<div class="mapend"></div>`;
@@ -1622,10 +1643,11 @@ function openLessonPage(i){
     <div class="lhero" style="--nc:var(--c${lvIdx(l)%7+1})">
       <span class="ltile">${GLYPH[l.id]||esc(l.new[0][0])}</span>
       <div style="min-width:0"><div class="lsup">${esc(lvShort(l.lvl))} · Lição ${lvIdx(l)+1}-${LESSONS.filter((x,j)=>j<=i&&x.lvl===l.lvl).length}</div>
-        <h2 class="ltitle">${esc(l.t)}</h2>
+        <h2 class="ltitle">${titleHtml(l)}</h2>
         <div class="lchips"><span>${ICON.clock}${mins} min</span><span>${l.new.length} palavras · ${l.ph.length} frases</span><span>${dn}/${us.length} etapas</span></div></div>
     </div>
     <p class="muted" style="margin:0">${esc(l.goal)}</p>
+    ${l.reg?(()=>{const pi=regPair(l);return `<div class="regnote">${regChip(l)}<span>${esc((C.reginfo||{})[l.reg]||"")}</span>${pi>=0?`<button class="pair" id="lpPair">${l.reg==="formal"?"Ver o jeito informal":"Ver o jeito formal"}: ${esc(baseT(LESSONS[pi]))} →</button>`:""}</div>`;})():""}
     <button class="reflink" id="lpRef"><span class="uic" style="--uc:var(--c7)">本</span><span class="ut"><b>Material de consulta</b><span>Gramática, palavras e frases da lição para ler e ouvir</span></span><span class="ust">${ICON.chev}</span></button>
     <div class="units">${us.map((u,k)=>{const st=uState(l,u),op=uOpen(l,us,k),d=st&&st.done;
       return `<button class="unit ${u.cls} ${d?"done":op?"open":"locked"} ${k===nextU?"next":""}" data-k="${u.k}" ${op?"":"aria-disabled=\"true\""}>
@@ -1635,6 +1657,7 @@ function openLessonPage(i){
   $("lpBack").onclick=()=>renderMap();
   v.querySelectorAll(".unit[data-k]").forEach(b=>b.onclick=()=>{const k=us.findIndex(u=>u.k===b.dataset.k);if(!uOpen(l,us,k))return;startUnit(i,b.dataset.k);});
   $("lpRef").onclick=()=>openConsulta(i);
+  if($("lpPair")){const pi=regPair(l);$("lpPair").onclick=()=>{if(lOpen(pi))openLessonPage(pi);else $("lpPair").textContent="Essa lição abre quando você chegar nela no mapa.";};}
   if($("lpGo"))$("lpGo").onclick=()=>startUnit(i,us[nextU].k);
 }
 
@@ -1725,11 +1748,11 @@ let barRO=null;
 function padForBar(){const b=$("sesBar"),s=$("sesSpacer");if(!b||!s)return;s.style.height=(b.offsetHeight+28)+"px";}
 function keepAboveBar(el){if(!el)return;requestAnimationFrame(()=>{const b=$("sesBar");if(!b)return;const r=el.getBoundingClientRect(),top=b.getBoundingClientRect().top;
   if(r.bottom>top-12)window.scrollBy({top:Math.min(r.bottom-top+20,Math.max(0,r.top-70)),behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});}
-function exitSession(){try{barRO&&barRO.disconnect();}catch(e){}document.body.style.paddingBottom="";stopAll();cancelRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
+function exitSession(){try{barRO&&barRO.disconnect();}catch(e){}document.body.style.paddingBottom="";stopAll();listenGen++;cancelRec();MIC=null;SS=null;document.body.classList.remove("insession");$("sessionView").hidden=true;
   if(LP!=null)openLessonPage(LP);else renderMap();}
 function barState(kind,html,label,fn){setTimeout(padForBar,0);const fb=$("sesFb"),bar=$("sesBar"),go=$("sesGo");
   bar.className="sesbar"+(kind?" "+kind:"");fb.hidden=!html;fb.innerHTML=html||"";go.textContent=label;go.disabled=!fn;go.onclick=fn||null;}
-function nextStep(){closePop();stopAll();MIC=null;SS.i++;renderStep();window.scrollTo(0,0);}
+function nextStep(){closePop();stopAll();listenGen++;MIC=null;SS.i++;renderStep();window.scrollTo(0,0);}
 function distract(l,h,n){const pool=poolFor(l).filter(x=>x!==h&&GL[x][1]!==GL[h][1]);let out=shuffle(pool).slice(0,n);
   if(out.length<n)out=out.concat(shuffle(Object.keys(GL).filter(x=>x!==h&&!out.includes(x))).slice(0,n-out.length));return out;}
 function ansInfo(s){if(s.h)return `<button class="hzi wbtn" data-w="${esc(s.h)}">${esc(s.h)}</button> <span class="pyi">${esc(GL[s.h][0])}</span> · ${esc(GL[s.h][1])}`;
@@ -1751,12 +1774,12 @@ function renderStep(){
   if(s.learn==="w"){const [p,m,n]=GL[s.h];const ex=SS.l.ph.find(ph=>ph[0].includes(s.h));
     body.innerHTML=`<div class="stepcard"><div class="kicker">${s.gram?"Gramática":"Palavra nova"}</div>${wordScene(s.h)}${hanBox(s.h,true)}
       <div class="bigpy">${esc(p)}</div><div class="bigm">${esc(m)}</div>
-      <button class="play" id="stPlay">▶ Ouvir de novo</button>
+      <div class="row" style="justify-content:center"><button class="play" id="stPlay">▶ Ouvir de novo</button><button class="play" id="stRep">🔁 Ouvir e repetir 3×</button></div>
       ${n?`<div class="notebox">${esc(n)}</div>`:""}
       ${[...s.h].length>1?insideWord(s.h,shortM(s.h)):(C.story[s.h]?`<div class="story"><div class="kicker">Como lembrar</div><p>${esc(C.story[s.h])}</p></div>`:"")}
       ${ex?`<div class="exbox"><div class="kicker">Exemplo</div><div class="toks" style="justify-content:center">${ex[0].map((t,i)=>PUNCT.test(t)?`<span class="tok p"><small>&nbsp;</small><span>${esc(t)}</span></span>`:`<span class="tok ${t===s.h?"sel":""}"><small>${esc(GL[t][0])}</small><span>${esc(t)}</span></span>`).join("")}</div>
         <div class="muted">${esc(ex[2])}</div><button class="play sm" id="stEx">▶ Ouvir a frase</button></div>`:""}</div>`;
-    $("stPlay").onclick=()=>sayWord(s.h);if($("stEx"))$("stEx").onclick=()=>saySentence(ex[0].join(""));
+    $("stPlay").onclick=()=>sayWord(s.h);$("stRep").onclick=()=>{const g=++listenGen;repeatLoop(()=>sayWord(s.h),g);};if($("stEx"))$("stEx").onclick=()=>saySentence(ex[0].join(""));
     sayWord(s.h);barState("","","Continuar",nextStep);return;}
   if(s.learn==="p"){const [tk,p,m]=s.ph;
     body.innerHTML=`<div class="stepcard">${sceneHtml(sceneFor(tk))}<div class="kicker">Frase nova · toque nas palavras</div>
@@ -1780,7 +1803,9 @@ function renderStep(){
   if(s.q==="pt2w"){prompt=`<div class="kicker">Como se diz em chinês?</div>${wordScene(s.h)}<div class="ptbig">${esc(GL[s.h][1])}</div>`;hz=true;
     opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:`<small>${esc(GL[x][0])}</small>${esc(x)}`,ok:x===s.h}));}
   if(s.q==="hear"){prompt=`<div class="kicker">Ouça e escolha a palavra</div><button class="earbtn" id="qp" aria-label="Ouvir">${ICON.ear}</button>`;hz=true;
-    opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:esc(x),ok:x===s.h}));}
+    /* nos módulos iniciais a tradução aparece embaixo do hanzi; depois, só ao responder */
+    const showM=SS.l.mod<=4;
+    opts=shuffle([s.h,...distract(SS.l,s.h,3)]).map(x=>({lab:esc(x)+(showM?`<span class="optm">${esc(shortM(x))}</span>`:""),ok:x===s.h,m:showM?null:shortM(x)}));}
   if(s.q==="listen"){const others=shuffle(upTo(SS.l).flatMap(x=>x.ph).filter(p=>p[2]!==s.ph[2])).slice(0,3);
     prompt=`<div class="kicker">Ouça e escolha a tradução</div><button class="earbtn" id="qp" aria-label="Ouvir">${ICON.ear}</button><div class="row" style="justify-content:center" id="qL">${listenBtns()}</div>`;
     opts=shuffle([s.ph,...others]).map(p=>({lab:esc(p[2]),ok:p===s.ph}));}
@@ -1795,7 +1820,7 @@ function renderStep(){
   if(s.q==="w2pt"||s.q==="hear"||s.q==="listen")play();
   const oc=$("qo");
   opts.forEach(o=>{const b=document.createElement("button");b.className="opt"+(hz?" hz":"");b.innerHTML=o.lab;
-    b.onclick=()=>{if(oc.dataset.done)return;oc.dataset.done=1;[...oc.children].forEach((y,k)=>{if(opts[k].ok)y.classList.add("right");});if(!o.ok)b.classList.add("wrong");
+    b.onclick=()=>{if(oc.dataset.done)return;oc.dataset.done=1;[...oc.children].forEach((y,k)=>{if(opts[k].ok)y.classList.add("right");if(opts[k].m)y.insertAdjacentHTML("beforeend",`<span class="optm">${esc(opts[k].m)}</span>`);});if(!o.ok)b.classList.add("wrong");
       if(s.q==="fill"){grade({...s,h:null},o.ok);$("sesFb").insertAdjacentHTML("beforeend",`<div class="fbg">${glossBox(s.ph[0][s.idx])}</div>`);}else grade(s,o.ok);};
     oc.append(b);});
 }

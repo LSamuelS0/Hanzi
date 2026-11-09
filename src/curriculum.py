@@ -181,31 +181,32 @@ G = {
 
 # Lições: (id, nível, título, objetivo, [frases: "tokens separados por espaço", pinyin, português])
 L = [
- (1,"Nível 1 · Primeiros passos","Olá e tchau","Cumprimentar em qualquer hora do dia e se despedir.",[
+ (1,"Nível 1 · Primeiros passos","Olá e tchau · formal","Cumprimentar chefes, clientes e grupos em qualquer hora do dia, e se despedir com educação.",[
   ("你 好 ！","Nǐ hǎo!","Olá!"),
+  ("您 好 ！","Nín hǎo!","Olá! (respeitoso: chefe, cliente, pessoa mais velha)"),
+  ("大家 好 ！","Dàjiā hǎo!","Olá, pessoal! (reunião, grupo)"),
   ("早上 好 ！","Zǎoshang hǎo!","Bom dia!"),
   ("下午 好 ！","Xiàwǔ hǎo!","Boa tarde!"),
   ("晚上 好 ！","Wǎnshang hǎo!","Boa noite! (ao chegar)"),
-  ("再见 ！","Zàijiàn!","Tchau!"),
-  ("明天 见 ！","Míngtiān jiàn!","Até amanhã!"),
-  ("晚安 ！","Wǎn'ān!","Boa noite! (ao dormir)"),
+  ("再见 ！","Zàijiàn!","Até logo! / Tchau!"),
  ]),
- (2,"Nível 1 · Primeiros passos","Como você está?","Perguntar e responder como a pessoa está, e devolver a pergunta.",[
-  ("你 好 吗 ？","Nǐ hǎo ma?","Tudo bem? / Como vai?"),
-  ("我 很 好 。","Wǒ hěn hǎo.","Estou bem."),
+ (2,"Nível 1 · Primeiros passos","Como você está? · formal","Perguntar com educação como a pessoa está, responder e devolver a pergunta.",[
+  ("您 最近 好 吗 ？","Nín zuìjìn hǎo ma?","Como o senhor tem passado?"),
+  ("我 很 好 ， 谢谢 。","Wǒ hěn hǎo, xièxie.","Estou bem, obrigado."),
+  ("您 呢 ？","Nín ne?","E o senhor?"),
+  ("你 好 吗 ？","Nǐ hǎo ma?","Tudo bem? (frase de livro: os chineses quase não usam)"),
   ("你 呢 ？","Nǐ ne?","E você?"),
   ("我 也 很 好 。","Wǒ yě hěn hǎo.","Eu também estou bem."),
-  ("还 不错 ， 谢谢 。","Hái búcuò, xièxie.","Até que bem, obrigado."),
   ("你 累 吗 ？","Nǐ lèi ma?","Você está cansado?"),
   ("我 不 累 ， 我 很 忙 。","Wǒ bú lèi, wǒ hěn máng.","Não estou cansado, estou ocupado."),
  ]),
- (3,"Nível 1 · Primeiros passos","Meu nome é…","Dizer seu nome e perguntar o nome dos outros.",[
-  ("你 叫 什么 名字 ？","Nǐ jiào shénme míngzi?","Como você se chama?"),
-  ("我 叫 保罗 。","Wǒ jiào Bǎoluó.","Eu me chamo Paulo."),
-  ("我 的 名字 是 保罗 。","Wǒ de míngzi shì Bǎoluó.","Meu nome é Paulo."),
-  ("请问 ， 您 贵姓 ？","Qǐngwèn, nín guìxìng?","Com licença, qual é o seu sobrenome? (educado)"),
+ (3,"Nível 1 · Primeiros passos","Meu nome é… · formal","Perguntar o sobrenome com educação, se apresentar e entregar o cartão de visita.",[
+  ("请问 ， 您 贵姓 ？","Qǐngwèn, nín guìxìng?","Com licença, qual é o seu sobrenome?"),
   ("我 姓 王 。","Wǒ xìng Wáng.","Meu sobrenome é Wang."),
-  ("很 高兴 认识 你 。","Hěn gāoxìng rènshi nǐ.","Muito prazer em te conhecer."),
+  ("您 怎么 称呼 ？","Nín zěnme chēnghu?","Como devo chamar o senhor?"),
+  ("我 叫 保罗 。","Wǒ jiào Bǎoluó.","Eu me chamo Paulo."),
+  ("这 是 我 的 名片 。","Zhè shì wǒ de míngpiàn.","Este é o meu cartão de visita."),
+  ("很 高兴 认识 您 。","Hěn gāoxìng rènshi nín.","Muito prazer em conhecê-lo."),
  ]),
  (4,"Nível 1 · Primeiros passos","De onde você é?","Falar de nacionalidade e apresentar amigos.",[
   ("你 是 哪 国 人 ？","Nǐ shì nǎ guó rén?","De que país você é?"),

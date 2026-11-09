@@ -7,6 +7,7 @@ from curriculum import G, L, NAMES_EXTRA
 from modules import G2, M_LESSONS, PHASES
 from grammar import GP
 from stories import ST
+from registro import REG, REG_INFO, R_LESSONS, R_GLOSS, R_GP
 from build_sent_audio import pieces_for, build, checkout, HSK, R
 
 HAN = re.compile(r'[一-鿿]')
@@ -14,6 +15,10 @@ P = set("！？。，")
 GG = dict(G)
 for k, v in G2.items():
     if k not in GG: GG[k] = v
+for k, v in R_GLOSS.items():
+    if k not in GG: GG[k] = v
+for k, v in R_GP.items(): GP.setdefault(k, []).extend(v)
+M_LESSONS = list(M_LESSONS) + R_LESSONS
 # ensina o anotador as palavras e frases novas
 for k, v in GG.items(): addpy.WORDS.setdefault(k, v[0])
 for (i, t, goal, ph) in M_LESSONS:
@@ -24,7 +29,7 @@ byid = {l[0]: {"id": l[0], "t": l[2], "goal": l[3], "ph": l[4]} for l in L}
 for (i, t, goal, ph) in M_LESSONS: byid[i] = {"id": i, "t": t, "goal": goal, "ph": ph}
 
 old = json.load(open("ctest.json"))
-c = {k: old[k] for k in ("vocab", "sentences", "bases", "syll")}
+c = {k: old[k] for k in ("vocab", "sentences", "bases", "syll", "wimg", "pscene", "emo") if k in old}
 lessons = []; seen = set(); n = 0; mods = []
 for phase, ms in PHASES:
     for name, ids in ms:
@@ -38,9 +43,11 @@ for phase, ms in PHASES:
                     if tk not in seen: seen.add(tk); new.append(tk)
             d = {"id": i, "lvl": f"Módulo {n} · {name}", "mod": n, "phase": phase, "t": b["t"], "goal": b["goal"],
                  "new": new, "ph": [[z.split(), p, pt] for z, p, pt in b["ph"]]}
+            if i in REG: d["reg"] = REG[i]
+            if i in {x[0] for x in R_LESSONS}: d["added"] = True
             if i == 16: d["extra"] = {"groups": NAMES_EXTRA["groups"], "notes": [annotate2(x, miss) for x in NAMES_EXTRA["notes"]]}
             lessons.append(d)
-c["lessons"] = lessons; c["modules"] = mods
+c["lessons"] = lessons; c["modules"] = mods; c["reginfo"] = REG_INFO
 c["gloss"] = {k: [v[0], annotate2(v[1], miss), annotate2(v[2], miss)] for k, v in GG.items()}
 c["gloss"]["哪里"][2] = "Também se fala 哪儿 (nǎr) no norte da China."
 vm = {}
@@ -62,7 +69,8 @@ c["story"] = {}
 for ch, s in ST.items():
     a = annotate2(s, miss).replace("子 (zi,", "子 (zǐ,").replace("宀 (gài,", "宀 (mián,")
     c["story"][ch] = a
-c["cpy"] = {ch: fix.get(ch, mm.get(ch, "")) for ch in ST}
+allch = sorted(set(ST) | {ch for l in lessons for w in l["new"] for ch in w if HAN.match(ch)})
+c["cpy"] = {ch: fix.get(ch, mm.get(ch, "")) for ch in allch}
 print("sem pinyin nas notas:", miss)
 
 # ---------- áudio ----------

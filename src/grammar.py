@@ -5,9 +5,6 @@ GP = {
   ("Cumprimentar = quem/quando + 好", "Pessoa ou período + 好 (hǎo)",
    "Em chinês não existe uma palavra só para “oi”. Você junta a pessoa ou o momento do dia com 好 (hǎo, bom). É como dizer “você bem!” ou “manhã boa!”.",
    "早上 好 ！", "Zǎoshang hǎo!", "Bom dia!"),
-  ("Despedida com 见 (ver)", "Quando + 见 (jiàn)",
-   "Para se despedir, diga QUANDO vocês vão se ver de novo e acrescente 见 (jiàn, ver). Em português seria “amanhã nos vemos”.",
-   "明天 见 ！", "Míngtiān jiàn!", "Até amanhã!"),
  ],
  2: [
   ("Pergunta de sim/não com 吗", "Frase afirmativa + 吗 (ma)？",
@@ -21,12 +18,12 @@ GP = {
    "你 呢 ？", "Nǐ ne?", "E você?"),
  ],
  3: [
-  ("A palavra de pergunta fica no lugar da resposta", "Você + 叫 (jiào) + 什么 (shénme)？ → Eu + 叫 + nome",
-   "Em português a pergunta começa com “como” ou “qual”. Em chinês a palavra de pergunta fica exatamente onde a resposta vai estar. Pergunta: você chama O QUÊ? Resposta: eu chamo PAULO.",
-   "你 叫 什么 名字 ？", "Nǐ jiào shénme míngzi?", "Como você se chama?"),
+  ("Responder ao 贵姓 sem o 贵", "我 + 姓 (xìng) + sobrenome",
+   "贵 (guì, precioso) é um elogio ao sobrenome do OUTRO. Na resposta, nunca use 贵 para você mesmo: diga só 我姓王 (wǒ xìng Wáng).",
+   "我 姓 王 。", "Wǒ xìng Wáng.", "Meu sobrenome é Wang."),
   ("Posse com 的", "Dono + 的 (de) + coisa",
-   "O dono vem antes, ligado por 的 (de). É o contrário do português: em vez de “o nome DE mim”, fica “eu 的 nome” = meu nome.",
-   "我 的 名字 是 保罗 。", "Wǒ de míngzi shì Bǎoluó.", "Meu nome é Paulo."),
+   "O dono vem antes, ligado por 的 (de). É o contrário do português: em vez de “o cartão DE mim”, fica “eu 的 cartão” = meu cartão.",
+   "这 是 我 的 名片 。", "Zhè shì wǒ de míngpiàn.", "Este é o meu cartão de visita."),
  ],
  16: [
   ("Sobrenome primeiro", "Sobrenome + nome",
