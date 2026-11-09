@@ -70,7 +70,8 @@ for ch, s in ST.items():
     a = annotate2(s, miss).replace("子 (zi,", "子 (zǐ,").replace("宀 (gài,", "宀 (mián,")
     c["story"][ch] = a
 allch = sorted(set(ST) | {ch for l in lessons for w in l["new"] for ch in w if HAN.match(ch)})
-c["cpy"] = {ch: fix.get(ch, mm.get(ch, "")) for ch in allch}
+# leitura do caractere: a da palavra de 1 caractere no glossário (é a que a lição ensina), senão a do dicionário
+c["cpy"] = {ch: fix.get(ch) or (GG[ch][0].lower() if ch in GG and " " not in GG[ch][0] else mm.get(ch, "")) for ch in allch}
 print("sem pinyin nas notas:", miss)
 
 # ---------- áudio ----------
