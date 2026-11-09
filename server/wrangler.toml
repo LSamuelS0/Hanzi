@@ -1,0 +1,4 @@
+# Opcional: publicar pelo terminal com `npx wrangler deploy` (o painel web também funciona).
+name = "hanzi-professor"
+main = "worker.js"
+compatibility_date = "2026-10-01"
